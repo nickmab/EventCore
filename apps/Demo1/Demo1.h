@@ -2,15 +2,18 @@
 
 #include <Core/Application.h>
 
-#include <iostream>
+#include <chrono>
 
 class DemoApp : public EventCore::Application
 {
 public:
-	DemoApp() = default;
+	DemoApp(double secondsToStayAlive);
 
 private:
-	int mSomeInteger{0};
+	double mSecondsToStayAlive;
+	std::chrono::time_point<std::chrono::system_clock> mApplicationStartTime;
+	
+	virtual void Init() override;
 	virtual void OnUpdate() override;
 };
 

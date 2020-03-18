@@ -20,16 +20,61 @@ namespace EventCore {
 		mIsRunning = false;
 	}
 
+	void Application::RegisterEventProducer(std::shared_ptr<EventProducer> producer)
+	{
+		mEventProducers.push_back(producer);
+	}
+
+	void Application::UnregisterEventProducer(std::shared_ptr<EventProducer> producer)
+	{
+		// should check that this actually works...
+		auto it = std::find(mEventProducers.begin(), mEventProducers.end(), producer);
+		if (it != mEventProducers.end())
+			mEventProducers.erase(it);
+	}
+
 	void Application::Run()
 	{
-		while (mIsRunning)
-			OnUpdate();
+		for (;;)
+		{
+			if (mIsRunning)
+			{
+				OnUpdate();
+			}
+			else
+			{
+				return;
+			}
+
+			for (std::shared_ptr<EventProducer> producer : mEventProducers)
+			{
+				if (mIsRunning)
+				{
+					producer->OnUpdate();
+				}
+				else
+				{
+					return;
+				}
+			}
+
+			if (mIsRunning)
+			{
+				mEventQueue.PublishEvents();
+			}
+			else
+			{
+				return;
+			}
+		}
+			
 	}
 
 	int EntryPoint::MainFunction(int argc, char* argv[])
 	{
 		Application* instance = CreateApplication();
 		Application::sInstance = instance;
+		instance->Init();
 		instance->Run();
 		int exitCode = instance->mExitCode;
 		delete instance;
