@@ -5,6 +5,7 @@ include_directories(${CMAKE_SOURCE_DIR}/libs)
 link_directories(${CMAKE_SOURCE_DIR}/libs)
 
 set (APP_EXE Demo1)
-add_executable (${APP_EXE} "Demo1.cpp" "Demo1.h")
+file (GLOB_RECURSE Demo1_src "*.cpp")
+add_executable (${APP_EXE} ${Demo1_src})
 target_link_libraries(${APP_EXE}
 					  EventCoreLib)
