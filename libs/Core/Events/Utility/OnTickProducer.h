@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/EventImpls/OnTick.h"
+#include "Core/Events/OnTick.h"
 #include <chrono>
 
 namespace EventCore {

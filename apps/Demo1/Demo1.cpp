@@ -3,8 +3,8 @@
 
 #include "Demo1.h"
 
-#include "Core/EventProducers/OnTickProducer.h"
-#include "Core/EventConsumers/EventPrinter.h"
+#include "Core/Events/Utility/OnTickProducer.h"
+#include "Core/Events/Utility//EventPrinter.h"
 
 #include <iostream>
 
