@@ -1,8 +1,9 @@
 #pragma once
 
-#include <string>
 #include <functional>
+#include <map>
 #include <memory>
+#include <string>
 #include <vector>
 
 namespace EventCore {
@@ -11,10 +12,18 @@ namespace EventCore {
 	{
 	public:
 
+		// ALL events MUST be added to this enum.
 		enum class Type
 		{
-			Null = 0,
-			OnTick
+			Begin = 0,
+			
+			// Insert events in here. "Begin" and "End" are used just for iteration.
+			OnTick,
+			TCPClientConnected,
+			TCPClientDisonnected,
+			
+			// Insert events in the section above. "Begin" and "End" are used just for iteration.
+			End
 		};
 
 		inline virtual Event::Type GetType() const = 0;
@@ -60,7 +69,13 @@ namespace EventCore {
 
 	private:
 		std::vector<std::shared_ptr<Event> > mEventQueue;
-		std::vector<std::shared_ptr<EventConsumer> > mConsumers;
+		
+		// For each event type, we keep a vector of shared_ptrs to consumers that 
+		// are interested in consuming that event type. Used for convenient/efficient
+		// callback when we actually publish events / empty the queue. 
+		// Thus a consumer that listens for multiple event types will appear multiple
+		// times in this map.
+		std::map<Event::Type, std::vector<std::shared_ptr<EventConsumer> > > mEventTypeToConsumerMap;
 	};
 
 }

@@ -16,15 +16,28 @@ namespace EventCore {
 
 	void EventQueue::RegisterConsumer(std::shared_ptr<EventConsumer> consumer)
 	{
-		mConsumers.push_back(consumer);
+		for (int i = 1; i < static_cast<int>(Event::Type::End); i++)
+		{
+			Event::Type eventType = static_cast<Event::Type>(i);
+			if (consumer->DoesCareAboutEventType(eventType))
+				mEventTypeToConsumerMap[eventType].push_back(consumer);
+		}
 	}
 
 	void EventQueue::UnregisterConsumer(std::shared_ptr<EventConsumer> consumer)
 	{
 		// should check that this actually works...
-		auto it = std::find(mConsumers.begin(), mConsumers.end(), consumer);
-		if (it != mConsumers.end())
-			mConsumers.erase(it);
+		for (int i = 1; i < static_cast<int>(Event::Type::End); i++)
+		{
+			Event::Type eventType = static_cast<Event::Type>(i);
+			if (consumer->DoesCareAboutEventType(eventType))
+			{
+				auto vec = mEventTypeToConsumerMap[eventType];
+				auto it = std::find(vec.begin(), vec.end(), consumer);
+				if (it != vec.end())
+					vec.erase(it);
+			}
+		}
 	}
 
 	void EventQueue::EnqueueEvent(std::shared_ptr<Event> evtPtr)
@@ -36,13 +49,12 @@ namespace EventCore {
 	{
 		for (std::shared_ptr<Event> evtPtr : mEventQueue)
 		{
-			for (std::shared_ptr<EventConsumer> consumer : mConsumers)
+			auto consumerVec = mEventTypeToConsumerMap[evtPtr->GetType()];
+			for (std::shared_ptr<EventConsumer> consumer : consumerVec)
 			{
 				if (!Application::Get().IsRunning())
 					break;
-				
-				if (consumer->DoesCareAboutEventType(evtPtr->GetType()))
-					consumer->OnEvent(*evtPtr);
+				consumer->OnEvent(*evtPtr);
 			}
 		}
 
