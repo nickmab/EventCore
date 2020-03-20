@@ -2,8 +2,7 @@
 //
 
 #include "DemoClient.h"
-
-#include <iostream>
+#include "Core/Logger.h"
 
 namespace EventCore {
 	Application* CreateApplication()
@@ -18,7 +17,7 @@ void DemoClient::Init()
 {
 	if (!mTCPClient.Init())
 	{
-		std::cout << "Could not initialize client; shutting down." << std::endl;
+		LOG_CRITICAL("Could not initialize client; shutting down.");
 		Shutdown(1);
 	}
 }
@@ -28,7 +27,7 @@ void DemoClient::OnUpdate()
 	// temporary crappy hack...
 	if (!mTCPClient.OnUpdate())
 	{
-		std::cout << "Encountered some kind of error; shutting down." << std::endl;
+		LOG_CRITICAL("Encountered some kind of error; shutting down.");
 		Shutdown(1);
 	}
 }

@@ -1,8 +1,8 @@
 #include "TCPClient.h"
 #include "TCPUtils.h"
+#include "Core/Logger.h"
 
 #include <sstream>
-#include <iostream>
 
 namespace EventCore {
 
@@ -23,7 +23,7 @@ namespace EventCore {
 	{
 		if (mInitialized)
 		{
-			std::cout << "Called 'Init()' after client was already initialized!" << std::endl;
+			LOG_ERROR("Called 'Init()' after client was already initialized!");
 			return false;
 		}
 
@@ -55,7 +55,7 @@ namespace EventCore {
 			return false;
 		}
 
-		std::cout << "Successfully initialized client and connected to server." << std::endl;
+		LOG_INFO("Successfully initialized client and connected to server.");
 		mServerSession.reset(new TCPSession(sock));
 		mInitialized = true;
 		mRunning = true;
@@ -67,7 +67,7 @@ namespace EventCore {
 	{
 		if (!mRunning)
 		{
-			std::cout << "Client is not running! Doing nothing." << std::endl;
+			LOG_WARN("Client is not running! Doing nothing.");
 			return false;
 		}
 
@@ -76,7 +76,7 @@ namespace EventCore {
 		{
 			if (!mServerSession->Send(str))
 			{
-				std::cout << "Some kind of error sending data to server. Shutting down." << std::endl;
+				LOG_CRITICAL("Some kind of error sending data to server. Shutting down.");
 				Shutdown();
 				return false;
 			}
@@ -87,15 +87,15 @@ namespace EventCore {
 		// Now see if there's anything to read...
 		if (!mServerSession->Recv())
 		{
-			std::cout << "Some kind of error recv'ing from socket. Disconnecting." << std::endl;
+			LOG_CRITICAL("Some kind of error recv'ing from socket. Disconnecting.");
 			Shutdown();
 			return false;
 		}
 
 		if (mServerSession->BufferHasData())
 		{
-			std::cout << "Received the following from server..." << std::endl;
-			std::cout << mServerSession->GetAllRecvBufferContents() << std::endl;
+			LOG_INFO("Received the following from server...");
+			LOG_INFO(mServerSession->GetAllRecvBufferContents());
 		}
 
 		return true;

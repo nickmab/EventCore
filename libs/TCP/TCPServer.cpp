@@ -1,8 +1,8 @@
 #include "TCPServer.h"
 #include "TCPUtils.h"
+#include "Core/Logger.h"
 
 #include <sstream>
-#include <iostream>
 
 namespace EventCore {
 
@@ -23,7 +23,7 @@ namespace EventCore {
 	{
 		if (mInitialized)
 		{
-			std::cout << "Called 'Init()' after server was already initialized!" << std::endl;
+			LOG_ERROR("Called 'Init()' after server was already initialized!");
 			return false;
 		}
 
@@ -61,7 +61,7 @@ namespace EventCore {
 		}
 
 		// OK we are finally listening. Add the listening socket to the set and off we go.
-		std::cout << "Successfully initialized server." << std::endl;
+		LOG_INFO("Successfully initialized server.");
 		FD_ZERO(&mFDSet);
 		FD_SET(mListeningSocket, &mFDSet);
 		mInitialized = true;
@@ -73,7 +73,7 @@ namespace EventCore {
 	{
 		if (!mRunning)
 		{
-			std::cout << "Server is not running! Doing nothing." << std::endl;
+			LOG_WARN("Server is not running! Doing nothing.");
 			return false;
 		}
 
@@ -83,13 +83,13 @@ namespace EventCore {
 			auto tcpSession = mClientSessions.find(sockAndData.first);
 			if (tcpSession == mClientSessions.end())
 			{
-				std::cout << "Tried to write data to unknown socket/session! Skipping." << std::endl;
+				LOG_WARN("Tried to write data to unknown socket/session! Skipping.");
 			}
 			else
 			{
 				if (!tcpSession->second->Send(sockAndData.second))
 				{
-					std::cout << "Error trying to write to client; dropping it." << std::endl;
+					LOG_WARN("Error trying to write to client; dropping it.");
 					tcpSession->second.reset(nullptr);
 					FD_CLR(sockAndData.first, &mFDSet);
 					mClientSessions.erase(tcpSession);
@@ -139,20 +139,20 @@ namespace EventCore {
 				auto tcpSession = mClientSessions.find(sock);
 				if (tcpSession == mClientSessions.end())
 				{
-					std::cout << "Tried to read data from unknown socket/session!" << std::endl;
+					LOG_WARN("Tried to read data from unknown socket/session!");
 				}
 				else
 				{
 					if (!tcpSession->second->Recv())
 					{
-						std::cout << "Some kind of error recv'ing from socket. Deleting client." << std::endl;
+						LOG_WARN("Some kind of error recv'ing from socket. Deleting client.");
 						FD_CLR(sock, &mFDSet);
 						mClientSessions.erase(tcpSession);
 					}
 					else if (tcpSession->second->BufferHasData())
 					{
-						std::cout << "Received the following from client..." << std::endl;
-						std::cout << tcpSession->second->GetAllRecvBufferContents() << std::endl;
+						LOG_INFO("Received the following from client...");
+						LOG_INFO(tcpSession->second->GetAllRecvBufferContents());
 					}
 				}
 			}
@@ -169,7 +169,6 @@ namespace EventCore {
 		const int optVal = 1000;
 		const int optLen = sizeof(int);
 		setsockopt(mListeningSocket, SOL_SOCKET, SO_DONTLINGER, (char*)&optVal, optLen);
-		std::cout << "Lingering..." << std::endl;
 		closesocket(mListeningSocket);
 		WSACleanup();
 		mRunning = false;

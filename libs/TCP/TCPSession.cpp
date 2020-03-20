@@ -1,7 +1,6 @@
 #include "TCPSession.h"
 #include "TCPUtils.h"
-
-#include <iostream>
+#include "Core/Logger.h"
 
 namespace EventCore {
 
@@ -20,7 +19,6 @@ namespace EventCore {
 		// Try to do a graceful disconnect ...but doesn't seem to work very well.
 		const int optVal = 1000;
 		const int optLen = sizeof(int);
-		std::cout << "Lingering..." << std::endl;
 		setsockopt(mSocket, SOL_SOCKET, SO_LINGER, (char*)&optVal, optLen);
 		closesocket(mSocket);
 	}
@@ -56,7 +54,7 @@ namespace EventCore {
 
 			if (bytesOrError == 0)
 			{
-				std::cout << "The other side has disconnected gracefully." << std::endl;
+				LOG_INFO("The other side has disconnected gracefully.");
 				return false;
 			}
 			
@@ -77,10 +75,10 @@ namespace EventCore {
 
 	std::string TCPSession::GetAllRecvBufferContents()
 	{
-		std::cout << "Bytes in buffer... " << mNumBytesInRecvBuffer << std::endl;
+		LOGF_TRACE("Bytes in buffer: {}", mNumBytesInRecvBuffer);
 		std::string returnString(mRecvBuffer);
 		ClearRecvBuffer();
-		std::cout << "Now should be zero: " << mNumBytesInRecvBuffer << std::endl;
+		LOGF_TRACE("Bytes in buffer should now be zero: {}", mNumBytesInRecvBuffer);
 		return returnString;
 	}
 
@@ -110,19 +108,19 @@ namespace EventCore {
 				return true;
 		}
 
-		std::cout << "Unable to send after " << attemptCount << " attempts." << std::endl;
+		LOGF_WARN("Unable to send after {} attempts.", attemptCount);
 		return false;
 	}
 
 	bool TCPSession::ReallocRecvBufferByDoublingSizeAndMovingContents()
 	{
-		std::cout << "Realloc upwards from... " << mRecvBufSize << std::endl;
+		LOGF_TRACE("Realloc upwards from {}", mRecvBufSize);
 
 		size_t newRecvBufSize = 2 * mRecvBufSize;
 		
 		if (newRecvBufSize > MAX_RECV_BUF_SIZE)
 		{
-			std::cout << "Receive buffer size got unusually big; this should not happen." << std::endl;
+			LOG_ERROR("Receive buffer size got unusually big; this should not happen.");
 			return false;
 		}
 		

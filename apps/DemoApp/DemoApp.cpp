@@ -5,8 +5,7 @@
 
 #include "Core/Events/Utility/OnTickProducer.h"
 #include "Core/Events/Utility/EventPrinter.h"
-
-#include <iostream>
+#include "Core/Logger.h"
 
 namespace EventCore {
 	Application* CreateApplication()
@@ -41,7 +40,7 @@ void DemoApp::OnUpdate()
 
 	if (secondsAlive.count() > mSecondsToStayAlive) 
 	{
-		std::cout << "DemoApp has decided it's time to shutdown." << std::endl;
+		LOG_WARN("DemoApp has decided it's time to shutdown.");
 		Shutdown();
 	}
 }

@@ -1,15 +1,14 @@
 #include "TCPUtils.h"
+#include "Core/Logger.h"
 
 #include <WS2tcpip.h>
-
-#include <iostream>
 
 namespace EventCore {
 
 	void TCPError(const std::string& msg, std::optional<int> systemErrorCode)
 	{
 		if (!msg.empty())
-			std::cout << msg << std::endl;
+			LOG_ERROR(msg);
 
 		if (!systemErrorCode)
 		{
@@ -24,7 +23,7 @@ namespace EventCore {
 
 		std::stringstream ss;
 		ss << "TCPServer error (code " << systemErrorCode.value() << "): " << errString;
-		std::cout << ss.str() << std::endl;
+		LOG_ERROR(ss.str());
 
 		LocalFree(errString);
 	}

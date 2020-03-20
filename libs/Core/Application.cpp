@@ -72,15 +72,6 @@ namespace EventCore {
 
 	int EntryPoint::MainFunction(int argc, char* argv[])
 	{
-		LOG_INFO("Creating application...");
-		LOGF_CRITICAL("Critical application... {}", 999);
-		ASSERT(true, "Nothing here.");
-		ASSERT(false, "What a terrible assertion!");
-		ASSERTF(true, "Nothing here. {}", 66);
-		ASSERTF(false, "Boredom {}", 999);
-		LOG_WARN("Warning.");
-		LOGF_WARN("Warning {}", 2);
-		LOG_INFO("Info");
 		Application* instance = CreateApplication();
 		Application::sInstance = instance;
 		instance->Init();

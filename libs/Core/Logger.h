@@ -27,6 +27,7 @@ namespace EventCore {
 	#define ASSERTS_ENABLED 1
 	#define NORMAL_LOGGING 1
 #elif defined BUILD_Release
+	#define MINIMAL_LOGGING 1
 #else
 	#error "Build configuration defines not provided!"
 #endif
@@ -41,12 +42,14 @@ namespace EventCore {
 			__FILE__ , __FUNCTION__, __LINE__, msg)
 #elif NORMAL_LOGGING
 	#define _LOGF(level, fmt, ...) \
-		::EventCore::Logger::Get()->##level(fmt, __VA_ARGS__)
+		::EventCore::Logger::Get()->##level("{}()#{}: " fmt, \
+			__FUNCTION__, __LINE__, __VA_ARGS__)
 	#define _LOG(level, msg) \
-		::EventCore::Logger::Get()->##level(msg)
-#else // The logging; it does nothing.
-	#define _LOGF(level, fmt, ...)
-	#define _LOG(level, msg)
+		::EventCore::Logger::Get()->##level("{}()#{}: {}", \
+			__FUNCTION__, __LINE__, msg)
+#else
+	#define _LOGF(level, fmt, ...) ::EventCore::Logger::Get()->##level(fmt, __VA_ARGS__)
+	#define _LOG(level, msg) ::EventCore::Logger::Get()->##level(msg)
 #endif
 	   
 #define LOGF_TRACE(fmt, ...)    _LOGF(trace, fmt, __VA_ARGS__)

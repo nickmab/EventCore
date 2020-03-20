@@ -1,6 +1,5 @@
 #include "EventPrinter.h"
-
-#include <iostream>
+#include "Core/Logger.h"
 
 namespace EventCore {
 
@@ -11,7 +10,7 @@ namespace EventCore {
 	
 	void EventPrinter::OnEvent(const Event& evt)
 	{
-		std::cout << "EventPrinter says... " << evt.ToString() << std::endl;
+		LOGF_INFO("EventPrinter says: {}", evt.ToString());
 	}
 
 }

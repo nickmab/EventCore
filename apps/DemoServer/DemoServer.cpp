@@ -5,8 +5,7 @@
 
 #include "Core/Events/Utility/OnTickProducer.h"
 #include "Core/Events/Utility/EventPrinter.h"
-
-#include <iostream>
+#include "Core/Logger.h"
 
 namespace EventCore {
 	Application* CreateApplication()
@@ -35,7 +34,7 @@ void DemoServer::Init()
 
 	if (!mServer.Init())
 	{
-		std::cout << "Could not initialize server; shutting down." << std::endl;
+		LOG_CRITICAL("Could not initialize server; shutting down.");
 		Shutdown(1);
 	}
 }
@@ -47,15 +46,14 @@ void DemoServer::OnUpdate()
 
 	if (secondsAlive.count() > mSecondsToStayAlive) 
 	{
-		std::cout << "The server has decided it's time to shutdown after " 
-				  << mSecondsToStayAlive << " seconds. Bad luck, son." << std::endl;
+		LOGF_WARN("The server has decided it's time to shutdown after {} seconds. Bad luck, son.", mSecondsToStayAlive);
 		Shutdown();
 	}
 
 	// temporary crappy hack...
 	if (!mServer.OnUpdate())
 	{
-		std::cout << "Encountered some kind of error in server; shutting down." << std::endl;
+		LOG_CRITICAL("Encountered some kind of error in server; shutting down.");
 		Shutdown(1);
 	}
 }
