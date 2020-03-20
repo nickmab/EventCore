@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set (LIB_NAME "EventCoreLib")
 
 set (THIS_DIR ${CMAKE_CURRENT_LIST_DIR})
-include_directories(${THIS_DIR})
+include_directories(${THIS_DIR} "${CMAKE_SOURCE_DIR}/vendor/spdlog/include")
 
 file (GLOB_RECURSE ALL_SRC "*.cpp")
 add_library(${LIB_NAME} STATIC ${ALL_SRC})

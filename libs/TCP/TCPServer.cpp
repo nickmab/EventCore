@@ -165,10 +165,11 @@ namespace EventCore {
 	{
 		// the mClientSessions going out of scope should automatically call destructors to free memory...
 		shutdown(mListeningSocket, SD_BOTH);
-		BOOL optVal = TRUE;
 		// Try to do a graceful disconnect ...but doesn't seem to work very well.
-		const int optLen = sizeof(BOOL);
+		const int optVal = 1000;
+		const int optLen = sizeof(int);
 		setsockopt(mListeningSocket, SOL_SOCKET, SO_DONTLINGER, (char*)&optVal, optLen);
+		std::cout << "Lingering..." << std::endl;
 		closesocket(mListeningSocket);
 		WSACleanup();
 		mRunning = false;

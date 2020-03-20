@@ -18,9 +18,10 @@ namespace EventCore {
 		ClearRecvBuffer();
 		delete[] mRecvBuffer;
 		// Try to do a graceful disconnect ...but doesn't seem to work very well.
-		BOOL optVal = TRUE;
-		const int optLen = sizeof(BOOL);
-		setsockopt(mSocket, SOL_SOCKET, SO_DONTLINGER, (char*)&optVal, optLen);
+		const int optVal = 1000;
+		const int optLen = sizeof(int);
+		std::cout << "Lingering..." << std::endl;
+		setsockopt(mSocket, SOL_SOCKET, SO_LINGER, (char*)&optVal, optLen);
 		closesocket(mSocket);
 	}
 

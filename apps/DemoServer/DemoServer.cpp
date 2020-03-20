@@ -11,7 +11,7 @@
 namespace EventCore {
 	Application* CreateApplication()
 	{
-		return new ::DemoServer(20);
+		return new ::DemoServer(10);
 	}
 }
 
