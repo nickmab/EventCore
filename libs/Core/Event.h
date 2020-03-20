@@ -20,7 +20,7 @@ namespace EventCore {
 			// Insert events in here. "Begin" and "End" are used just for iteration.
 			OnTick,
 			TCPClientConnected,
-			TCPClientDisonnected,
+			TCPClientDisconnected,
 			
 			// Insert events in the section above. "Begin" and "End" are used just for iteration.
 			End

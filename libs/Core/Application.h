@@ -25,16 +25,16 @@ namespace EventCore {
 	private:
 		static Application* sInstance;
 		
+		virtual void Init() = 0;
+		virtual void OnUpdate() = 0;
+
+		void Run();
+
 		bool mIsRunning{ true };
 		int mExitCode{0};
 
 		EventQueue mEventQueue;
 		std::vector<std::shared_ptr<EventProducer> > mEventProducers;
-						
-		virtual void Init() = 0;
-		virtual void OnUpdate() = 0;
-		
-		void Run();		
 	};
 
 	// Application must be subclassed by an app that uses this class, 

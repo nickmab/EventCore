@@ -1,10 +1,10 @@
 ﻿// EventCore.cpp : Defines the entry point for the application.
 //
 
-#include "Demo1.h"
+#include "DemoApp.h"
 
 #include "Core/Events/Utility/OnTickProducer.h"
-#include "Core/Events/Utility//EventPrinter.h"
+#include "Core/Events/Utility/EventPrinter.h"
 
 #include <iostream>
 
