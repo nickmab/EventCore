@@ -11,3 +11,6 @@ file (GLOB_RECURSE ALL_SRC "*.cpp")
 add_library(${LIB_NAME} STATIC ${ALL_SRC})
 target_link_libraries(${LIB_NAME} ws2_32.lib)
 set_target_properties (${LIB_NAME} PROPERTIES LIB_ROOT_DIR ${THIS_DIR})
+
+add_subdirectory ("Core")
+add_subdirectory ("TCP")

@@ -1,5 +1,9 @@
 #pragma once
 
+#ifndef _WIN32
+	#error "Project currently only supports Windows, sorry."
+#endif
+
 #include "Event.h"
 #include "Logger.h"
 
