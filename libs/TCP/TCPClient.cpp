@@ -4,6 +4,8 @@
 
 #include <sstream>
 
+#include "Proto/DemoProto/DemoProto.pb.h"
+
 namespace EventCore {
 
 	TCPClient::TCPClient(const char* serverAddr, USHORT serverPort)
@@ -60,6 +62,17 @@ namespace EventCore {
 		mInitialized = true;
 		mRunning = true;
 		QueueWriteData("Hello from a client!");
+		demoproto::NumericMessage msg;
+		msg.set_an_integer(6123);
+		msg.set_a_double(42.1);
+		std::string debug = msg.DebugString();
+		QueueWriteData(debug);
+		std::string strOut;
+		msg.SerializeToString(&strOut);
+		std::cout << strOut << std::endl;
+		std::cout << strOut.length() << std::endl;
+		std::cout << strOut.size() << std::endl;
+		QueueWriteData(strOut);
 		return true;
 	}
 
@@ -74,6 +87,7 @@ namespace EventCore {
 		// First see if we have anything queued to write out to existing clients.
 		for (auto& str : mQueuedWriteData)
 		{
+			LOGF_TRACE("Try to send: {}", str);
 			if (!mServerSession->Send(str))
 			{
 				LOG_CRITICAL("Some kind of error sending data to server. Shutting down.");
@@ -112,6 +126,7 @@ namespace EventCore {
 
 	void TCPClient::QueueWriteData(const std::string& data)
 	{
+		LOGF_TRACE("Queueing: {}", data);
 		mQueuedWriteData.emplace_back(data);
 	}
 

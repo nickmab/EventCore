@@ -2,6 +2,12 @@ syntax = "proto3";
 
 package demoproto;
 
-message Example {
-	int32 aNumber = 1;
+message NumericMessage {
+	int32 an_integer = 1;
+	double a_double = 2;
+}
+
+message TextualMessage {
+	bool is_interesting = 1;
+	string a_sentence = 2;
 }

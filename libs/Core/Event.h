@@ -21,6 +21,7 @@ namespace EventCore {
 			OnTick,
 			TCPClientConnected,
 			TCPClientDisconnected,
+			OnDemoProtoMessage,
 			
 			// Insert events in the section above. "Begin" and "End" are used just for iteration.
 			End

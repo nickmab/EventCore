@@ -52,6 +52,8 @@ namespace EventCore {
 				mRecvBufSize - mNumBytesInRecvBuffer,
 				recvFlags);
 
+			LOGF_TRACE("recv buffer: {}", std::string(mRecvBuffer, mRecvBufSize));
+
 			if (bytesOrError == 0)
 			{
 				LOG_INFO("The other side has disconnected gracefully.");
@@ -75,11 +77,17 @@ namespace EventCore {
 
 	std::string TCPSession::GetAllRecvBufferContents()
 	{
+		LOGF_TRACE("Printing recv buf... {}", std::string(mRecvBuffer));
 		LOGF_TRACE("Bytes in buffer: {}", mNumBytesInRecvBuffer);
-		std::string returnString(mRecvBuffer);
+		std::string s1(mRecvBuffer);
+		LOGF_TRACE("s1 length is {}", s1.length());
+		std::string returnStr(mRecvBuffer, mNumBytesInRecvBuffer);
+		LOGF_TRACE("returnStr length is {}", returnStr.length());
+		LOGF_TRACE("returnStr {}", returnStr);
 		ClearRecvBuffer();
 		LOGF_TRACE("Bytes in buffer should now be zero: {}", mNumBytesInRecvBuffer);
-		return returnString;
+		LOG_TRACE(returnStr);
+		return returnStr;
 	}
 
 	bool TCPSession::Send(const std::string& data, int sendFlags)
@@ -87,6 +95,8 @@ namespace EventCore {
 		unsigned short attemptCount = 0;
 		int totalBytesSent = 0;
 		const int totalBytesToSend = data.size() + 1;
+		LOGF_TRACE("Bytes to send: {}", totalBytesToSend);
+		LOGF_TRACE("Data: {}", data);
 		
 		while (attemptCount++ < MAX_WRITE_ATTEMPTS)
 		{

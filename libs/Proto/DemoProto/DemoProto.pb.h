@@ -47,7 +47,7 @@ struct TableStruct_DemoProto_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxillaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[1]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[2]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -55,34 +55,38 @@ struct TableStruct_DemoProto_2eproto {
 };
 extern const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_DemoProto_2eproto;
 namespace demoproto {
-class Example;
-class ExampleDefaultTypeInternal;
-extern ExampleDefaultTypeInternal _Example_default_instance_;
+class NumericMessage;
+class NumericMessageDefaultTypeInternal;
+extern NumericMessageDefaultTypeInternal _NumericMessage_default_instance_;
+class TextualMessage;
+class TextualMessageDefaultTypeInternal;
+extern TextualMessageDefaultTypeInternal _TextualMessage_default_instance_;
 }  // namespace demoproto
 PROTOBUF_NAMESPACE_OPEN
-template<> ::demoproto::Example* Arena::CreateMaybeMessage<::demoproto::Example>(Arena*);
+template<> ::demoproto::NumericMessage* Arena::CreateMaybeMessage<::demoproto::NumericMessage>(Arena*);
+template<> ::demoproto::TextualMessage* Arena::CreateMaybeMessage<::demoproto::TextualMessage>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 namespace demoproto {
 
 // ===================================================================
 
-class Example :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:demoproto.Example) */ {
+class NumericMessage :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:demoproto.NumericMessage) */ {
  public:
-  Example();
-  virtual ~Example();
+  NumericMessage();
+  virtual ~NumericMessage();
 
-  Example(const Example& from);
-  Example(Example&& from) noexcept
-    : Example() {
+  NumericMessage(const NumericMessage& from);
+  NumericMessage(NumericMessage&& from) noexcept
+    : NumericMessage() {
     *this = ::std::move(from);
   }
 
-  inline Example& operator=(const Example& from) {
+  inline NumericMessage& operator=(const NumericMessage& from) {
     CopyFrom(from);
     return *this;
   }
-  inline Example& operator=(Example&& from) noexcept {
+  inline NumericMessage& operator=(NumericMessage&& from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -100,37 +104,37 @@ class Example :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return GetMetadataStatic().reflection;
   }
-  static const Example& default_instance();
+  static const NumericMessage& default_instance();
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const Example* internal_default_instance() {
-    return reinterpret_cast<const Example*>(
-               &_Example_default_instance_);
+  static inline const NumericMessage* internal_default_instance() {
+    return reinterpret_cast<const NumericMessage*>(
+               &_NumericMessage_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     0;
 
-  friend void swap(Example& a, Example& b) {
+  friend void swap(NumericMessage& a, NumericMessage& b) {
     a.Swap(&b);
   }
-  inline void Swap(Example* other) {
+  inline void Swap(NumericMessage* other) {
     if (other == this) return;
     InternalSwap(other);
   }
 
   // implements Message ----------------------------------------------
 
-  inline Example* New() const final {
-    return CreateMaybeMessage<Example>(nullptr);
+  inline NumericMessage* New() const final {
+    return CreateMaybeMessage<NumericMessage>(nullptr);
   }
 
-  Example* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<Example>(arena);
+  NumericMessage* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<NumericMessage>(arena);
   }
   void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
   void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
-  void CopyFrom(const Example& from);
-  void MergeFrom(const Example& from);
+  void CopyFrom(const NumericMessage& from);
+  void MergeFrom(const NumericMessage& from);
   PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
   bool IsInitialized() const final;
 
@@ -144,10 +148,10 @@ class Example :
   inline void SharedCtor();
   inline void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(Example* other);
+  void InternalSwap(NumericMessage* other);
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "demoproto.Example";
+    return "demoproto.NumericMessage";
   }
   private:
   inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
@@ -172,23 +176,180 @@ class Example :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kANumberFieldNumber = 1,
+    kADoubleFieldNumber = 2,
+    kAnIntegerFieldNumber = 1,
   };
-  // int32 aNumber = 1;
-  void clear_anumber();
-  ::PROTOBUF_NAMESPACE_ID::int32 anumber() const;
-  void set_anumber(::PROTOBUF_NAMESPACE_ID::int32 value);
+  // double a_double = 2;
+  void clear_a_double();
+  double a_double() const;
+  void set_a_double(double value);
   private:
-  ::PROTOBUF_NAMESPACE_ID::int32 _internal_anumber() const;
-  void _internal_set_anumber(::PROTOBUF_NAMESPACE_ID::int32 value);
+  double _internal_a_double() const;
+  void _internal_set_a_double(double value);
   public:
 
-  // @@protoc_insertion_point(class_scope:demoproto.Example)
+  // int32 an_integer = 1;
+  void clear_an_integer();
+  ::PROTOBUF_NAMESPACE_ID::int32 an_integer() const;
+  void set_an_integer(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_an_integer() const;
+  void _internal_set_an_integer(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:demoproto.NumericMessage)
  private:
   class _Internal;
 
   ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
-  ::PROTOBUF_NAMESPACE_ID::int32 anumber_;
+  double a_double_;
+  ::PROTOBUF_NAMESPACE_ID::int32 an_integer_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_DemoProto_2eproto;
+};
+// -------------------------------------------------------------------
+
+class TextualMessage :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:demoproto.TextualMessage) */ {
+ public:
+  TextualMessage();
+  virtual ~TextualMessage();
+
+  TextualMessage(const TextualMessage& from);
+  TextualMessage(TextualMessage&& from) noexcept
+    : TextualMessage() {
+    *this = ::std::move(from);
+  }
+
+  inline TextualMessage& operator=(const TextualMessage& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline TextualMessage& operator=(TextualMessage&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const TextualMessage& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const TextualMessage* internal_default_instance() {
+    return reinterpret_cast<const TextualMessage*>(
+               &_TextualMessage_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    1;
+
+  friend void swap(TextualMessage& a, TextualMessage& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(TextualMessage* other) {
+    if (other == this) return;
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline TextualMessage* New() const final {
+    return CreateMaybeMessage<TextualMessage>(nullptr);
+  }
+
+  TextualMessage* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<TextualMessage>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const TextualMessage& from);
+  void MergeFrom(const TextualMessage& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(TextualMessage* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "demoproto.TextualMessage";
+  }
+  private:
+  inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
+    return nullptr;
+  }
+  inline void* MaybeArenaPtr() const {
+    return nullptr;
+  }
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_DemoProto_2eproto);
+    return ::descriptor_table_DemoProto_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kASentenceFieldNumber = 2,
+    kIsInterestingFieldNumber = 1,
+  };
+  // string a_sentence = 2;
+  void clear_a_sentence();
+  const std::string& a_sentence() const;
+  void set_a_sentence(const std::string& value);
+  void set_a_sentence(std::string&& value);
+  void set_a_sentence(const char* value);
+  void set_a_sentence(const char* value, size_t size);
+  std::string* mutable_a_sentence();
+  std::string* release_a_sentence();
+  void set_allocated_a_sentence(std::string* a_sentence);
+  private:
+  const std::string& _internal_a_sentence() const;
+  void _internal_set_a_sentence(const std::string& value);
+  std::string* _internal_mutable_a_sentence();
+  public:
+
+  // bool is_interesting = 1;
+  void clear_is_interesting();
+  bool is_interesting() const;
+  void set_is_interesting(bool value);
+  private:
+  bool _internal_is_interesting() const;
+  void _internal_set_is_interesting(bool value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:demoproto.TextualMessage)
+ private:
+  class _Internal;
+
+  ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr a_sentence_;
+  bool is_interesting_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_DemoProto_2eproto;
 };
@@ -201,31 +362,137 @@ class Example :
   #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif  // __GNUC__
-// Example
+// NumericMessage
 
-// int32 aNumber = 1;
-inline void Example::clear_anumber() {
-  anumber_ = 0;
+// int32 an_integer = 1;
+inline void NumericMessage::clear_an_integer() {
+  an_integer_ = 0;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 Example::_internal_anumber() const {
-  return anumber_;
+inline ::PROTOBUF_NAMESPACE_ID::int32 NumericMessage::_internal_an_integer() const {
+  return an_integer_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 Example::anumber() const {
-  // @@protoc_insertion_point(field_get:demoproto.Example.aNumber)
-  return _internal_anumber();
+inline ::PROTOBUF_NAMESPACE_ID::int32 NumericMessage::an_integer() const {
+  // @@protoc_insertion_point(field_get:demoproto.NumericMessage.an_integer)
+  return _internal_an_integer();
 }
-inline void Example::_internal_set_anumber(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void NumericMessage::_internal_set_an_integer(::PROTOBUF_NAMESPACE_ID::int32 value) {
   
-  anumber_ = value;
+  an_integer_ = value;
 }
-inline void Example::set_anumber(::PROTOBUF_NAMESPACE_ID::int32 value) {
-  _internal_set_anumber(value);
-  // @@protoc_insertion_point(field_set:demoproto.Example.aNumber)
+inline void NumericMessage::set_an_integer(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_an_integer(value);
+  // @@protoc_insertion_point(field_set:demoproto.NumericMessage.an_integer)
+}
+
+// double a_double = 2;
+inline void NumericMessage::clear_a_double() {
+  a_double_ = 0;
+}
+inline double NumericMessage::_internal_a_double() const {
+  return a_double_;
+}
+inline double NumericMessage::a_double() const {
+  // @@protoc_insertion_point(field_get:demoproto.NumericMessage.a_double)
+  return _internal_a_double();
+}
+inline void NumericMessage::_internal_set_a_double(double value) {
+  
+  a_double_ = value;
+}
+inline void NumericMessage::set_a_double(double value) {
+  _internal_set_a_double(value);
+  // @@protoc_insertion_point(field_set:demoproto.NumericMessage.a_double)
+}
+
+// -------------------------------------------------------------------
+
+// TextualMessage
+
+// bool is_interesting = 1;
+inline void TextualMessage::clear_is_interesting() {
+  is_interesting_ = false;
+}
+inline bool TextualMessage::_internal_is_interesting() const {
+  return is_interesting_;
+}
+inline bool TextualMessage::is_interesting() const {
+  // @@protoc_insertion_point(field_get:demoproto.TextualMessage.is_interesting)
+  return _internal_is_interesting();
+}
+inline void TextualMessage::_internal_set_is_interesting(bool value) {
+  
+  is_interesting_ = value;
+}
+inline void TextualMessage::set_is_interesting(bool value) {
+  _internal_set_is_interesting(value);
+  // @@protoc_insertion_point(field_set:demoproto.TextualMessage.is_interesting)
+}
+
+// string a_sentence = 2;
+inline void TextualMessage::clear_a_sentence() {
+  a_sentence_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline const std::string& TextualMessage::a_sentence() const {
+  // @@protoc_insertion_point(field_get:demoproto.TextualMessage.a_sentence)
+  return _internal_a_sentence();
+}
+inline void TextualMessage::set_a_sentence(const std::string& value) {
+  _internal_set_a_sentence(value);
+  // @@protoc_insertion_point(field_set:demoproto.TextualMessage.a_sentence)
+}
+inline std::string* TextualMessage::mutable_a_sentence() {
+  // @@protoc_insertion_point(field_mutable:demoproto.TextualMessage.a_sentence)
+  return _internal_mutable_a_sentence();
+}
+inline const std::string& TextualMessage::_internal_a_sentence() const {
+  return a_sentence_.GetNoArena();
+}
+inline void TextualMessage::_internal_set_a_sentence(const std::string& value) {
+  
+  a_sentence_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
+}
+inline void TextualMessage::set_a_sentence(std::string&& value) {
+  
+  a_sentence_.SetNoArena(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:demoproto.TextualMessage.a_sentence)
+}
+inline void TextualMessage::set_a_sentence(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  a_sentence_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:demoproto.TextualMessage.a_sentence)
+}
+inline void TextualMessage::set_a_sentence(const char* value, size_t size) {
+  
+  a_sentence_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:demoproto.TextualMessage.a_sentence)
+}
+inline std::string* TextualMessage::_internal_mutable_a_sentence() {
+  
+  return a_sentence_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline std::string* TextualMessage::release_a_sentence() {
+  // @@protoc_insertion_point(field_release:demoproto.TextualMessage.a_sentence)
+  
+  return a_sentence_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline void TextualMessage::set_allocated_a_sentence(std::string* a_sentence) {
+  if (a_sentence != nullptr) {
+    
+  } else {
+    
+  }
+  a_sentence_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), a_sentence);
+  // @@protoc_insertion_point(field_set_allocated:demoproto.TextualMessage.a_sentence)
 }
 
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 
 // @@protoc_insertion_point(namespace_scope)
 

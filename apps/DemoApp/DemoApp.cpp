@@ -13,9 +13,10 @@
 namespace EventCore {
 	Application* CreateApplication()
 	{
-		demoproto::Example e;
-		e.set_anumber(6123);
-		std::cout << e.anumber() << std::endl;
+		demoproto::NumericMessage msg;
+		msg.set_an_integer(6123);
+		msg.set_a_double(42.1);
+		std::cout << msg.DebugString() << std::endl;
 		return new ::DemoApp(7);
 	}
 }
