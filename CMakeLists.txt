@@ -9,7 +9,11 @@ if (NOT WIN32)
 	message (FATAL_ERROR "Project currently only supports Windows.")
 endif ()
 
+set (SPDLOG_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/vendor/spdlog/include")
+set (PROTOBUF_INCLUDE_DIR "C:/Dev/protobuf/include")
+
 add_compile_definitions (GOOGLE_PROTOBUF_NO_THREAD_SAFETY)
+
 if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
 	add_compile_definitions (BUILD_Debug)
 elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")

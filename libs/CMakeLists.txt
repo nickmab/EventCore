@@ -13,13 +13,10 @@ find_library (PROTOBUF_LIB
               NO_DEFAULT_PATH
               )
 
-MESSAGE (STATUS ${PROTOBUF_LIBS})
-
-include_directories(${THIS_DIR} "${CMAKE_SOURCE_DIR}/vendor/spdlog/include" "C:/Dev/protobuf/include")
+include_directories(${THIS_DIR} ${SPDLOG_INCLUDE_DIR} ${PROTOBUF_INCLUDE_DIR})
 
 file (GLOB_RECURSE ALL_SRC "*.cpp" "*.cc")
 add_library(${LIB_NAME} STATIC ${ALL_SRC})
-# target_link_libraries(${LIB_NAME} ws2_32.lib)
 target_link_libraries(${LIB_NAME} ws2_32.lib ${PROTOBUF_LIB})
 set_target_properties (${LIB_NAME} PROPERTIES LIB_ROOT_DIR ${THIS_DIR})
 
