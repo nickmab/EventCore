@@ -1,6 +1,6 @@
-﻿# CMakeList.txt : Top-level CMake project file, do global configuration
-# and include sub-projects here.
-#
+﻿# I'm going to apologise in advance for how badly protobuf is handled
+# in this project...I am an amateur obviously.
+
 cmake_minimum_required (VERSION 3.15)
 
 project ("EventCore")
