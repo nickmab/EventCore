@@ -1,7 +1,14 @@
 #include "Application.h"
 
+#include <string>
+#include <iostream>
+#include "Proto/DemoProto/DemoProto.pb.h"
+
 int main(int argc, char* argv[])
 {
+	demoproto::Example e;
+	e.set_anumber(6123);
+	std::cout << e.anumber() << std::endl;
 	return EventCore::EntryPoint::MainFunction(argc, argv);
 }
 

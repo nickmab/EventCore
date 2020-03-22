@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package demoproto;
+
+message Example {
+	int32 aNumber = 1;
+}

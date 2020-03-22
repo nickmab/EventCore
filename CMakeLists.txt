@@ -9,6 +9,7 @@ if (NOT WIN32)
 	message (FATAL_ERROR "Project currently only supports Windows.")
 endif ()
 
+add_compile_definitions (GOOGLE_PROTOBUF_NO_THREAD_SAFETY)
 if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
 	add_compile_definitions (BUILD_Debug)
 elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
@@ -18,6 +19,8 @@ elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 else ()
 	message (FATAL_ERROR "Build configuration '${CMAKE_BUILD_TYPE}' not supported.")
 endif ()
+
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 # Include sub-projects.
 add_subdirectory ("libs")

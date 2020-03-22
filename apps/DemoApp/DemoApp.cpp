@@ -7,9 +7,15 @@
 #include "Core/Events/Utility/EventPrinter.h"
 #include "Core/Logger.h"
 
+#include <Proto/DemoProto/DemoProto.pb.h>
+#include <iostream>
+
 namespace EventCore {
 	Application* CreateApplication()
 	{
+		demoproto::Example e;
+		e.set_anumber(6123);
+		std::cout << e.anumber() << std::endl;
 		return new ::DemoApp(7);
 	}
 }
