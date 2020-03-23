@@ -86,7 +86,7 @@ namespace EventCore {
 			return false;
 		}
 
-		if (!mParser.WriteTo(*mServerSession))
+		if (mParser.HasData() && !mParser.WriteTo(*mServerSession))
 		{
 			LOG_CRITICAL("Some kind of error sending data to server. Shutting down.");
 			Shutdown();

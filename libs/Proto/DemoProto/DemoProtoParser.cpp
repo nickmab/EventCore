@@ -118,10 +118,8 @@ namespace EventCore {
 	{
 		LOG_WARN("Writeto...");
 		std::string data(mOutputBuffer.str());
-		mOutputBuffer.clear();
-		if (!data.empty())
-			return session.Send(data);
-		return true;
+		mOutputBuffer.str(std::string()); // this is how you clear a stringstream.
+		return session.Send(data);
 	}
 
 	void DemoProtoParser::OnNumericMessage(const NumericMessage& msg) const

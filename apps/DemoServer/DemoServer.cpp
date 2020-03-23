@@ -10,16 +10,11 @@
 namespace EventCore {
 	Application* CreateApplication()
 	{
-		return new ::DemoServer(10);
+		return new ::DemoServer();
 	}
 }
 
 using namespace EventCore;
-
-DemoServer::DemoServer(double secondsToStayAlive)
-	: mSecondsToStayAlive(secondsToStayAlive)
-	, mApplicationStartTime(std::chrono::system_clock::now())
-{}
 
 void DemoServer::Init()
 {
@@ -41,16 +36,6 @@ void DemoServer::Init()
 
 void DemoServer::OnUpdate()
 {
-	auto now = std::chrono::system_clock::now();
-	std::chrono::duration<double> secondsAlive = now - mApplicationStartTime;
-
-	if (secondsAlive.count() > mSecondsToStayAlive) 
-	{
-		LOGF_WARN("The server has decided it's time to shutdown after {} seconds. Bad luck, son.", mSecondsToStayAlive);
-		Shutdown();
-	}
-
-	// temporary crappy hack...
 	if (!mServer.OnUpdate())
 	{
 		LOG_CRITICAL("Encountered some kind of error in server; shutting down.");

@@ -4,6 +4,7 @@
 #include "TCP/TCPSession.h"
 #include "DemoProto.pb.h"
 
+#include <iostream>
 #include <sstream>
 #include <variant>
 
@@ -21,6 +22,8 @@ namespace EventCore {
 		bool ConsumeFrom(TCPSession&);
 		bool QueueMessageToWrite(const MsgVariant&);
 		bool WriteTo(TCPSession&);
+
+		inline bool HasData() { return mOutputBuffer.peek() != std::char_traits<char>::eof(); }
 
 	private:
 		// these are used for i/o buffering and caching, saves you

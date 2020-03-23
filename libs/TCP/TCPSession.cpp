@@ -52,7 +52,8 @@ namespace EventCore {
 				mRecvBufSize - mNumBytesInRecvBuffer,
 				recvFlags);
 
-			LOGF_TRACE("recv buffer: {}", std::string(mRecvBuffer, mRecvBufSize));
+			//if (bytesOrError > 0)
+			//	LOGF_TRACE("BADWRONG: {}", std::string(mRecvBuffer, mRecvBufSize));
 
 			if (bytesOrError == 0)
 			{
@@ -77,11 +78,8 @@ namespace EventCore {
 
 	std::string TCPSession::GetAllRecvBufferContents()
 	{
-		LOGF_TRACE("Bytes in buffer: {}", mNumBytesInRecvBuffer);
 		std::string returnStr(mRecvBuffer, mNumBytesInRecvBuffer);
-		LOGF_TRACE("returnStr length is {}", returnStr.length());
 		ClearRecvBuffer();
-		LOGF_TRACE("Bytes in buffer should now be zero: {}", mNumBytesInRecvBuffer);
 		return returnStr;
 	}
 
@@ -130,8 +128,8 @@ namespace EventCore {
 		}
 		
 		char* newRecvBuffer = new char[newRecvBufSize];
-		ZeroMemory(newRecvBuffer, newRecvBufSize);
-		CopyMemory(newRecvBuffer, mRecvBuffer, mNumBytesInRecvBuffer);
+		memset(newRecvBuffer, '\0', newRecvBufSize);
+		memcpy(newRecvBuffer, mRecvBuffer, mNumBytesInRecvBuffer);
 		delete[] mRecvBuffer;
 		mRecvBuffer = newRecvBuffer;
 		mRecvBufSize = newRecvBufSize;
@@ -140,7 +138,7 @@ namespace EventCore {
 
 	void TCPSession::ClearRecvBuffer()
 	{
-		ZeroMemory(mRecvBuffer, mRecvBufSize);
+		memset(mRecvBuffer, '\0', mRecvBufSize);
 		mNumBytesInRecvBuffer = 0;
 	}
 }

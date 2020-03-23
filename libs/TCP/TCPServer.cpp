@@ -88,7 +88,7 @@ namespace EventCore {
 		{
 			auto& session = sockAndData.second.mSession;
 			auto& parser = sockAndData.second.mParser;
-			if (!parser.WriteTo(session))
+			if (parser.HasData() && !parser.WriteTo(session))
 			{
 				LOG_WARN("Error trying to write to client; dropping it.");
 				clientsToDrop.push_back(sockAndData.first);
