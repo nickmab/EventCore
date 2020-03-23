@@ -47,7 +47,7 @@ struct TableStruct_DemoProto_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxillaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[2]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[3]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -61,10 +61,14 @@ extern NumericMessageDefaultTypeInternal _NumericMessage_default_instance_;
 class TextualMessage;
 class TextualMessageDefaultTypeInternal;
 extern TextualMessageDefaultTypeInternal _TextualMessage_default_instance_;
+class WrappedMessage;
+class WrappedMessageDefaultTypeInternal;
+extern WrappedMessageDefaultTypeInternal _WrappedMessage_default_instance_;
 }  // namespace demoproto
 PROTOBUF_NAMESPACE_OPEN
 template<> ::demoproto::NumericMessage* Arena::CreateMaybeMessage<::demoproto::NumericMessage>(Arena*);
 template<> ::demoproto::TextualMessage* Arena::CreateMaybeMessage<::demoproto::TextualMessage>(Arena*);
+template<> ::demoproto::WrappedMessage* Arena::CreateMaybeMessage<::demoproto::WrappedMessage>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 namespace demoproto {
 
@@ -353,6 +357,175 @@ class TextualMessage :
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_DemoProto_2eproto;
 };
+// -------------------------------------------------------------------
+
+class WrappedMessage :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:demoproto.WrappedMessage) */ {
+ public:
+  WrappedMessage();
+  virtual ~WrappedMessage();
+
+  WrappedMessage(const WrappedMessage& from);
+  WrappedMessage(WrappedMessage&& from) noexcept
+    : WrappedMessage() {
+    *this = ::std::move(from);
+  }
+
+  inline WrappedMessage& operator=(const WrappedMessage& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline WrappedMessage& operator=(WrappedMessage&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const WrappedMessage& default_instance();
+
+  enum MsgCase {
+    kNumericMessage = 1,
+    kTextualMessage = 2,
+    MSG_NOT_SET = 0,
+  };
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const WrappedMessage* internal_default_instance() {
+    return reinterpret_cast<const WrappedMessage*>(
+               &_WrappedMessage_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    2;
+
+  friend void swap(WrappedMessage& a, WrappedMessage& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(WrappedMessage* other) {
+    if (other == this) return;
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline WrappedMessage* New() const final {
+    return CreateMaybeMessage<WrappedMessage>(nullptr);
+  }
+
+  WrappedMessage* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<WrappedMessage>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const WrappedMessage& from);
+  void MergeFrom(const WrappedMessage& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(WrappedMessage* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "demoproto.WrappedMessage";
+  }
+  private:
+  inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
+    return nullptr;
+  }
+  inline void* MaybeArenaPtr() const {
+    return nullptr;
+  }
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_DemoProto_2eproto);
+    return ::descriptor_table_DemoProto_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kNumericMessageFieldNumber = 1,
+    kTextualMessageFieldNumber = 2,
+  };
+  // .demoproto.NumericMessage numeric_message = 1;
+  bool has_numeric_message() const;
+  private:
+  bool _internal_has_numeric_message() const;
+  public:
+  void clear_numeric_message();
+  const ::demoproto::NumericMessage& numeric_message() const;
+  ::demoproto::NumericMessage* release_numeric_message();
+  ::demoproto::NumericMessage* mutable_numeric_message();
+  void set_allocated_numeric_message(::demoproto::NumericMessage* numeric_message);
+  private:
+  const ::demoproto::NumericMessage& _internal_numeric_message() const;
+  ::demoproto::NumericMessage* _internal_mutable_numeric_message();
+  public:
+
+  // .demoproto.TextualMessage textual_message = 2;
+  bool has_textual_message() const;
+  private:
+  bool _internal_has_textual_message() const;
+  public:
+  void clear_textual_message();
+  const ::demoproto::TextualMessage& textual_message() const;
+  ::demoproto::TextualMessage* release_textual_message();
+  ::demoproto::TextualMessage* mutable_textual_message();
+  void set_allocated_textual_message(::demoproto::TextualMessage* textual_message);
+  private:
+  const ::demoproto::TextualMessage& _internal_textual_message() const;
+  ::demoproto::TextualMessage* _internal_mutable_textual_message();
+  public:
+
+  void clear_msg();
+  MsgCase msg_case() const;
+  // @@protoc_insertion_point(class_scope:demoproto.WrappedMessage)
+ private:
+  class _Internal;
+  void set_has_numeric_message();
+  void set_has_textual_message();
+
+  inline bool has_msg() const;
+  inline void clear_has_msg();
+
+  ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
+  union MsgUnion {
+    MsgUnion() {}
+    ::demoproto::NumericMessage* numeric_message_;
+    ::demoproto::TextualMessage* textual_message_;
+  } msg_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  ::PROTOBUF_NAMESPACE_ID::uint32 _oneof_case_[1];
+
+  friend struct ::TableStruct_DemoProto_2eproto;
+};
 // ===================================================================
 
 
@@ -488,9 +661,124 @@ inline void TextualMessage::set_allocated_a_sentence(std::string* a_sentence) {
   // @@protoc_insertion_point(field_set_allocated:demoproto.TextualMessage.a_sentence)
 }
 
+// -------------------------------------------------------------------
+
+// WrappedMessage
+
+// .demoproto.NumericMessage numeric_message = 1;
+inline bool WrappedMessage::_internal_has_numeric_message() const {
+  return msg_case() == kNumericMessage;
+}
+inline bool WrappedMessage::has_numeric_message() const {
+  return _internal_has_numeric_message();
+}
+inline void WrappedMessage::set_has_numeric_message() {
+  _oneof_case_[0] = kNumericMessage;
+}
+inline void WrappedMessage::clear_numeric_message() {
+  if (_internal_has_numeric_message()) {
+    delete msg_.numeric_message_;
+    clear_has_msg();
+  }
+}
+inline ::demoproto::NumericMessage* WrappedMessage::release_numeric_message() {
+  // @@protoc_insertion_point(field_release:demoproto.WrappedMessage.numeric_message)
+  if (_internal_has_numeric_message()) {
+    clear_has_msg();
+      ::demoproto::NumericMessage* temp = msg_.numeric_message_;
+    msg_.numeric_message_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::demoproto::NumericMessage& WrappedMessage::_internal_numeric_message() const {
+  return _internal_has_numeric_message()
+      ? *msg_.numeric_message_
+      : *reinterpret_cast< ::demoproto::NumericMessage*>(&::demoproto::_NumericMessage_default_instance_);
+}
+inline const ::demoproto::NumericMessage& WrappedMessage::numeric_message() const {
+  // @@protoc_insertion_point(field_get:demoproto.WrappedMessage.numeric_message)
+  return _internal_numeric_message();
+}
+inline ::demoproto::NumericMessage* WrappedMessage::_internal_mutable_numeric_message() {
+  if (!_internal_has_numeric_message()) {
+    clear_msg();
+    set_has_numeric_message();
+    msg_.numeric_message_ = CreateMaybeMessage< ::demoproto::NumericMessage >(
+        GetArenaNoVirtual());
+  }
+  return msg_.numeric_message_;
+}
+inline ::demoproto::NumericMessage* WrappedMessage::mutable_numeric_message() {
+  // @@protoc_insertion_point(field_mutable:demoproto.WrappedMessage.numeric_message)
+  return _internal_mutable_numeric_message();
+}
+
+// .demoproto.TextualMessage textual_message = 2;
+inline bool WrappedMessage::_internal_has_textual_message() const {
+  return msg_case() == kTextualMessage;
+}
+inline bool WrappedMessage::has_textual_message() const {
+  return _internal_has_textual_message();
+}
+inline void WrappedMessage::set_has_textual_message() {
+  _oneof_case_[0] = kTextualMessage;
+}
+inline void WrappedMessage::clear_textual_message() {
+  if (_internal_has_textual_message()) {
+    delete msg_.textual_message_;
+    clear_has_msg();
+  }
+}
+inline ::demoproto::TextualMessage* WrappedMessage::release_textual_message() {
+  // @@protoc_insertion_point(field_release:demoproto.WrappedMessage.textual_message)
+  if (_internal_has_textual_message()) {
+    clear_has_msg();
+      ::demoproto::TextualMessage* temp = msg_.textual_message_;
+    msg_.textual_message_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::demoproto::TextualMessage& WrappedMessage::_internal_textual_message() const {
+  return _internal_has_textual_message()
+      ? *msg_.textual_message_
+      : *reinterpret_cast< ::demoproto::TextualMessage*>(&::demoproto::_TextualMessage_default_instance_);
+}
+inline const ::demoproto::TextualMessage& WrappedMessage::textual_message() const {
+  // @@protoc_insertion_point(field_get:demoproto.WrappedMessage.textual_message)
+  return _internal_textual_message();
+}
+inline ::demoproto::TextualMessage* WrappedMessage::_internal_mutable_textual_message() {
+  if (!_internal_has_textual_message()) {
+    clear_msg();
+    set_has_textual_message();
+    msg_.textual_message_ = CreateMaybeMessage< ::demoproto::TextualMessage >(
+        GetArenaNoVirtual());
+  }
+  return msg_.textual_message_;
+}
+inline ::demoproto::TextualMessage* WrappedMessage::mutable_textual_message() {
+  // @@protoc_insertion_point(field_mutable:demoproto.WrappedMessage.textual_message)
+  return _internal_mutable_textual_message();
+}
+
+inline bool WrappedMessage::has_msg() const {
+  return msg_case() != MSG_NOT_SET;
+}
+inline void WrappedMessage::clear_has_msg() {
+  _oneof_case_[0] = MSG_NOT_SET;
+}
+inline WrappedMessage::MsgCase WrappedMessage::msg_case() const {
+  return WrappedMessage::MsgCase(_oneof_case_[0]);
+}
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 

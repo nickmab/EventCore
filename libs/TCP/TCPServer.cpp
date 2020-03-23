@@ -19,6 +19,11 @@ namespace EventCore {
 			Shutdown();
 	}
 
+	TCPServer::ClientDataInterface::ClientDataInterface(SOCKET sock, size_t initialRecvBufSize)
+		: mSession(sock, initialRecvBufSize)
+	{
+	}
+
 	bool TCPServer::Init()
 	{
 		if (mInitialized)
@@ -78,26 +83,23 @@ namespace EventCore {
 		}
 
 		// First see if we have anything queued to write out to existing clients.
-		for (auto& sockAndData : mQueuedWriteData)
+		std::vector<SOCKET> clientsToDrop;
+		for (auto& sockAndData : mClientMap)
 		{
-			auto tcpSession = mClientSessions.find(sockAndData.first);
-			if (tcpSession == mClientSessions.end())
+			auto& session = sockAndData.second.mSession;
+			auto& parser = sockAndData.second.mParser;
+			if (!parser.WriteTo(session))
 			{
-				LOG_WARN("Tried to write data to unknown socket/session! Skipping.");
-			}
-			else
-			{
-				if (!tcpSession->second->Send(sockAndData.second))
-				{
-					LOG_WARN("Error trying to write to client; dropping it.");
-					tcpSession->second.reset(nullptr);
-					FD_CLR(sockAndData.first, &mFDSet);
-					mClientSessions.erase(tcpSession);
-				}
+				LOG_WARN("Error trying to write to client; dropping it.");
+				clientsToDrop.push_back(sockAndData.first);
 			}
 		}
 
-		mQueuedWriteData.clear();
+		for (auto& sock : clientsToDrop)
+		{
+			mClientMap.erase(sock);
+			FD_CLR(sock, &mFDSet);
+		}
 
 		// Then we call "select" to see if there's any data anywhere.
 		fd_set copyOfExistingFDSet = mFDSet;
@@ -128,37 +130,58 @@ namespace EventCore {
 				}
 
 				FD_SET(newClient, &mFDSet);
-				QueueWriteData(newClient, "Hello from the server");
-				mClientSessions[newClient] = std::make_unique<TCPSession>(newClient);
+				mClientMap.emplace(newClient, newClient);
+				demoproto::TextualMessage msg;
+				msg.set_a_sentence("Hello from the server! Sending a number too...");
+				bool success = QueueWriteData(newClient, msg);
+				LOGF_WARN("Success? {}", success);
+				demoproto::NumericMessage msg2;
+				msg2.set_an_integer(12345);
+				msg2.set_a_double(-4483.9);
+				success = QueueWriteData(newClient, msg2);
+				LOGF_WARN("Success? {}", success);
 			}
 			else
 			{
 				// If we have data on an existing socket of an existing session, recv from it.
 				// As long as we can read without blocking (i.e. there is data there),
 				// keep filling up the session buffer...
-				auto tcpSession = mClientSessions.find(sock);
-				if (tcpSession == mClientSessions.end())
+				auto clientData = mClientMap.find(sock);
+				if (clientData == mClientMap.end())
 				{
 					LOG_WARN("Tried to read data from unknown socket/session!");
 				}
 				else
 				{
-					if (!tcpSession->second->Recv())
+					auto& session = clientData->second.mSession;
+					if (!session.Recv())
 					{
 						LOG_WARN("Some kind of error recv'ing from socket. Deleting client.");
 						FD_CLR(sock, &mFDSet);
-						mClientSessions.erase(tcpSession);
+						mClientMap.erase(sock);
 					}
-					else if (tcpSession->second->BufferHasData())
+					else if (session.BufferHasData())
 					{
-						LOG_INFO("Received the following from client...");
-						LOG_INFO(tcpSession->second->GetAllRecvBufferContents());
+						if (!clientData->second.mParser.ConsumeFrom(session))
+						{
+							LOG_ERROR("Some kind of error parsing socket data. Deleting client.");
+							FD_CLR(sock, &mFDSet);
+							mClientMap.erase(sock);
+						}
 					}
 				}
 			}
 		}		
 
 		return true;
+	}
+
+	bool TCPServer::QueueWriteData(SOCKET sock, const DemoProtoParser::MsgVariant& msg)
+	{
+		auto it = mClientMap.find(sock);
+		if (it == mClientMap.end())
+			return false;
+		return it->second.mParser.QueueMessageToWrite(msg);
 	}
 
 	void TCPServer::Shutdown()
@@ -175,8 +198,4 @@ namespace EventCore {
 		mShutdown = true;
 	}
 
-	void TCPServer::QueueWriteData(SOCKET sock, const std::string& data)
-	{
-		mQueuedWriteData.emplace(sock, data);
-	}
 }

@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "TCPSession.h"
+#include "Proto/DemoProto/DemoProtoParser.h"
 
 namespace EventCore {
 
@@ -33,17 +34,15 @@ namespace EventCore {
 		void Shutdown();
 
 		// temporary...
-		void QueueWriteData(const std::string&);
+		bool QueueWriteData(const DemoProtoParser::MsgVariant&);
 
 	private:
 		sockaddr_in mSockAddrIn;
 		std::unique_ptr<TCPSession> mServerSession;
+		DemoProtoParser mParser;
 		bool mInitialized{false};
 		bool mRunning{false};
 		bool mShutdown{false};
-
-		// temporary
-		std::vector<std::string> mQueuedWriteData;
 	};
 
 }

@@ -77,16 +77,11 @@ namespace EventCore {
 
 	std::string TCPSession::GetAllRecvBufferContents()
 	{
-		LOGF_TRACE("Printing recv buf... {}", std::string(mRecvBuffer));
 		LOGF_TRACE("Bytes in buffer: {}", mNumBytesInRecvBuffer);
-		std::string s1(mRecvBuffer);
-		LOGF_TRACE("s1 length is {}", s1.length());
 		std::string returnStr(mRecvBuffer, mNumBytesInRecvBuffer);
 		LOGF_TRACE("returnStr length is {}", returnStr.length());
-		LOGF_TRACE("returnStr {}", returnStr);
 		ClearRecvBuffer();
 		LOGF_TRACE("Bytes in buffer should now be zero: {}", mNumBytesInRecvBuffer);
-		LOG_TRACE(returnStr);
 		return returnStr;
 	}
 

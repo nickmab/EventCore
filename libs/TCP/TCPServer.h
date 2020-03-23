@@ -8,6 +8,8 @@
 
 #include "TCPSession.h"
 
+#include "Proto/DemoProto/DemoProtoParser.h"
+
 namespace EventCore {
 
 	static const ULONG DEFAULT_IN_ADDR = INADDR_ANY;
@@ -33,19 +35,24 @@ namespace EventCore {
 		void Shutdown();
 
 		// temporary...
-		void QueueWriteData(SOCKET, const std::string&);
+		bool QueueWriteData(SOCKET, const DemoProtoParser::MsgVariant&);
 
 	private:
 		sockaddr_in mSockAddrIn;
 		SOCKET mListeningSocket{0};
 		fd_set mFDSet{0};
-		std::map<SOCKET, std::unique_ptr<TCPSession> > mClientSessions;
+
+		struct ClientDataInterface
+		{
+			ClientDataInterface(SOCKET, size_t initialRecvBufSize = 1024);
+			TCPSession mSession;
+			DemoProtoParser mParser;
+		};
+		std::map<SOCKET, ClientDataInterface> mClientMap;
+		
 		bool mInitialized{false};
 		bool mRunning{false};
 		bool mShutdown{false};
-
-		// temporary
-		std::multimap<SOCKET, std::string> mQueuedWriteData;
 	};
 
 }

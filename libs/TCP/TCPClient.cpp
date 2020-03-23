@@ -61,18 +61,20 @@ namespace EventCore {
 		mServerSession.reset(new TCPSession(sock));
 		mInitialized = true;
 		mRunning = true;
-		QueueWriteData("Hello from a client!");
+		// QueueWriteData("Hello from a client!");
 		demoproto::NumericMessage msg;
 		msg.set_an_integer(6123);
 		msg.set_a_double(42.1);
-		std::string debug = msg.DebugString();
-		QueueWriteData(debug);
-		std::string strOut;
-		msg.SerializeToString(&strOut);
-		std::cout << strOut << std::endl;
-		std::cout << strOut.length() << std::endl;
-		std::cout << strOut.size() << std::endl;
-		QueueWriteData(strOut);
+		LOG_WARN("Calling...");
+		bool success = QueueWriteData(msg);
+		LOGF_WARN("Returned {}", success);
+		demoproto::TextualMessage msg2;
+		LOG_WARN("Making a fresh juan");
+		msg2.set_a_sentence("I got the message!");
+		msg2.set_is_interesting(false);
+		LOGF_WARN("Calling again, {}", msg2.DebugString());
+		success = QueueWriteData(msg2);
+		LOGF_WARN("Returned again {}", success);
 		return true;
 	}
 
@@ -84,19 +86,12 @@ namespace EventCore {
 			return false;
 		}
 
-		// First see if we have anything queued to write out to existing clients.
-		for (auto& str : mQueuedWriteData)
+		if (!mParser.WriteTo(*mServerSession))
 		{
-			LOGF_TRACE("Try to send: {}", str);
-			if (!mServerSession->Send(str))
-			{
-				LOG_CRITICAL("Some kind of error sending data to server. Shutting down.");
-				Shutdown();
-				return false;
-			}
+			LOG_CRITICAL("Some kind of error sending data to server. Shutting down.");
+			Shutdown();
+			return false;
 		}
-
-		mQueuedWriteData.clear();
 
 		// Now see if there's anything to read...
 		if (!mServerSession->Recv())
@@ -108,8 +103,12 @@ namespace EventCore {
 
 		if (mServerSession->BufferHasData())
 		{
-			LOG_INFO("Received the following from server...");
-			LOG_INFO(mServerSession->GetAllRecvBufferContents());
+			if (!mParser.ConsumeFrom(*mServerSession))
+			{
+				LOG_ERROR("Some kind of error parsing socket data. Shutting down.");
+				Shutdown();
+				return false;
+			}
 		}
 
 		return true;
@@ -124,10 +123,9 @@ namespace EventCore {
 		mShutdown = true;
 	}
 
-	void TCPClient::QueueWriteData(const std::string& data)
+	bool TCPClient::QueueWriteData(const DemoProtoParser::MsgVariant& msg)
 	{
-		LOGF_TRACE("Queueing: {}", data);
-		mQueuedWriteData.emplace_back(data);
+		return mParser.QueueMessageToWrite(msg);
 	}
 
 }

@@ -5,6 +5,9 @@ cmake_minimum_required (VERSION 3.15)
 
 project ("EventCore")
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 if (NOT WIN32)
 	message (FATAL_ERROR "Project currently only supports Windows.")
 endif ()
