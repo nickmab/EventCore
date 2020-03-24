@@ -4,10 +4,10 @@
 
 #include <map>
 #include <memory>
-#include <string>
 
 #include "TCPSession.h"
 
+#include "Proto/ProtoParser.h"
 #include "Proto/DemoProto/DemoProtoParser.h"
 
 namespace EventCore {
@@ -20,7 +20,9 @@ namespace EventCore {
 	class TCPServer
 	{
 	public:
-		TCPServer(ULONG inAddr = DEFAULT_IN_ADDR, USHORT listeningPort = DEFAULT_LISTENING_PORT);
+		using ParserFactoryFn = std::function<ProtoParser * (void)>;
+		
+		TCPServer(ParserFactoryFn, ULONG inAddr = DEFAULT_IN_ADDR, USHORT listeningPort = DEFAULT_LISTENING_PORT);
 		~TCPServer();
 		
 		// For the below public methods, if an error is encountered it will return false
@@ -35,18 +37,19 @@ namespace EventCore {
 		void Shutdown();
 
 		// temporary...
-		bool QueueWriteData(SOCKET, const DemoProtoParser::MsgVariant&);
+		bool QueueWriteData(SOCKET, const ProtoMsgVariant&);
 
 	private:
 		sockaddr_in mSockAddrIn;
 		SOCKET mListeningSocket{0};
 		fd_set mFDSet{0};
 
+		ParserFactoryFn mMakeNewParser;
 		struct ClientDataInterface
 		{
-			ClientDataInterface(SOCKET, size_t initialRecvBufSize = 1024);
+			ClientDataInterface(ProtoParser*, SOCKET, size_t initialRecvBufSize = 1024);
 			TCPSession mSession;
-			DemoProtoParser mParser;
+			std::unique_ptr<ProtoParser> mParser;
 		};
 		std::map<SOCKET, ClientDataInterface> mClientMap;
 		

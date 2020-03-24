@@ -8,7 +8,8 @@
 
 namespace EventCore {
 
-	TCPClient::TCPClient(const char* serverAddr, USHORT serverPort)
+	TCPClient::TCPClient(ProtoParser* parser, const char* serverAddr, USHORT serverPort)
+		: mParser(parser)
 	{
 		mSockAddrIn.sin_family = AF_INET;
 		mSockAddrIn.sin_port = htons(serverPort);
@@ -86,7 +87,7 @@ namespace EventCore {
 			return false;
 		}
 
-		if (mParser.HasData() && !mParser.WriteTo(*mServerSession))
+		if (mParser->HasData() && !mParser->WriteTo(*mServerSession))
 		{
 			LOG_CRITICAL("Some kind of error sending data to server. Shutting down.");
 			Shutdown();
@@ -103,7 +104,7 @@ namespace EventCore {
 
 		if (mServerSession->BufferHasData())
 		{
-			if (!mParser.ConsumeFrom(*mServerSession))
+			if (!mParser->ConsumeFrom(*mServerSession))
 			{
 				LOG_ERROR("Some kind of error parsing socket data. Shutting down.");
 				Shutdown();
@@ -123,9 +124,9 @@ namespace EventCore {
 		mShutdown = true;
 	}
 
-	bool TCPClient::QueueWriteData(const DemoProtoParser::MsgVariant& msg)
+	bool TCPClient::QueueWriteData(const ProtoMsgVariant& msg)
 	{
-		return mParser.QueueMessageToWrite(msg);
+		return mParser->QueueMessageToWrite(msg);
 	}
 
 }

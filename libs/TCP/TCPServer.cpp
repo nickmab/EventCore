@@ -3,10 +3,12 @@
 #include "Core/Logger.h"
 
 #include <sstream>
+#include <tuple>
 
 namespace EventCore {
 
-	TCPServer::TCPServer(ULONG inAddr, USHORT listeningPort)
+	TCPServer::TCPServer(ParserFactoryFn makeNewParser, ULONG inAddr, USHORT listeningPort)
+		: mMakeNewParser(makeNewParser)
 	{
 		mSockAddrIn.sin_family = AF_INET;
 		mSockAddrIn.sin_port = htons(listeningPort);
@@ -19,8 +21,9 @@ namespace EventCore {
 			Shutdown();
 	}
 
-	TCPServer::ClientDataInterface::ClientDataInterface(SOCKET sock, size_t initialRecvBufSize)
+	TCPServer::ClientDataInterface::ClientDataInterface(ProtoParser* parser, SOCKET sock, size_t initialRecvBufSize)
 		: mSession(sock, initialRecvBufSize)
+		, mParser(parser)
 	{
 	}
 
@@ -88,7 +91,7 @@ namespace EventCore {
 		{
 			auto& session = sockAndData.second.mSession;
 			auto& parser = sockAndData.second.mParser;
-			if (parser.HasData() && !parser.WriteTo(session))
+			if (parser->HasData() && !parser->WriteTo(session))
 			{
 				LOG_WARN("Error trying to write to client; dropping it.");
 				clientsToDrop.push_back(sockAndData.first);
@@ -130,7 +133,15 @@ namespace EventCore {
 				}
 
 				FD_SET(newClient, &mFDSet);
-				mClientMap.emplace(newClient, newClient);
+				mClientMap.emplace(
+					std::piecewise_construct,
+					/* map key */
+					std::forward_as_tuple(newClient),
+					/* constructor args for ClientDataInterface */
+					std::forward_as_tuple(
+						mMakeNewParser(),
+						newClient)
+					);
 				demoproto::TextualMessage msg;
 				msg.set_a_sentence("Hello from the server! Sending a number too...");
 				bool success = QueueWriteData(newClient, msg);
@@ -162,7 +173,7 @@ namespace EventCore {
 					}
 					else if (session.BufferHasData())
 					{
-						if (!clientData->second.mParser.ConsumeFrom(session))
+						if (!clientData->second.mParser->ConsumeFrom(session))
 						{
 							LOG_ERROR("Some kind of error parsing socket data. Deleting client.");
 							FD_CLR(sock, &mFDSet);
@@ -176,12 +187,12 @@ namespace EventCore {
 		return true;
 	}
 
-	bool TCPServer::QueueWriteData(SOCKET sock, const DemoProtoParser::MsgVariant& msg)
+	bool TCPServer::QueueWriteData(SOCKET sock, const ProtoMsgVariant& msg)
 	{
 		auto it = mClientMap.find(sock);
 		if (it == mClientMap.end())
 			return false;
-		return it->second.mParser.QueueMessageToWrite(msg);
+		return it->second.mParser->QueueMessageToWrite(msg);
 	}
 
 	void TCPServer::Shutdown()

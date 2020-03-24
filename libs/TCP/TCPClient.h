@@ -3,11 +3,9 @@
 #include <WS2tcpip.h>
 
 #include <memory>
-#include <string>
-#include <vector>
 
 #include "TCPSession.h"
-#include "Proto/DemoProto/DemoProtoParser.h"
+#include "Proto/ProtoParser.h"
 
 namespace EventCore {
 
@@ -19,7 +17,10 @@ namespace EventCore {
 	class TCPClient
 	{
 	public:
-		TCPClient(const char* serverAddr = DEFAULT_SERVER_ADDR, USHORT serverPort = DEFAULT_SERVER_PORT);
+		TCPClient(
+			ProtoParser*,
+			const char* serverAddr = DEFAULT_SERVER_ADDR, 
+			USHORT serverPort = DEFAULT_SERVER_PORT);
 		~TCPClient();
 
 		// For the below public methods, if an error is encountered it will return false
@@ -34,12 +35,12 @@ namespace EventCore {
 		void Shutdown();
 
 		// temporary...
-		bool QueueWriteData(const DemoProtoParser::MsgVariant&);
+		bool QueueWriteData(const ProtoMsgVariant&);
 
 	private:
 		sockaddr_in mSockAddrIn;
 		std::unique_ptr<TCPSession> mServerSession;
-		DemoProtoParser mParser;
+		std::unique_ptr<ProtoParser> mParser;
 		bool mInitialized{false};
 		bool mRunning{false};
 		bool mShutdown{false};

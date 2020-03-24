@@ -2,6 +2,11 @@
 
 namespace EventCore {
 
+	ProtoParser* DemoProtoParser::New()
+	{
+		return new DemoProtoParser();
+	}
+
 	bool DemoProtoParser::ConsumeFrom(TCPSession& session)
 	{
 		mInputBuffer << session.GetAllRecvBufferContents();
@@ -77,7 +82,7 @@ namespace EventCore {
 		return true;
 	}
 
-	bool DemoProtoParser::QueueMessageToWrite(const MsgVariant& inMsg)
+	bool DemoProtoParser::QueueMessageToWrite(const ProtoMsgVariant& inMsg)
 	{
 		WrappedMessage wrapped;
 		

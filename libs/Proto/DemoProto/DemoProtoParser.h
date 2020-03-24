@@ -2,9 +2,9 @@
 
 #include "Core/Logger.h"
 #include "TCP/TCPSession.h"
+#include "Proto/ProtoParser.h"
 #include "DemoProto.pb.h"
 
-#include <iostream>
 #include <sstream>
 #include <variant>
 
@@ -12,18 +12,18 @@ using namespace demoproto;
 
 namespace EventCore {
 
-	class DemoProtoParser
+	class DemoProtoParser : public ProtoParser
 	{
 	public:
-		
-		using MsgVariant = std::variant<NumericMessage, TextualMessage>;
+
+		static ProtoParser* New();
 		
 		// false indicates error.
-		bool ConsumeFrom(TCPSession&);
-		bool QueueMessageToWrite(const MsgVariant&);
-		bool WriteTo(TCPSession&);
+		virtual bool ConsumeFrom(TCPSession&) override;
+		virtual bool QueueMessageToWrite(const ProtoMsgVariant&) override;
+		virtual bool WriteTo(TCPSession&) override;
 
-		inline bool HasData() { return mOutputBuffer.peek() != std::char_traits<char>::eof(); }
+		virtual inline bool HasData() override { return mOutputBuffer.peek() != std::char_traits<char>::eof(); }
 
 	private:
 		// these are used for i/o buffering and caching, saves you

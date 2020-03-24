@@ -7,11 +7,16 @@
 namespace EventCore {
 	Application* CreateApplication()
 	{
-		return new ::DemoClient();
+		return new ::DemoClient(DemoProtoParser::New());
 	}
 }
 
 using namespace EventCore;
+
+DemoClient::DemoClient(ProtoParser* parser)
+	: mTCPClient(parser)
+{
+}
 
 void DemoClient::Init()
 {
