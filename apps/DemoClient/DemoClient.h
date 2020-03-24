@@ -11,6 +11,7 @@ public:
 
 private:
 	EventCore::TCPClient mTCPClient;
+	bool mHasSentMessageYet{false};
 
 	virtual void Init() override;
 	virtual void OnUpdate() override;

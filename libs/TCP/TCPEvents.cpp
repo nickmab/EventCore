@@ -4,25 +4,23 @@
 
 namespace EventCore {
 
-	TCPClientConnected::TCPClientConnected(std::string clientName)
-		: mClientName(clientName)
-	{}
-
-	std::string TCPClientConnected::ToString() const
-	{
-		std::stringstream ss;
-		ss << "TCPClientConnectedEvent: " << mClientName;
-		return ss.str();
+// throwaway macro
+#define TCP_EVT_IMPL(who, what) \
+	TCP##who##what::TCP##who##what(std::string name) \
+		: mName(name) \
+	{} \
+\
+	std::string TCP##who##what::ToString() const \
+	{ \
+		std::stringstream ss; \
+		ss << "TCP##who##whatEvent: " << mName; \
+		return ss.str(); \
 	}
 
-	TCPClientDisconnected::TCPClientDisconnected(std::string clientName)
-		: mClientName(clientName)
-	{}
+	TCP_EVT_IMPL(Client, Connected)
+	TCP_EVT_IMPL(Client, Disconnected)
+	TCP_EVT_IMPL(Server, Connected)
+	TCP_EVT_IMPL(Server, Disconnected)
 
-	std::string TCPClientDisconnected::ToString() const
-	{
-		std::stringstream ss;
-		ss << "TCPClientDisconnectedEvent: " << mClientName;
-		return ss.str();
-	}
+#undef TCP_EVT_IMPL
 }

@@ -142,6 +142,7 @@ namespace EventCore {
 						mMakeNewParser(),
 						newClient)
 					);
+				
 				demoproto::TextualMessage msg;
 				msg.set_a_sentence("Hello from the server! Sending a number too...");
 				bool success = QueueWriteData(newClient, msg);

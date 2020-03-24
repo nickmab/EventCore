@@ -62,20 +62,6 @@ namespace EventCore {
 		mServerSession.reset(new TCPSession(sock));
 		mInitialized = true;
 		mRunning = true;
-		// QueueWriteData("Hello from a client!");
-		demoproto::NumericMessage msg;
-		msg.set_an_integer(6123);
-		msg.set_a_double(42.1);
-		LOG_WARN("Calling...");
-		bool success = QueueWriteData(msg);
-		LOGF_WARN("Returned {}", success);
-		demoproto::TextualMessage msg2;
-		LOG_WARN("Making a fresh juan");
-		msg2.set_a_sentence("I got the message!");
-		msg2.set_is_interesting(false);
-		LOGF_WARN("Calling again, {}", msg2.DebugString());
-		success = QueueWriteData(msg2);
-		LOGF_WARN("Returned again {}", success);
 		return true;
 	}
 

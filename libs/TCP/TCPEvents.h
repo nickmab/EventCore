@@ -4,32 +4,27 @@
 
 namespace EventCore {
 
-	class TCPClientConnected : public Event
-	{
-	public:
-		TCPClientConnected(std::string clientName);
-		
-		inline virtual Event::Type GetType() const override { return Event::Type::TCPClientConnected; }
-		inline virtual const char* const GetName() const override { return "TCPClientConnectedEvent"; }
-
-		virtual std::string ToString() const override;
-		
-	private:
-		std::string mClientName;
+// throwaway macro
+#define TCP_EVT(who, what) \
+	class TCP##who##what : public Event \
+	{ \
+	public: \
+		TCP##who##what(std::string name = "(unnamed)"); \
+\
+		inline virtual Event::Type GetType() const override { return Event::Type::TCP##who##what; } \
+		inline virtual const char* const GetName() const override { return "TCP##who##whatEvent"; } \
+\
+		virtual std::string ToString() const override; \
+\
+	private: \
+		std::string mName; \
 	};
 
-	class TCPClientDisconnected : public Event
-	{
-	public:
-		TCPClientDisconnected(std::string clientName);
+	TCP_EVT(Client, Connected)
+	TCP_EVT(Client, Disconnected)
+	TCP_EVT(Server, Connected)
+	TCP_EVT(Server, Disconnected)
 
-		inline virtual Event::Type GetType() const override { return Event::Type::TCPClientDisconnected; }
-		inline virtual const char* const GetName() const override { return "TCPClientDisconnectedEvent"; }
-
-		virtual std::string ToString() const override;
-
-	private:
-		std::string mClientName;
-	};
+#undef TCP_EVT
 
 }

@@ -18,6 +18,7 @@ namespace EventCore {
 		std::string data = mInputBuffer.str();
 		size_t dataIndex = 0;
 		const size_t dataLength = data.length();
+		WrappedMessage wrapped;
 
 		for (;;)
 		{
@@ -36,18 +37,18 @@ namespace EventCore {
 				}
 				else
 				{
-					if (!mWrappedMessage.ParseFromArray(&data[dataIndex], mNextInputMessageSize))
+					if (!wrapped.ParseFromArray(&data[dataIndex], mNextInputMessageSize))
 					{
 						LOG_ERROR("Could not parse message from buffer!");
 						return false;
 					}
-					if (mWrappedMessage.has_numeric_message())
+					if (wrapped.has_numeric_message())
 					{
-						OnNumericMessage(mWrappedMessage.numeric_message());
+						OnNumericMessage(wrapped.numeric_message());
 					}
-					else if (mWrappedMessage.has_textual_message())
+					else if (wrapped.has_textual_message())
 					{
-						OnTextualMessage(mWrappedMessage.textual_message());
+						OnTextualMessage(wrapped.textual_message());
 					}
 					else
 					{
@@ -93,13 +94,11 @@ namespace EventCore {
 		{
 			NumericMessage* msg = new NumericMessage(std::get<NumericMessage>(inMsg));
 			wrapped.set_allocated_numeric_message(msg);
-			LOG_WARN("Queue Numeric");
 		}
 		else if (std::holds_alternative<TextualMessage>(inMsg))
 		{
 			TextualMessage* msg = new TextualMessage(std::get<TextualMessage>(inMsg));
 			wrapped.set_allocated_textual_message(msg);
-			LOG_WARN("Queue Textual");
 		}
 		else
 		{
@@ -110,18 +109,12 @@ namespace EventCore {
 		// Now we write the data to the output sstream. First the
 		// message size, then the serialized message data.
 		const int byteSize = wrapped.ByteSize();
-		LOGF_WARN("ByteSize: {}", byteSize);
 		mOutputBuffer.write(reinterpret_cast<const char*>(&byteSize), sizeof(int));
-		LOG_WARN("Tryserialize...");
-		const bool success = wrapped.SerializeToOstream(&mOutputBuffer);
-		LOGF_WARN("Tried; success? {}", success);
-		LOGF_WARN("Cleared; gggrrrrreturning.");
-		return success;
+		return wrapped.SerializeToOstream(&mOutputBuffer);
 	}
 
 	bool DemoProtoParser::WriteTo(TCPSession& session)
 	{
-		LOG_WARN("Writeto...");
 		std::string data(mOutputBuffer.str());
 		mOutputBuffer.str(std::string()); // this is how you clear a stringstream.
 		return session.Send(data);
