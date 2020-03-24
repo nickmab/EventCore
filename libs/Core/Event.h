@@ -23,7 +23,7 @@ namespace EventCore {
 			TCPClientDisconnected,
 			TCPServerConnected,
 			TCPServerDisconnected,
-			OnProtoMessage,
+			OnProtoMessageReceived,
 			
 			// Insert events in the section above. "Begin" and "End" are used just for iteration.
 			End
@@ -44,13 +44,17 @@ namespace EventCore {
 		EventProducer(EventCallbackFn);
 		virtual ~EventProducer() = default;
 		
+		// will be periodically called (and calls OnUpdateImpl under the hood) every run loop
+		// giving the chance for the producer to raise an event.
+		// However, it can also raise an event any time it wants just by calling the callback fn.
 		void OnUpdate();
+
+	protected:
+		EventCallbackFn mCallback;
 
 	private:
 		// client should return nullptr if no event needs to be raised/produced.
-		virtual std::shared_ptr<Event> OnUpdateImpl() = 0;
-		
-		EventCallbackFn mCallback;
+		virtual std::shared_ptr<Event> OnUpdateImpl();
 	};
 
 	class EventConsumer

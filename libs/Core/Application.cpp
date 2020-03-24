@@ -20,12 +20,12 @@ namespace EventCore {
 		mIsRunning = false;
 	}
 
-	void Application::RegisterEventProducer(std::shared_ptr<EventProducer> producer)
+	void Application::RegisterEventProducer(EventProducer* producer)
 	{
 		mEventProducers.push_back(producer);
 	}
 
-	void Application::UnregisterEventProducer(std::shared_ptr<EventProducer> producer)
+	void Application::UnregisterEventProducer(EventProducer* producer)
 	{
 		// should check that this actually works...
 		auto it = std::find(mEventProducers.begin(), mEventProducers.end(), producer);
@@ -46,7 +46,7 @@ namespace EventCore {
 				return;
 			}
 
-			for (std::shared_ptr<EventProducer> producer : mEventProducers)
+			for (auto* producer : mEventProducers)
 			{
 				if (mIsRunning)
 				{

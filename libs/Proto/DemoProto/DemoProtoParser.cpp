@@ -2,11 +2,16 @@
 
 namespace EventCore {
 
-	ProtoParser* DemoProtoParser::New()
+	ProtoParser* DemoProtoParser::New(EventProducer::EventCallbackFn callback)
 	{
-		return new DemoProtoParser();
+		return new DemoProtoParser(callback);
 	}
 
+	DemoProtoParser::DemoProtoParser(EventProducer::EventCallbackFn callback)
+		: ProtoParser(callback)
+	{
+	}
+	
 	bool DemoProtoParser::ConsumeFrom(TCPSession& session)
 	{
 		mInputBuffer << session.GetAllRecvBufferContents();
@@ -19,6 +24,7 @@ namespace EventCore {
 		size_t dataIndex = 0;
 		const size_t dataLength = data.length();
 		WrappedMessage wrapped;
+		
 
 		for (;;)
 		{
@@ -42,6 +48,14 @@ namespace EventCore {
 						LOG_ERROR("Could not parse message from buffer!");
 						return false;
 					}
+
+					std::shared_ptr<ProtoMsgVariant> var(new ProtoMsgVariant());
+					*var = wrapped;
+
+					std::shared_ptr<OnProtoMessageReceived> evt(
+						new OnProtoMessageReceived(session.GetSessionId(), var));
+					mCallback(evt);
+
 					if (wrapped.has_numeric_message())
 					{
 						OnNumericMessage(wrapped.numeric_message());

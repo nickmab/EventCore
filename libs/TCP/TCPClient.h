@@ -40,7 +40,7 @@ namespace EventCore {
 	private:
 		sockaddr_in mSockAddrIn;
 		std::unique_ptr<TCPSession> mServerSession;
-		std::unique_ptr<ProtoParser> mParser;
+		ProtoParser* mParser;
 		bool mInitialized{false};
 		bool mRunning{false};
 		bool mShutdown{false};

@@ -45,9 +45,11 @@ namespace EventCore {
 		fd_set mFDSet{0};
 
 		ParserFactoryFn mMakeNewParser;
+		// This is the thing that actually _owns_ the parser (and the events it produces/consumes).
 		struct ClientDataInterface
 		{
 			ClientDataInterface(ProtoParser*, SOCKET, size_t initialRecvBufSize = 1024);
+			~ClientDataInterface();
 			TCPSession mSession;
 			std::unique_ptr<ProtoParser> mParser;
 		};

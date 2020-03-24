@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Event.h"
 #include "TCP/TCPSession.h"
 #include "DemoProto/DemoProto.pb.h"
 
@@ -14,9 +15,10 @@ namespace EventCore {
 		demoproto::TextualMessage,
 		demoproto::WrappedMessage>;
 
-	class ProtoParser
+	class ProtoParser : public EventProducer
 	{
 	public:
+		ProtoParser(EventProducer::EventCallbackFn);
 		virtual ~ProtoParser() {}
 		
 		// false indicates error.

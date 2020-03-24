@@ -4,8 +4,11 @@
 
 namespace EventCore {
 
+	TCPSession::SessionId TCPSession::sSessionIdCounter = 0;
+
 	TCPSession::TCPSession(SOCKET sock, size_t initialRecvBufSize)
-		: mSocket(sock)
+		: mSessionId(++sSessionIdCounter)
+		, mSocket(sock)
 		, mRecvBufSize(initialRecvBufSize)
 		, mRecvBuffer(new char[initialRecvBufSize])
 	{

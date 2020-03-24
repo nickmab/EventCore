@@ -16,6 +16,8 @@ namespace EventCore {
 	class TCPSession
 	{
 	public:
+		using SessionId = int;
+
 		TCPSession(SOCKET, size_t initialRecvBufSize = 1024);
 		~TCPSession(); // Frees the buffer and closes the socket.
 		
@@ -34,6 +36,7 @@ namespace EventCore {
 		// so you need to periodically call this to get the data out and then clear the buffer.
 		std::string GetAllRecvBufferContents();
 		inline bool BufferHasData() const { return mNumBytesInRecvBuffer > 0; }
+		inline SessionId GetSessionId() const { return mSessionId; }
 
 		// Keeps trying to write until all bytes written, up to a preconfigured 
 		// max number of attempts. True means success.
@@ -43,6 +46,9 @@ namespace EventCore {
 		bool Send(const std::string&, int sendFlags = 0);
 
 	private:
+		static SessionId sSessionIdCounter;
+		SessionId mSessionId;
+
 		SOCKET mSocket;
 		size_t mRecvBufSize;
 		char* mRecvBuffer;

@@ -3,24 +3,30 @@
 
 #include "DemoClient.h"
 #include "Core/Logger.h"
+#include "Core/Events/Utility/EventPrinter.h"
 
 namespace EventCore {
 	Application* CreateApplication()
 	{
-		return new ::DemoClient(DemoProtoParser::New());
+		return new ::DemoClient();
 	}
 }
 
 using namespace EventCore;
 
-DemoClient::DemoClient(ProtoParser* parser)
-	: mTCPClient(parser)
-{
-}
-
 void DemoClient::Init()
 {
-	if (!mTCPClient.Init())
+	EventPrinter* consumer = new EventPrinter();
+	GetEventQueue().RegisterConsumer(std::shared_ptr<EventConsumer>(consumer));
+
+	mProtoParser.reset(new DemoProtoParser(
+		std::bind(&EventQueue::EnqueueEvent, &GetEventQueue(), std::placeholders::_1)));
+
+	RegisterEventProducer(mProtoParser.get());
+
+	mTCPClient.reset(new TCPClient(mProtoParser.get()));
+	
+	if (!mTCPClient->Init())
 	{
 		LOG_CRITICAL("Could not initialize client; shutting down.");
 		Shutdown(1);
@@ -35,7 +41,7 @@ void DemoClient::OnUpdate()
 		demoproto::NumericMessage msg;
 		msg.set_an_integer(6123);
 		msg.set_a_double(42.1);
-		bool success = mTCPClient.QueueWriteData(msg);
+		bool success = mTCPClient->QueueWriteData(msg);
 		if (!success)
 		{
 			LOGF_CRITICAL("Encountered an error queuing msg to send: {}", msg.DebugString());
@@ -45,7 +51,7 @@ void DemoClient::OnUpdate()
 		demoproto::TextualMessage msg2;
 		msg2.set_a_sentence("I got the message!");
 		msg2.set_is_interesting(false);
-		success = mTCPClient.QueueWriteData(msg2);
+		success = mTCPClient->QueueWriteData(msg2);
 
 		if (!success)
 		{
@@ -57,7 +63,7 @@ void DemoClient::OnUpdate()
 	}
 	
 	// temporary crappy hack...
-	if (!mTCPClient.OnUpdate())
+	if (!mTCPClient->OnUpdate())
 	{
 		LOG_CRITICAL("Encountered some kind of error; shutting down.");
 		Shutdown(1);

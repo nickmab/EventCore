@@ -22,9 +22,8 @@ namespace EventCore {
 		static Application& Get() { return *sInstance; }
 		inline bool IsRunning() const { return mIsRunning; }
 
-	protected:
-		void RegisterEventProducer(std::shared_ptr<EventProducer>);
-		void UnregisterEventProducer(std::shared_ptr<EventProducer>);
+		void RegisterEventProducer(EventProducer*);
+		void UnregisterEventProducer(EventProducer*);
 		EventQueue& GetEventQueue() { return mEventQueue; }
 
 	private:
@@ -39,7 +38,7 @@ namespace EventCore {
 		int mExitCode{0};
 
 		EventQueue mEventQueue;
-		std::vector<std::shared_ptr<EventProducer> > mEventProducers;
+		std::vector<EventProducer*> mEventProducers;
 	};
 
 	// Application must be subclassed by an app that uses this class, 

@@ -3,7 +3,6 @@
 
 #include "DemoApp.h"
 
-#include "Core/Events/Utility/OnTickProducer.h"
 #include "Core/Events/Utility/EventPrinter.h"
 #include "Core/Logger.h"
 
@@ -30,11 +29,11 @@ DemoApp::DemoApp(double secondsToStayAlive)
 
 void DemoApp::Init()
 {
-	OnTickProducer* producer = new OnTickProducer(
+	mOnTickProducer.reset(new OnTickProducer(
 		std::bind(&EventQueue::EnqueueEvent, &GetEventQueue(), std::placeholders::_1),
-		1000);
+		1000));
 	
-	RegisterEventProducer(std::shared_ptr<EventProducer>(producer));
+	RegisterEventProducer(mOnTickProducer.get());
 
 	EventPrinter* consumer = new EventPrinter();
 	GetEventQueue().RegisterConsumer(std::shared_ptr<EventConsumer>(consumer));

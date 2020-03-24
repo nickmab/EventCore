@@ -14,6 +14,11 @@ namespace EventCore {
 			mCallback(evtPtr);
 	}
 
+	std::shared_ptr<Event> EventProducer::OnUpdateImpl()
+	{
+		return nullptr;
+	}
+
 	void EventQueue::RegisterConsumer(std::shared_ptr<EventConsumer> consumer)
 	{
 		for (int i = 1; i < static_cast<int>(Event::Type::End); i++)

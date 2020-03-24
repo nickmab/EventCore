@@ -1,3 +1,4 @@
+#include "Core/Application.h"
 #include "TCPServer.h"
 #include "TCPUtils.h"
 #include "Core/Logger.h"
@@ -25,6 +26,12 @@ namespace EventCore {
 		: mSession(sock, initialRecvBufSize)
 		, mParser(parser)
 	{
+		Application::Get().RegisterEventProducer(parser);
+	}
+
+	TCPServer::ClientDataInterface::~ClientDataInterface()
+	{
+		Application::Get().UnregisterEventProducer(mParser.get());
 	}
 
 	bool TCPServer::Init()

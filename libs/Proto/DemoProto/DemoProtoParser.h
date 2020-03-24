@@ -1,8 +1,10 @@
 #pragma once
 
 #include "Core/Logger.h"
+#include "Core/Event.h"
 #include "TCP/TCPSession.h"
 #include "Proto/ProtoParser.h"
+#include "Proto/ProtoEvents.h"
 #include "DemoProto.pb.h"
 
 #include <sstream>
@@ -12,11 +14,14 @@ using namespace demoproto;
 
 namespace EventCore {
 
-	class DemoProtoParser : public ProtoParser
+	class DemoProtoParser 
+		: public ProtoParser // which is also an EventProducer.
 	{
 	public:
 
-		static ProtoParser* New();
+		static ProtoParser* New(EventProducer::EventCallbackFn);
+
+		DemoProtoParser(EventProducer::EventCallbackFn);
 		
 		// false indicates error.
 		virtual bool ConsumeFrom(TCPSession&) override;

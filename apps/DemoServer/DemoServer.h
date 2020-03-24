@@ -1,19 +1,27 @@
 ﻿#pragma once
 
 #include <Core/Application.h>
+#include <Core/Events/Utility/OnTickProducer.h>
 #include <TCP/TCPServer.h>
 #include <Proto/DemoProto/DemoProtoParser.h>
 
-class DemoServer : public EventCore::Application
+#include <memory>
+
+using namespace EventCore;
+
+class DemoServer : public Application
 {
 public:
 	DemoServer() {}
 
+	ProtoParser* NewProtoParser();
+
 private:
-	EventCore::TCPServer mServer{EventCore::DemoProtoParser::New};
-	
+	std::unique_ptr<TCPServer> mServer{nullptr};
+	std::unique_ptr<OnTickProducer> mOnTickProducer{ nullptr };
+
 	virtual void Init() override;
 	virtual void OnUpdate() override;
 };
 
-EventCore::Application* EventCore::CreateApplication();
+Application* CreateApplication();
