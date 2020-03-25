@@ -153,12 +153,10 @@ namespace EventCore {
 				demoproto::TextualMessage msg;
 				msg.set_a_sentence("Hello from the server! Sending a number too...");
 				bool success = QueueWriteData(newClient, msg);
-				LOGF_WARN("Success? {}", success);
 				demoproto::NumericMessage msg2;
 				msg2.set_an_integer(12345);
 				msg2.set_a_double(-4483.9);
 				success = QueueWriteData(newClient, msg2);
-				LOGF_WARN("Success? {}", success);
 			}
 			else
 			{

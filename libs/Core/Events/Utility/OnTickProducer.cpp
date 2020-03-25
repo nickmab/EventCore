@@ -7,14 +7,14 @@ namespace EventCore {
 		, mSecondsFrequency(1e-3 * (double)millisFrequency)
 	{}
 
-	std::shared_ptr<Event> OnTickProducer::OnUpdateImpl()
+	Event* OnTickProducer::OnUpdateImpl()
 	{
 		auto now = std::chrono::system_clock::now();
 		std::chrono::duration<double> diff = now - mLastRunTime;
 		if (diff.count() > mSecondsFrequency)
 		{
 			mLastRunTime = now;
-			return std::shared_ptr<Event>(new OnTickEvent());
+			return new OnTickEvent();
 		}
 		return nullptr;
 	}

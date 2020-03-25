@@ -5,7 +5,8 @@ namespace EventCore {
 
 	bool EventPrinter::DoesCareAboutEventType(Event::Type type) const
 	{
-		return type == Event::Type::OnTick;
+		// we just print any event.
+		return true;
 	}
 	
 	void EventPrinter::OnEvent(const Event& evt)

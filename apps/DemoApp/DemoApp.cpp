@@ -6,16 +6,9 @@
 #include "Core/Events/Utility/EventPrinter.h"
 #include "Core/Logger.h"
 
-#include <Proto/DemoProto/DemoProto.pb.h>
-#include <iostream>
-
 namespace EventCore {
 	Application* CreateApplication()
 	{
-		demoproto::NumericMessage msg;
-		msg.set_an_integer(6123);
-		msg.set_a_double(42.1);
-		std::cout << msg.DebugString() << std::endl;
 		return new ::DemoApp(7);
 	}
 }
@@ -35,8 +28,8 @@ void DemoApp::Init()
 	
 	RegisterEventProducer(mOnTickProducer.get());
 
-	EventPrinter* consumer = new EventPrinter();
-	GetEventQueue().RegisterConsumer(std::shared_ptr<EventConsumer>(consumer));
+	mEventPrinter.reset(new EventPrinter());
+	GetEventQueue().RegisterConsumer(mEventPrinter.get());
 }
 
 void DemoApp::OnUpdate()

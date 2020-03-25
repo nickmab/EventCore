@@ -7,10 +7,14 @@
 #include "Event.h"
 #include "Logger.h"
 
+#include <vector>
+
 int main(int argc, char* argv[]);
 
 namespace EventCore {
 
+	// The Application class owns the Events from when they are raised 
+	// (via the EventQueue instance). They are freed after the OnEvent callback loop.
 	class Application
 	{
 		friend class EntryPoint;
@@ -22,6 +26,11 @@ namespace EventCore {
 		static Application& Get() { return *sInstance; }
 		inline bool IsRunning() const { return mIsRunning; }
 
+		// Whatever creates the EventProducer is responsible for 
+		// the lifetime of that event producer, including ensuring it is
+		// removed / unregistered from here before the memory is freed.
+		// Otherwise we'll keep trying to call on them during the
+		// Event Queue's OnUpdate callbacks.
 		void RegisterEventProducer(EventProducer*);
 		void UnregisterEventProducer(EventProducer*);
 		EventQueue& GetEventQueue() { return mEventQueue; }
@@ -34,10 +43,12 @@ namespace EventCore {
 
 		void Run();
 
-		bool mIsRunning{ true };
+		bool mIsRunning{true};
 		int mExitCode{0};
 
+		// The EventQueue takes ownership of the Events when they are raised.
 		EventQueue mEventQueue;
+		// The Application base class does not own these event producers.
 		std::vector<EventProducer*> mEventProducers;
 	};
 

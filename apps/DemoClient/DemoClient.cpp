@@ -2,8 +2,8 @@
 //
 
 #include "DemoClient.h"
-#include "Core/Logger.h"
-#include "Core/Events/Utility/EventPrinter.h"
+
+#include <Core/Logger.h>
 
 namespace EventCore {
 	Application* CreateApplication()
@@ -16,8 +16,8 @@ using namespace EventCore;
 
 void DemoClient::Init()
 {
-	EventPrinter* consumer = new EventPrinter();
-	GetEventQueue().RegisterConsumer(std::shared_ptr<EventConsumer>(consumer));
+	mEventPrinter.reset(new EventPrinter());
+	GetEventQueue().RegisterConsumer(mEventPrinter.get());
 
 	mProtoParser.reset(new DemoProtoParser(
 		std::bind(&EventQueue::EnqueueEvent, &GetEventQueue(), std::placeholders::_1)));

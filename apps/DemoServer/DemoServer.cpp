@@ -1,9 +1,5 @@
-﻿// EventCore.cpp : Defines the entry point for the application.
-//
+﻿#include "DemoServer.h"
 
-#include "DemoServer.h"
-
-#include "Core/Events/Utility/EventPrinter.h"
 #include "Core/Logger.h"
 
 namespace EventCore {
@@ -29,8 +25,8 @@ void DemoServer::Init()
 	
 	RegisterEventProducer(mOnTickProducer.get());
 
-	EventPrinter* consumer = new EventPrinter();
-	GetEventQueue().RegisterConsumer(std::shared_ptr<EventConsumer>(consumer));
+	mEventPrinter.reset(new EventPrinter());
+	GetEventQueue().RegisterConsumer(mEventPrinter.get());
 
 	mServer.reset(new TCPServer(std::bind(&DemoServer::NewProtoParser, this)));
 

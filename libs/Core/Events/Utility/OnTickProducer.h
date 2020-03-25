@@ -14,7 +14,7 @@ namespace EventCore {
 		double mSecondsFrequency;
 		std::chrono::time_point<std::chrono::system_clock> mLastRunTime;
 
-		virtual std::shared_ptr<Event> OnUpdateImpl() override;
+		virtual Event* OnUpdateImpl() override;
 	};
 
 }

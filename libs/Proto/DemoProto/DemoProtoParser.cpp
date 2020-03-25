@@ -25,7 +25,6 @@ namespace EventCore {
 		const size_t dataLength = data.length();
 		WrappedMessage wrapped;
 		
-
 		for (;;)
 		{
 			const size_t bytesLeft = dataLength - dataIndex;
@@ -49,29 +48,16 @@ namespace EventCore {
 						return false;
 					}
 
-					std::shared_ptr<ProtoMsgVariant> var(new ProtoMsgVariant());
-					*var = wrapped;
-
-					std::shared_ptr<OnProtoMessageReceived> evt(
-						new OnProtoMessageReceived(session.GetSessionId(), var));
-					mCallback(evt);
-
-					if (wrapped.has_numeric_message())
-					{
-						OnNumericMessage(wrapped.numeric_message());
-					}
-					else if (wrapped.has_textual_message())
-					{
-						OnTextualMessage(wrapped.textual_message());
-					}
-					else
-					{
-						ASSERT(false, "This should be unreachable code.");
-						return false;
-					}
-
 					dataIndex += mNextInputMessageSize;
 					mNextInputMessageSize = 0;
+
+					// We lose ownership of this when we construct OnProtoMessageReceived
+					ProtoMsgVariant* var = new ProtoMsgVariant();
+					*var = wrapped;
+
+					// we lose ownership of this when we call the event callback.
+					OnProtoMessageReceived* evt = new OnProtoMessageReceived(session.GetSessionId(), var);
+					mCallback(evt);
 				}
 			}
 			else
@@ -106,13 +92,13 @@ namespace EventCore {
 		// lots of different message types...
 		if (std::holds_alternative<NumericMessage>(inMsg))
 		{
-			NumericMessage* msg = new NumericMessage(std::get<NumericMessage>(inMsg));
-			wrapped.set_allocated_numeric_message(msg);
+			NumericMessage* msg = wrapped.mutable_numeric_message();
+			*msg = std::get<NumericMessage>(inMsg);
 		}
 		else if (std::holds_alternative<TextualMessage>(inMsg))
 		{
-			TextualMessage* msg = new TextualMessage(std::get<TextualMessage>(inMsg));
-			wrapped.set_allocated_textual_message(msg);
+			TextualMessage* msg = wrapped.mutable_textual_message();
+			*msg = std::get<TextualMessage>(inMsg);
 		}
 		else
 		{
@@ -132,16 +118,6 @@ namespace EventCore {
 		std::string data(mOutputBuffer.str());
 		mOutputBuffer.str(std::string()); // this is how you clear a stringstream.
 		return session.Send(data);
-	}
-
-	void DemoProtoParser::OnNumericMessage(const NumericMessage& msg) const
-	{
-		LOGF_WARN("Received numeric message: {}", msg.DebugString());
-	}
-	
-	void DemoProtoParser::OnTextualMessage(const TextualMessage& msg) const
-	{
-		LOGF_WARN("Received textual message: {}", msg.DebugString());
 	}
 
 }

@@ -6,7 +6,7 @@
 
 namespace EventCore {
 
-	OnProtoMessageReceived::OnProtoMessageReceived(TCPSession::SessionId source, std::shared_ptr<ProtoMsgVariant> msg)
+	OnProtoMessageReceived::OnProtoMessageReceived(TCPSession::SessionId source, ProtoMsgVariant* msg)
 		: mSource(source)
 		, mMessage(msg)
 	{
@@ -20,8 +20,8 @@ namespace EventCore {
 		// ProtoMsgVariant having a DebugString() -> std::string method.
 		// (like generated protobuf messages do).
 		ss << "OnProtoMessageReceivedEvent: source session ID: " << mSource
-			<< "message: " << std::visit(
-				[](auto&& arg) -> std::string&& { return arg.DebugString(); },
+			<< " message: " << std::visit(
+				[](auto& arg) -> std::string { return arg.DebugString(); },
 				*mMessage);
 		return ss.str();
 	}

@@ -9,17 +9,17 @@ namespace EventCore {
 
 	void EventProducer::OnUpdate()
 	{
-		std::shared_ptr<Event> evtPtr = OnUpdateImpl();
+		Event* evtPtr = OnUpdateImpl();
 		if (evtPtr)
 			mCallback(evtPtr);
 	}
 
-	std::shared_ptr<Event> EventProducer::OnUpdateImpl()
+	Event* EventProducer::OnUpdateImpl()
 	{
 		return nullptr;
 	}
 
-	void EventQueue::RegisterConsumer(std::shared_ptr<EventConsumer> consumer)
+	void EventQueue::RegisterConsumer(EventConsumer* consumer)
 	{
 		for (int i = 1; i < static_cast<int>(Event::Type::End); i++)
 		{
@@ -29,7 +29,7 @@ namespace EventCore {
 		}
 	}
 
-	void EventQueue::UnregisterConsumer(std::shared_ptr<EventConsumer> consumer)
+	void EventQueue::UnregisterConsumer(EventConsumer* consumer)
 	{
 		// should check that this actually works...
 		for (int i = 1; i < static_cast<int>(Event::Type::End); i++)
@@ -45,21 +45,21 @@ namespace EventCore {
 		}
 	}
 
-	void EventQueue::EnqueueEvent(std::shared_ptr<Event> evtPtr)
+	void EventQueue::EnqueueEvent(Event* evtPtr)
 	{
-		mEventQueue.push_back(evtPtr);
+		mEventQueue.emplace_back(evtPtr);
 	}
 
 	void EventQueue::PublishEvents()
 	{
-		for (std::shared_ptr<Event> evtPtr : mEventQueue)
+		for (auto& evt : mEventQueue)
 		{
-			auto consumerVec = mEventTypeToConsumerMap[evtPtr->GetType()];
-			for (std::shared_ptr<EventConsumer> consumer : consumerVec)
+			auto consumerVec = mEventTypeToConsumerMap[evt->GetType()];
+			for (auto* consumer : consumerVec)
 			{
 				if (!Application::Get().IsRunning())
 					break;
-				consumer->OnEvent(*evtPtr);
+				consumer->OnEvent(*evt);
 			}
 		}
 

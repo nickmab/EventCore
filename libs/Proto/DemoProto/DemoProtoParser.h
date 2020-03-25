@@ -36,10 +36,7 @@ namespace EventCore {
 		// docs themselves suggest reusing message instances. 
 		std::stringstream mInputBuffer;
 		int mNextInputMessageSize{0};
-		std::stringstream mOutputBuffer;
-		// placeholder event handlers just for dev/testing right now.
-		void OnNumericMessage(const NumericMessage&) const;
-		void OnTextualMessage(const TextualMessage&) const;
+		std::stringstream mOutputBuffer;		
 	};
 
 }

@@ -13,7 +13,7 @@ namespace EventCore {
 	class OnProtoMessageReceived : public Event
 	{
 	public:
-		OnProtoMessageReceived(TCPSession::SessionId source, std::shared_ptr<ProtoMsgVariant>);
+		OnProtoMessageReceived(TCPSession::SessionId source, ProtoMsgVariant*);
 
 		inline virtual Event::Type GetType() const override { return Event::Type::OnProtoMessageReceived; }
 		inline virtual const char* const GetName() const override { return "OnProtoMessageReceivedEvent"; } 
@@ -22,7 +22,7 @@ namespace EventCore {
 
 	private: 
 		TCPSession::SessionId mSource;
-		std::shared_ptr<ProtoMsgVariant> mMessage;
+		std::unique_ptr<ProtoMsgVariant> mMessage;
 	};
 
 }
