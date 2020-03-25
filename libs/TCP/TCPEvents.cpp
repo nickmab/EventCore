@@ -6,14 +6,15 @@ namespace EventCore {
 
 // throwaway macro
 #define TCP_EVT_IMPL(who, what) \
-	TCP##who##what::TCP##who##what(std::string name) \
-		: mName(name) \
+	TCP ## who ## what ## Event::TCP ## who ## what ## Event(const EventProducer* sender, std::string name) \
+		: Event(sender) \
+		, mName(name) \
 	{} \
 \
-	std::string TCP##who##what::ToString() const \
+	std::string TCP ## who ## what ## Event::ToString() const \
 	{ \
 		std::stringstream ss; \
-		ss << "TCP##who##whatEvent: " << mName; \
+		ss << "TCP" #who #what "Event: " << mName; \
 		return ss.str(); \
 	}
 

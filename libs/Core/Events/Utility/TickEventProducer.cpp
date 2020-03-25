@@ -1,22 +1,21 @@
-#include "OnTickProducer.h"
+#include "TickEventProducer.h"
 
 namespace EventCore {
 
-	OnTickProducer::OnTickProducer(EventCallbackFn callback, int millisFrequency)
+	TickEventProducer::TickEventProducer(EventCallbackFn callback, int millisFrequency)
 		: EventProducer(callback)
 		, mSecondsFrequency(1e-3 * (double)millisFrequency)
 	{}
 
-	Event* OnTickProducer::OnUpdateImpl()
+	void TickEventProducer::EventProducerOnUpdate()
 	{
 		auto now = std::chrono::system_clock::now();
 		std::chrono::duration<double> diff = now - mLastRunTime;
 		if (diff.count() > mSecondsFrequency)
 		{
 			mLastRunTime = now;
-			return new OnTickEvent();
+			RaiseEvent(new TickEvent(this));
 		}
-		return nullptr;
 	}
 
 }

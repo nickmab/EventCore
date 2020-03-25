@@ -6,6 +6,7 @@
 
 #include "TCPSession.h"
 #include "Proto/ProtoParser.h"
+#include "Core/Event.h"
 
 namespace EventCore {
 
@@ -14,10 +15,11 @@ namespace EventCore {
 	
 	// This needs to be both a producer and consumer of events.
 	// Might eventually turn it into an abstract class and make something else impl a protocol...
-	class TCPClient
+	class TCPClient : public EventProducer
 	{
 	public:
 		TCPClient(
+			EventProducer::EventCallbackFn,
 			ProtoParser*,
 			const char* serverAddr = DEFAULT_SERVER_ADDR, 
 			USHORT serverPort = DEFAULT_SERVER_PORT);

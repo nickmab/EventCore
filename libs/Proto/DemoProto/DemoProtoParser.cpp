@@ -51,13 +51,7 @@ namespace EventCore {
 					dataIndex += mNextInputMessageSize;
 					mNextInputMessageSize = 0;
 
-					// We lose ownership of this when we construct OnProtoMessageReceived
-					ProtoMsgVariant* var = new ProtoMsgVariant();
-					*var = wrapped;
-
-					// we lose ownership of this when we call the event callback.
-					OnProtoMessageReceived* evt = new OnProtoMessageReceived(session.GetSessionId(), var);
-					mCallback(evt);
+					RaiseEvent(ProtoMessageReceivedEvent::New(this, session.GetSessionId(), wrapped));
 				}
 			}
 			else

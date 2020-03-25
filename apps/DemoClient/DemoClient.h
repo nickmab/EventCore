@@ -14,7 +14,6 @@ class DemoClient : public Application
 	std::unique_ptr<TCPClient> mTCPClient{nullptr};
 	std::unique_ptr<ProtoParser> mProtoParser{nullptr};
 	std::unique_ptr<EventPrinter> mEventPrinter{nullptr};
-	bool mHasSentMessageYet{false};
 
 	virtual void Init() override;
 	virtual void OnUpdate() override;

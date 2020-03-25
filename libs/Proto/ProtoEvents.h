@@ -10,15 +10,30 @@
 
 namespace EventCore {
 
-	class OnProtoMessageReceived : public Event
+	class ProtoMessageReceivedEvent : public Event
 	{
 	public:
-		OnProtoMessageReceived(TCPSession::SessionId source, ProtoMsgVariant*);
+		static ProtoMessageReceivedEvent* New(
+			const EventProducer* sender, 
+			TCPSession::SessionId source, 
+			const ProtoMsgVariant&);
+		
+		ProtoMessageReceivedEvent(
+			const EventProducer* sender, 
+			TCPSession::SessionId source, 
+			ProtoMsgVariant*);
 
-		inline virtual Event::Type GetType() const override { return Event::Type::OnProtoMessageReceived; }
-		inline virtual const char* const GetName() const override { return "OnProtoMessageReceivedEvent"; } 
+		inline virtual Event::Type GetType() const override { return Event::Type::ProtoMessageReceived; }
+		inline virtual const char* const GetName() const override { return "ProtoMessageReceivedEvent"; } 
 
-		virtual std::string ToString() const override; 
+		virtual std::string ToString() const override;
+		
+		inline TCPSession::SessionId GetSessionId() const { return mSource; }
+
+#ifdef GetMessage
+#undef GetMessage // this is some totally random windows macro name.
+#endif
+		inline const ProtoMsgVariant& GetMessage() const { return *mMessage; }
 
 	private: 
 		TCPSession::SessionId mSource;

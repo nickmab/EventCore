@@ -7,6 +7,7 @@
 
 #include "TCPSession.h"
 
+#include "Core/Event.h"
 #include "Proto/ProtoParser.h"
 #include "Proto/DemoProto/DemoProtoParser.h"
 
@@ -17,12 +18,16 @@ namespace EventCore {
 
 	// This needs to be both a producer and consumer of events.
 	// Might eventually turn it into an abstract class and make something else impl a protocol...
-	class TCPServer
+	class TCPServer : public EventProducer
 	{
 	public:
 		using ParserFactoryFn = std::function<ProtoParser * (void)>;
 		
-		TCPServer(ParserFactoryFn, ULONG inAddr = DEFAULT_IN_ADDR, USHORT listeningPort = DEFAULT_LISTENING_PORT);
+		TCPServer(
+			EventProducer::EventCallbackFn, 
+			ParserFactoryFn, 
+			ULONG inAddr = DEFAULT_IN_ADDR, 
+			USHORT listeningPort = DEFAULT_LISTENING_PORT);
 		~TCPServer();
 		
 		// For the below public methods, if an error is encountered it will return false

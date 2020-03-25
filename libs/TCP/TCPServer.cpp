@@ -2,14 +2,20 @@
 #include "TCPServer.h"
 #include "TCPUtils.h"
 #include "Core/Logger.h"
+#include "TCPEvents.h"
 
 #include <sstream>
 #include <tuple>
 
 namespace EventCore {
 
-	TCPServer::TCPServer(ParserFactoryFn makeNewParser, ULONG inAddr, USHORT listeningPort)
-		: mMakeNewParser(makeNewParser)
+	TCPServer::TCPServer(
+		EventProducer::EventCallbackFn evtCallback, 
+		ParserFactoryFn makeNewParser, 
+		ULONG inAddr, 
+		USHORT listeningPort)
+		: EventProducer(evtCallback)
+		, mMakeNewParser(makeNewParser)
 	{
 		mSockAddrIn.sin_family = AF_INET;
 		mSockAddrIn.sin_port = htons(listeningPort);
@@ -101,6 +107,10 @@ namespace EventCore {
 			if (parser->HasData() && !parser->WriteTo(session))
 			{
 				LOG_WARN("Error trying to write to client; dropping it.");
+				std::stringstream ss;
+				ss << "Client socket: " << sockAndData.first;
+				TCPClientDisconnectedEvent* disconnEvt = new TCPClientDisconnectedEvent(this, ss.str());
+				Application::Get().GetEventQueue().EnqueueEvent(disconnEvt);
 				clientsToDrop.push_back(sockAndData.first);
 			}
 		}
@@ -150,13 +160,10 @@ namespace EventCore {
 						newClient)
 					);
 				
-				demoproto::TextualMessage msg;
-				msg.set_a_sentence("Hello from the server! Sending a number too...");
-				bool success = QueueWriteData(newClient, msg);
-				demoproto::NumericMessage msg2;
-				msg2.set_an_integer(12345);
-				msg2.set_a_double(-4483.9);
-				success = QueueWriteData(newClient, msg2);
+				std::stringstream ss;
+				ss << "Client socket: " << newClient;
+				TCPClientConnectedEvent* connEvt = new TCPClientConnectedEvent(this, ss.str());
+				Application::Get().GetEventQueue().EnqueueEvent(connEvt);
 			}
 			else
 			{
@@ -166,14 +173,20 @@ namespace EventCore {
 				auto clientData = mClientMap.find(sock);
 				if (clientData == mClientMap.end())
 				{
-					LOG_WARN("Tried to read data from unknown socket/session!");
+					LOG_CRITICAL("Tried to read data from unknown socket/session!");
+					Shutdown();
+					return false;
 				}
 				else
 				{
 					auto& session = clientData->second.mSession;
 					if (!session.Recv())
 					{
-						LOG_WARN("Some kind of error recv'ing from socket. Deleting client.");
+						LOG_ERROR("Some kind of error recv'ing from socket. Deleting client.");
+						std::stringstream ss;
+						ss << "Client socket: " << sock;
+						TCPClientDisconnectedEvent* disconnEvt = new TCPClientDisconnectedEvent(this, ss.str());
+						Application::Get().GetEventQueue().EnqueueEvent(disconnEvt);
 						FD_CLR(sock, &mFDSet);
 						mClientMap.erase(sock);
 					}

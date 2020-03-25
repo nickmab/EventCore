@@ -19,16 +19,18 @@ ProtoParser* DemoServer::NewProtoParser()
 
 void DemoServer::Init()
 {
-	mOnTickProducer.reset(new OnTickProducer(
+	mTickEventProducer.reset(new TickEventProducer(
 		std::bind(&EventQueue::EnqueueEvent, &GetEventQueue(), std::placeholders::_1),
 		1000));
 	
-	RegisterEventProducer(mOnTickProducer.get());
+	RegisterEventProducer(mTickEventProducer.get());
 
 	mEventPrinter.reset(new EventPrinter());
 	GetEventQueue().RegisterConsumer(mEventPrinter.get());
 
-	mServer.reset(new TCPServer(std::bind(&DemoServer::NewProtoParser, this)));
+	mServer.reset(new TCPServer(
+		std::bind(&EventQueue::EnqueueEvent, &GetEventQueue(), std::placeholders::_1),
+		std::bind(&DemoServer::NewProtoParser, this)));
 
 	if (!mServer->Init())
 	{

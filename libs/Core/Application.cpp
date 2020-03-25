@@ -50,7 +50,7 @@ namespace EventCore {
 			{
 				if (mIsRunning)
 				{
-					producer->OnUpdate();
+					producer->EventProducerOnUpdate();
 				}
 				else
 				{

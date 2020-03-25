@@ -6,13 +6,25 @@
 
 namespace EventCore {
 
-	OnProtoMessageReceived::OnProtoMessageReceived(TCPSession::SessionId source, ProtoMsgVariant* msg)
-		: mSource(source)
+	ProtoMessageReceivedEvent* ProtoMessageReceivedEvent::New(
+		const EventProducer* sender,
+		TCPSession::SessionId source,
+		const ProtoMsgVariant& msg)
+	{
+		return new ProtoMessageReceivedEvent(sender, source, new ProtoMsgVariant(msg));
+	}
+
+	ProtoMessageReceivedEvent::ProtoMessageReceivedEvent(
+		const EventProducer* sender,
+		TCPSession::SessionId source,
+		ProtoMsgVariant* msg)
+		: Event(sender)
+		, mSource(source)
 		, mMessage(msg)
 	{
 	}
 
-	std::string OnProtoMessageReceived::ToString() const
+	std::string ProtoMessageReceivedEvent::ToString() const
 	{
 		std::stringstream ss;
 		// This is possibly the worst line of code I have ever written...

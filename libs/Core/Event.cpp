@@ -1,22 +1,74 @@
 #include "Event.h"
 #include "Application.h"
 
+#include "Events/TickEvent.h"
+#include "Proto/ProtoEvents.h"
+#include "TCP/TCPEvents.h"
+
+#include <sstream>
+
 namespace EventCore {
 
+	Event::Event(const EventProducer* sender)
+		: mSender(sender)
+	{}
+	
 	EventProducer::EventProducer(EventCallbackFn callback)
 		: mCallback(callback)
 	{}
 
-	void EventProducer::OnUpdate()
+	std::string EventProducer::ToString() const
 	{
-		Event* evtPtr = OnUpdateImpl();
-		if (evtPtr)
-			mCallback(evtPtr);
+		std::stringstream ss;
+		ss << "Unnamed EventProducer at " << this;
+		return ss.str();
+	}
+	
+	void EventProducer::RaiseEvent(Event* evt) const
+	{
+		mCallback(evt);
 	}
 
-	Event* EventProducer::OnUpdateImpl()
+	bool EventConsumer::DoesCareAboutEventType(Event::Type type) const
 	{
-		return nullptr;
+		return mEventsCaredAbout.find(type) != mEventsCaredAbout.end();
+	}
+
+	void EventConsumer::OnEvent(const Event& evt)
+	{
+		const Event::Type type = evt.GetType();
+		if (DoesCareAboutEventType(type))
+		{
+
+#define TYPE_SWITCH(evt_type) \
+	case Event::Type:: ## evt_type: \
+		On ## evt_type ## (reinterpret_cast<const evt_type ## Event&>(evt)); \
+		break;
+
+			switch (type)
+			{
+				TYPE_SWITCH(Tick)
+				TYPE_SWITCH(TCPClientConnected)
+				TYPE_SWITCH(TCPClientDisconnected)
+				TYPE_SWITCH(TCPServerConnected)
+				TYPE_SWITCH(TCPServerDisconnected)
+				TYPE_SWITCH(ProtoMessageReceived)
+			default:
+				ASSERTF(false, "This should be unreachable; unhandled event type: {}", type);
+			}
+		}
+#undef TYPE_SWITCH
+	}
+
+	void EventConsumer::OnProtoMessageReceived(const ProtoMessageReceivedEvent& evt)
+	{
+		const ProtoMsgVariant& msg = evt.GetMessage();
+		if (std::holds_alternative<demoproto::NumericMessage>(msg))
+			On_demoproto_NumericMessage(std::get<demoproto::NumericMessage>(msg));
+		else if (std::holds_alternative<demoproto::TextualMessage>(msg))
+			On_demoproto_TextualMessage(std::get<demoproto::TextualMessage>(msg));
+		else
+			ASSERT(false, "This should be unreachable; unrecognised event type.");
 	}
 
 	void EventQueue::RegisterConsumer(EventConsumer* consumer)

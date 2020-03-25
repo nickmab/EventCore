@@ -6,13 +6,13 @@ namespace EventCore {
 
 // throwaway macro
 #define TCP_EVT(who, what) \
-	class TCP##who##what : public Event \
+	class TCP ## who ## what ## Event : public Event \
 	{ \
 	public: \
-		TCP##who##what(std::string name = "(unnamed)"); \
+		TCP ## who ## what ## Event(const EventProducer* sender, std::string name = "(unnamed)"); \
 \
-		inline virtual Event::Type GetType() const override { return Event::Type::TCP##who##what; } \
-		inline virtual const char* const GetName() const override { return "TCP##who##whatEvent"; } \
+		inline virtual Event::Type GetType() const override { return Event::Type::TCP ## who ## what ## ; } \
+		inline virtual const char* const GetName() const override { return "TCP" #who #what "Event"; } \
 \
 		virtual std::string ToString() const override; \
 \

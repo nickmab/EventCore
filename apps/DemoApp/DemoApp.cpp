@@ -22,11 +22,11 @@ DemoApp::DemoApp(double secondsToStayAlive)
 
 void DemoApp::Init()
 {
-	mOnTickProducer.reset(new OnTickProducer(
+	mTickEventProducer.reset(new TickEventProducer(
 		std::bind(&EventQueue::EnqueueEvent, &GetEventQueue(), std::placeholders::_1),
 		1000));
 	
-	RegisterEventProducer(mOnTickProducer.get());
+	RegisterEventProducer(mTickEventProducer.get());
 
 	mEventPrinter.reset(new EventPrinter());
 	GetEventQueue().RegisterConsumer(mEventPrinter.get());

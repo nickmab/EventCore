@@ -8,8 +8,13 @@
 
 namespace EventCore {
 
-	TCPClient::TCPClient(ProtoParser* parser, const char* serverAddr, USHORT serverPort)
-		: mParser(parser)
+	TCPClient::TCPClient(
+		EventProducer::EventCallbackFn evtCallback,
+		ProtoParser* parser, 
+		const char* serverAddr, 
+		USHORT serverPort)
+		: EventProducer(evtCallback)
+		, mParser(parser)
 	{
 		mSockAddrIn.sin_family = AF_INET;
 		mSockAddrIn.sin_port = htons(serverPort);
