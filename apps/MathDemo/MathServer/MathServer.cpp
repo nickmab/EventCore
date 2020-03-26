@@ -1,4 +1,4 @@
-﻿#include "DemoClient.h"
+#include "MathServer.h"
 
 #include <Core/Logger.h>
 #include <Proto/ProtoParser.h>
@@ -6,30 +6,33 @@
 namespace EventCore {
 	Application* CreateApplication()
 	{
-		return new ::DemoClient();
+		return new ::MathServer();
 	}
 }
 
 using namespace EventCore;
 
-void DemoClient::Init()
+void MathServer::Init()
 {
+	mTickEventProducer.reset(new TickEventProducer(1000));
+	RegisterEventProducer(mTickEventProducer.get());
+
 	mEventPrinter.reset(new EventPrinter());
 	RegisterEventConsumer(mEventPrinter.get());
 
-	mTCPClient.reset(new TCPClient(ProtoParser::Protocol::DemoProto));
-	RegisterEventProducer(mTCPClient.get());
-	
-	if (!mTCPClient->Init())
+	mServer.reset(new TCPServer(ProtoParser::Protocol::DemoProto));
+	RegisterEventProducer(mServer.get());
+
+	if (!mServer->Init())
 	{
 		LOG_CRITICAL("Could not initialize client; shutting down.");
 		Shutdown(1);
 	}
 }
 
-void DemoClient::OnUpdate()
-{	
-	if (!mTCPClient->OnUpdate())
+void MathServer::OnUpdate()
+{
+	if (!mServer->OnUpdate())
 	{
 		LOG_CRITICAL("Encountered some kind of error; shutting down.");
 		Shutdown(1);
