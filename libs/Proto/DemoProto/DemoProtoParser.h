@@ -30,7 +30,7 @@ namespace EventCore {
 		virtual bool QueueMessageToWrite(const ProtoMsgVariant&) override;
 		virtual bool WriteTo(TCPSession&) override;
 
-		virtual inline bool HasData() override { return mOutputBuffer.peek() != std::char_traits<char>::eof(); }
+		virtual bool HasData() override;
 
 	private:
 		// these are used for i/o buffering and caching, saves you

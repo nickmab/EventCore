@@ -66,12 +66,42 @@ namespace EventCore {
 	void EventConsumer::OnProtoMessageReceived(const ProtoMessageReceivedEvent& evt)
 	{
 		const ProtoMsgVariant& msg = evt.GetMessage();
-		if (std::holds_alternative<demoproto::NumericMessage>(msg))
-			On_demoproto_NumericMessage(evt, std::get<demoproto::NumericMessage>(msg));
-		else if (std::holds_alternative<demoproto::TextualMessage>(msg))
-			On_demoproto_TextualMessage(evt, std::get<demoproto::TextualMessage>(msg));
+		if (std::holds_alternative<demoproto::WrappedMessage>(msg))
+		{
+			auto wrapped = std::get<demoproto::WrappedMessage>(msg);
+			if (wrapped.has_numeric_message())
+			{
+				On_demoproto_NumericMessage(evt, wrapped.numeric_message());
+			}
+			else if (wrapped.has_textual_message())
+			{
+				On_demoproto_TextualMessage(evt, wrapped.textual_message());
+			}
+			else
+			{
+				ASSERT(false, "Unreachable: unrecognised message type.");
+			}
+		}
+		else if (std::holds_alternative<mathproto::WrappedMessage>(msg))
+		{
+			auto wrapped = std::get<mathproto::WrappedMessage>(msg);
+			if (wrapped.has_arithmetic_request())
+			{
+				On_mathproto_ArithmeticRequest(evt, wrapped.arithmetic_request());
+			}
+			else if (wrapped.has_arithmetic_response())
+			{
+				On_mathproto_ArithmeticResponse(evt, wrapped.arithmetic_response());
+			}
+			else
+			{
+				ASSERT(false, "Unreachable: unrecognised message type.");
+			}
+		}
 		else
+		{
 			ASSERT(false, "This should be unreachable; unrecognised event type.");
+		}
 	}
 
 	void EventQueue::RegisterConsumer(EventConsumer* consumer)

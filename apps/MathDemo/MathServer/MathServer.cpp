@@ -14,14 +14,11 @@ using namespace EventCore;
 
 void MathServer::Init()
 {
-	mTickEventProducer.reset(new TickEventProducer(1000));
-	RegisterEventProducer(mTickEventProducer.get());
-
-	mEventPrinter.reset(new EventPrinter());
-	RegisterEventConsumer(mEventPrinter.get());
-
-	mServer.reset(new TCPServer(ProtoParser::Protocol::DemoProto));
+	mServer.reset(new TCPServer(ProtoParser::Protocol::MathProto));
 	RegisterEventProducer(mServer.get());
+
+	mAnswerer.reset(new QuestionAnswerer());
+	RegisterEventConsumer(mAnswerer.get());
 
 	if (!mServer->Init())
 	{
@@ -35,6 +32,18 @@ void MathServer::OnUpdate()
 	if (!mServer->OnUpdate())
 	{
 		LOG_CRITICAL("Encountered some kind of error; shutting down.");
+		Shutdown(1);
+	}
+}
+
+void MathServer::SendAnswer(TCPSession::SessionId sessionId, const ProtoMsgVariant& msg)
+{
+	if (!mServer->QueueOutgoingMessage(sessionId, msg))
+	{
+		LOGF_CRITICAL("Unable to queue outgoing message to session ID {}: {}",
+			sessionId,
+			std::visit([](const auto& arg) -> std::string { return arg.DebugString(); },
+				msg));
 		Shutdown(1);
 	}
 }

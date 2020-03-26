@@ -55,9 +55,6 @@ namespace EventCore {
 				mRecvBufSize - mNumBytesInRecvBuffer,
 				recvFlags);
 
-			//if (bytesOrError > 0)
-			//	LOGF_TRACE("BADWRONG: {}", std::string(mRecvBuffer, mRecvBufSize));
-
 			if (bytesOrError == 0)
 			{
 				LOG_INFO("The other side has disconnected gracefully.");
@@ -90,9 +87,7 @@ namespace EventCore {
 	{
 		unsigned short attemptCount = 0;
 		int totalBytesSent = 0;
-		const int totalBytesToSend = data.size() + 1;
-		LOGF_TRACE("Bytes to send: {}", totalBytesToSend);
-		LOGF_TRACE("Data: {}", data);
+		const int totalBytesToSend = data.size();
 		
 		while (attemptCount++ < MAX_WRITE_ATTEMPTS)
 		{

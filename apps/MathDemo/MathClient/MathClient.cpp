@@ -1,7 +1,8 @@
 #include "MathClient.h"
 
 #include <Core/Logger.h>
-#include <Proto/ProtoParser.h>
+
+#include <variant>
 
 namespace EventCore {
 	Application* CreateApplication()
@@ -14,11 +15,17 @@ using namespace EventCore;
 
 void MathClient::Init()
 {
-	mEventPrinter.reset(new EventPrinter());
-	RegisterEventConsumer(mEventPrinter.get());
-
 	mTCPClient.reset(new TCPClient(ProtoParser::Protocol::MathProto));
 	RegisterEventProducer(mTCPClient.get());
+
+	mTickEventProducer.reset(new TickEventProducer(1000));
+	RegisterEventProducer(mTickEventProducer.get());
+
+	mRouter.reset(new QAndARouter());
+	RegisterEventConsumer(mRouter.get());
+
+	mQuestionGen.reset(new QuestionGenerator(*mRouter));
+	RegisterEventConsumer(mQuestionGen.get());
 
 	if (!mTCPClient->Init())
 	{
@@ -32,6 +39,17 @@ void MathClient::OnUpdate()
 	if (!mTCPClient->OnUpdate())
 	{
 		LOG_CRITICAL("Encountered some kind of error; shutting down.");
+		Shutdown(1);
+	}
+}
+
+void MathClient::SendQuestion(const ProtoMsgVariant& msg)
+{
+	if (!mTCPClient->QueueOutgoingMessage(msg))
+	{
+		LOGF_CRITICAL("Unable to queue outgoing message: {}", 
+			std::visit([](const auto& arg) -> std::string { return arg.DebugString(); },
+				msg));
 		Shutdown(1);
 	}
 }

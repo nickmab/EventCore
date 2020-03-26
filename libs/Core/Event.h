@@ -13,6 +13,11 @@ namespace demoproto {
 	class TextualMessage;
 }
 
+namespace mathproto {
+	class ArithmeticRequest;
+	class ArithmeticResponse;
+}
+
 namespace EventCore {
 
 	// Forward decs of event types
@@ -29,7 +34,6 @@ namespace EventCore {
 	class Event
 	{
 	public:
-
 		Event(const EventProducer* sender);
 
 		// ALL events MUST be added to this enum.
@@ -107,6 +111,8 @@ namespace EventCore {
 		virtual void OnProtoMessageReceived(const ProtoMessageReceivedEvent&);
 		virtual void On_demoproto_NumericMessage(const ProtoMessageReceivedEvent&, const demoproto::NumericMessage&) {}
 		virtual void On_demoproto_TextualMessage(const ProtoMessageReceivedEvent&, const demoproto::TextualMessage&) {}
+		virtual void On_mathproto_ArithmeticRequest(const ProtoMessageReceivedEvent&, const mathproto::ArithmeticRequest&) {}
+		virtual void On_mathproto_ArithmeticResponse(const ProtoMessageReceivedEvent&, const mathproto::ArithmeticResponse&) {}
 	};
 
 	// Takes ownership of the lifetime of the Event instances.

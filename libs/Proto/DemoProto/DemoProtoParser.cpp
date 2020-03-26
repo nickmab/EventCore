@@ -115,4 +115,9 @@ namespace EventCore {
 		return session.Send(data);
 	}
 
+	bool DemoProtoParser::HasData()
+	{
+		return mOutputBuffer.str().length() > 0;
+	}
+
 }

@@ -23,6 +23,8 @@ namespace EventCore {
 		// ...obviously we might have message fragmentation too.
 
 		std::string data = mInputBuffer.str();
+		// clear the input buffer...
+		mInputBuffer.str(std::string());
 		size_t dataIndex = 0;
 		const size_t dataLength = data.length();
 		WrappedMessage wrapped;
@@ -73,7 +75,7 @@ namespace EventCore {
 				}
 			}
 		}
-
+		
 		// whatever fragment remains, write it to the buffer for next time.
 		mInputBuffer.write(&data[dataIndex], dataLength - dataIndex);
 		return true;
@@ -111,8 +113,14 @@ namespace EventCore {
 	bool MathProtoParser::WriteTo(TCPSession& session)
 	{
 		std::string data(mOutputBuffer.str());
-		mOutputBuffer.str(std::string()); // this is how you clear a stringstream.
+		// clear the output buffer
+		mOutputBuffer.str(std::string());
 		return session.Send(data);
+	}
+
+	bool MathProtoParser::HasData()
+	{
+		return mOutputBuffer.str().length() > 0;
 	}
 
 }

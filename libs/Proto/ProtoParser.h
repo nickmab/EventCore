@@ -42,7 +42,7 @@ namespace EventCore {
 
 		// this *should* really be const, but for practial impl reasons
 		// right now it is not. see DemoProtoParser implementation.
-		virtual inline bool HasData() = 0;
+		virtual bool HasData() = 0;
 	};
 
 }
