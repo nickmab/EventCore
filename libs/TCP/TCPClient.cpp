@@ -68,8 +68,7 @@ namespace EventCore {
 		TCPDataInterface* newInterface = new TCPDataInterface(mMakeNewParser(), sock);
 		mDataInterface.reset(newInterface);
 
-		TCPServerConnectedEvent* connEvt = new TCPServerConnectedEvent(this, newInterface->mSession.GetSessionId());
-		Application::Get().GetEventQueue().EnqueueEvent(connEvt);
+		RaiseEvent(new TCPServerConnectedEvent(this, newInterface->mSession.GetSessionId()));
 
 		mInitialized = true;
 		mRunning = true;
@@ -118,8 +117,7 @@ namespace EventCore {
 	{
 		// the mServerSession going out of scope should automatically call 
 		// destructors to free memory and close the socket.
-		TCPServerDisconnectedEvent* disconnEvt = new TCPServerDisconnectedEvent(this, mDataInterface->mSession.GetSessionId());
-		Application::Get().GetEventQueue().EnqueueEvent(disconnEvt);
+		RaiseEvent(new TCPServerDisconnectedEvent(this, mDataInterface->mSession.GetSessionId()));
 		
 		WSACleanup();
 		mRunning = false;
