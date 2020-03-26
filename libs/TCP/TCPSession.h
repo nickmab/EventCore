@@ -9,7 +9,7 @@ namespace EventCore {
 	// sanity check as we keep allocing more if the buffer needs to grow. 
 	const size_t MAX_RECV_BUF_SIZE = 65536;
 	const unsigned short MAX_WRITE_ATTEMPTS = 10;
-		
+	
 	// When either a TCPServer or TCPClient actually initiates a connection 
 	// on a port (i.e. once a conn is accepted on the listening port),
 	// use one of these to manage the communication from there on.
@@ -45,6 +45,8 @@ namespace EventCore {
 		// and log the error/reason.
 		bool Send(const std::string&, int sendFlags = 0);
 
+		inline SOCKET GetSocket() { return mSocket; }
+
 	private:
 		static SessionId sSessionIdCounter;
 		SessionId mSessionId;
@@ -60,5 +62,7 @@ namespace EventCore {
 		// something must be wrong).
 		bool ReallocRecvBufferByDoublingSizeAndMovingContents();
 	};
+
+
 
 }

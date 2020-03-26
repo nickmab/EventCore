@@ -107,8 +107,8 @@ namespace EventCore {
 		virtual void OnTCPServerDisconnected(const TCPServerDisconnectedEvent&) {}
 		
 		virtual void OnProtoMessageReceived(const ProtoMessageReceivedEvent&);
-		virtual void On_demoproto_NumericMessage(const demoproto::NumericMessage&) {}
-		virtual void On_demoproto_TextualMessage(const demoproto::TextualMessage&) {}
+		virtual void On_demoproto_NumericMessage(const ProtoMessageReceivedEvent&, const demoproto::NumericMessage&) {}
+		virtual void On_demoproto_TextualMessage(const ProtoMessageReceivedEvent&, const demoproto::TextualMessage&) {}
 	};
 
 	// Takes ownership of the lifetime of the Event instances.

@@ -3,6 +3,7 @@
 #include "Core/Event.h"
 #include "TCP/TCPSession.h"
 #include "DemoProto/DemoProto.pb.h"
+#include "MathProto/MathProto.pb.h"
 
 #include <variant>
 
@@ -13,11 +14,16 @@ namespace EventCore {
 	using ProtoMsgVariant = std::variant<
 		demoproto::NumericMessage,
 		demoproto::TextualMessage,
-		demoproto::WrappedMessage>;
+		demoproto::WrappedMessage,
+		mathproto::ArithmeticRequest,
+		mathproto::ArithmeticResponse,
+		mathproto::WrappedMessage>;
 
 	class ProtoParser : public EventProducer
 	{
 	public:
+		using ParserFactoryFn = std::function<ProtoParser * (void)>;
+		
 		ProtoParser(EventProducer::EventCallbackFn);
 		virtual ~ProtoParser() {}
 		

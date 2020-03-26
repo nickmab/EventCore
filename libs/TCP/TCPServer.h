@@ -6,6 +6,7 @@
 #include <memory>
 
 #include "TCPSession.h"
+#include "TCPDataInterface.h"
 
 #include "Core/Event.h"
 #include "Proto/ProtoParser.h"
@@ -21,11 +22,9 @@ namespace EventCore {
 	class TCPServer : public EventProducer
 	{
 	public:
-		using ParserFactoryFn = std::function<ProtoParser * (void)>;
-		
 		TCPServer(
 			EventProducer::EventCallbackFn, 
-			ParserFactoryFn, 
+			ProtoParser::ParserFactoryFn,
 			ULONG inAddr = DEFAULT_IN_ADDR, 
 			USHORT listeningPort = DEFAULT_LISTENING_PORT);
 		~TCPServer();
@@ -41,28 +40,30 @@ namespace EventCore {
 		
 		void Shutdown();
 
-		// temporary...
-		bool QueueWriteData(SOCKET, const ProtoMsgVariant&);
+		bool QueueOutgoingMessage(TCPSession::SessionId, const ProtoMsgVariant&);
 
 	private:
 		sockaddr_in mSockAddrIn;
 		SOCKET mListeningSocket{0};
 		fd_set mFDSet{0};
 
-		ParserFactoryFn mMakeNewParser;
-		// This is the thing that actually _owns_ the parser (and the events it produces/consumes).
-		struct ClientDataInterface
-		{
-			ClientDataInterface(ProtoParser*, SOCKET, size_t initialRecvBufSize = 1024);
-			~ClientDataInterface();
-			TCPSession mSession;
-			std::unique_ptr<ProtoParser> mParser;
-		};
-		std::map<SOCKET, ClientDataInterface> mClientMap;
-		
+		ProtoParser::ParserFactoryFn mMakeNewParser;
+		// TCPDataInterface actually _owns_ the parser (and the events it produces/consumes).
+		// The use of unique_ptr here is due to the awkwardness of construction and moving/emplacement
+		// within the map (awkard due to the way I chose to key this map on session ID. No biggie. Fix later.
+		std::map<TCPSession::SessionId, std::unique_ptr<TCPDataInterface> > mClientMap;
+		// I freely admit this is a horrendous hack but it will do for now. 
+		// The above is keyed on session id for the sake of writing/queueing/routing
+		// outgoing messages, but when we choose a socket to _read_ from using the select function,
+		// we do need to look up the right client by its socket, not the TCPSessionId.
+		// Returns nullptr if not found.
+		TCPDataInterface* FindClientInClientMapBySocket(SOCKET);
+
 		bool mInitialized{false};
 		bool mRunning{false};
 		bool mShutdown{false};
+
+		
 	};
 
 }

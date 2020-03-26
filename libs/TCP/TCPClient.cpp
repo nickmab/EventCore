@@ -1,5 +1,6 @@
 #include "TCPClient.h"
 #include "TCPUtils.h"
+#include "Core/Application.h"
 #include "Core/Logger.h"
 
 #include <sstream>
@@ -10,11 +11,11 @@ namespace EventCore {
 
 	TCPClient::TCPClient(
 		EventProducer::EventCallbackFn evtCallback,
-		ProtoParser* parser, 
+		ProtoParser::ParserFactoryFn makeNewParser,
 		const char* serverAddr, 
 		USHORT serverPort)
 		: EventProducer(evtCallback)
-		, mParser(parser)
+		, mMakeNewParser(makeNewParser)
 	{
 		mSockAddrIn.sin_family = AF_INET;
 		mSockAddrIn.sin_port = htons(serverPort);
@@ -64,7 +65,12 @@ namespace EventCore {
 		}
 
 		LOG_INFO("Successfully initialized client and connected to server.");
-		mServerSession.reset(new TCPSession(sock));
+		TCPDataInterface* newInterface = new TCPDataInterface(mMakeNewParser(), sock);
+		mDataInterface.reset(newInterface);
+
+		TCPServerConnectedEvent* connEvt = new TCPServerConnectedEvent(this, newInterface->mSession.GetSessionId());
+		Application::Get().GetEventQueue().EnqueueEvent(connEvt);
+
 		mInitialized = true;
 		mRunning = true;
 		return true;
@@ -78,7 +84,9 @@ namespace EventCore {
 			return false;
 		}
 
-		if (mParser->HasData() && !mParser->WriteTo(*mServerSession))
+		auto& parser = mDataInterface->mParser;
+		auto& session = mDataInterface->mSession;
+		if (parser->HasData() && !parser->WriteTo(session))
 		{
 			LOG_CRITICAL("Some kind of error sending data to server. Shutting down.");
 			Shutdown();
@@ -86,16 +94,16 @@ namespace EventCore {
 		}
 
 		// Now see if there's anything to read...
-		if (!mServerSession->Recv())
+		if (!session.Recv())
 		{
 			LOG_CRITICAL("Some kind of error recv'ing from socket. Disconnecting.");
 			Shutdown();
 			return false;
 		}
 
-		if (mServerSession->BufferHasData())
+		if (session.BufferHasData())
 		{
-			if (!mParser->ConsumeFrom(*mServerSession))
+			if (!parser->ConsumeFrom(session))
 			{
 				LOG_ERROR("Some kind of error parsing socket data. Shutting down.");
 				Shutdown();
@@ -110,14 +118,17 @@ namespace EventCore {
 	{
 		// the mServerSession going out of scope should automatically call 
 		// destructors to free memory and close the socket.
+		TCPServerDisconnectedEvent* disconnEvt = new TCPServerDisconnectedEvent(this, mDataInterface->mSession.GetSessionId());
+		Application::Get().GetEventQueue().EnqueueEvent(disconnEvt);
+		
 		WSACleanup();
 		mRunning = false;
 		mShutdown = true;
 	}
 
-	bool TCPClient::QueueWriteData(const ProtoMsgVariant& msg)
+	bool TCPClient::QueueOutgoingMessage(const ProtoMsgVariant& msg)
 	{
-		return mParser->QueueMessageToWrite(msg);
+		return mDataInterface->mParser->QueueMessageToWrite(msg);
 	}
 
 }

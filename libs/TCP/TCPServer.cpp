@@ -1,5 +1,6 @@
-#include "Core/Application.h"
 #include "TCPServer.h"
+
+#include "Core/Application.h"
 #include "TCPUtils.h"
 #include "Core/Logger.h"
 #include "TCPEvents.h"
@@ -11,7 +12,7 @@ namespace EventCore {
 
 	TCPServer::TCPServer(
 		EventProducer::EventCallbackFn evtCallback, 
-		ParserFactoryFn makeNewParser, 
+		ProtoParser::ParserFactoryFn makeNewParser,
 		ULONG inAddr, 
 		USHORT listeningPort)
 		: EventProducer(evtCallback)
@@ -26,19 +27,7 @@ namespace EventCore {
 	{
 		if (!mShutdown)
 			Shutdown();
-	}
-
-	TCPServer::ClientDataInterface::ClientDataInterface(ProtoParser* parser, SOCKET sock, size_t initialRecvBufSize)
-		: mSession(sock, initialRecvBufSize)
-		, mParser(parser)
-	{
-		Application::Get().RegisterEventProducer(parser);
-	}
-
-	TCPServer::ClientDataInterface::~ClientDataInterface()
-	{
-		Application::Get().UnregisterEventProducer(mParser.get());
-	}
+	}	
 
 	bool TCPServer::Init()
 	{
@@ -90,6 +79,20 @@ namespace EventCore {
 		return true;
 	}
 
+	TCPDataInterface* TCPServer::FindClientInClientMapBySocket(SOCKET sock)
+	{
+		TCPDataInterface* maybeFound = nullptr;
+		for (auto& sIdToData : mClientMap)
+		{
+			if (sIdToData.second->mSession.GetSocket() == sock)
+			{
+				maybeFound = sIdToData.second.get();
+				break;
+			}
+		}
+		return maybeFound;
+	}
+
 	bool TCPServer::OnUpdate()
 	{
 		if (!mRunning)
@@ -99,27 +102,27 @@ namespace EventCore {
 		}
 
 		// First see if we have anything queued to write out to existing clients.
-		std::vector<SOCKET> clientsToDrop;
-		for (auto& sockAndData : mClientMap)
+		// We drop the client if we can no longer write to them / if there is some kind of error.
+		std::vector<TCPSession::SessionId> mapItemsToErase;
+		for (auto& sIdToData : mClientMap)
 		{
-			auto& session = sockAndData.second.mSession;
-			auto& parser = sockAndData.second.mParser;
+			const auto sessionId = sIdToData.first;
+			auto& session = sIdToData.second->mSession;
+			auto& parser = sIdToData.second->mParser;
 			if (parser->HasData() && !parser->WriteTo(session))
 			{
 				LOG_WARN("Error trying to write to client; dropping it.");
-				std::stringstream ss;
-				ss << "Client socket: " << sockAndData.first;
-				TCPClientDisconnectedEvent* disconnEvt = new TCPClientDisconnectedEvent(this, ss.str());
+				
+				FD_CLR(session.GetSocket(), &mFDSet);
+				
+				TCPClientDisconnectedEvent* disconnEvt = new TCPClientDisconnectedEvent(this, sessionId);
 				Application::Get().GetEventQueue().EnqueueEvent(disconnEvt);
-				clientsToDrop.push_back(sockAndData.first);
+				mapItemsToErase.push_back(sessionId);
 			}
 		}
 
-		for (auto& sock : clientsToDrop)
-		{
-			mClientMap.erase(sock);
-			FD_CLR(sock, &mFDSet);
-		}
+		for (auto sessionId : mapItemsToErase)
+			mClientMap.erase(sessionId);
 
 		// Then we call "select" to see if there's any data anywhere.
 		fd_set copyOfExistingFDSet = mFDSet;
@@ -150,19 +153,15 @@ namespace EventCore {
 				}
 
 				FD_SET(newClient, &mFDSet);
-				mClientMap.emplace(
-					std::piecewise_construct,
-					/* map key */
-					std::forward_as_tuple(newClient),
-					/* constructor args for ClientDataInterface */
-					std::forward_as_tuple(
-						mMakeNewParser(),
-						newClient)
-					);
+
+				// OK I've accidentally made this kind of awkward because we need to construct the object
+				// to get a unique session id, but we want to key the map of the instances by session id. heh.
+				// easily fixed, but leaving it like this for now.
+				TCPDataInterface* newDataInterface = new TCPDataInterface(mMakeNewParser(), newClient);
+				const auto sessionId = newDataInterface->mSession.GetSessionId();
+				mClientMap.emplace(sessionId, newDataInterface);
 				
-				std::stringstream ss;
-				ss << "Client socket: " << newClient;
-				TCPClientConnectedEvent* connEvt = new TCPClientConnectedEvent(this, ss.str());
+				TCPClientConnectedEvent* connEvt = new TCPClientConnectedEvent(this, sessionId);
 				Application::Get().GetEventQueue().EnqueueEvent(connEvt);
 			}
 			else
@@ -170,8 +169,9 @@ namespace EventCore {
 				// If we have data on an existing socket of an existing session, recv from it.
 				// As long as we can read without blocking (i.e. there is data there),
 				// keep filling up the session buffer...
-				auto clientData = mClientMap.find(sock);
-				if (clientData == mClientMap.end())
+				
+				TCPDataInterface* clientData = FindClientInClientMapBySocket(sock);
+				if (!clientData)
 				{
 					LOG_CRITICAL("Tried to read data from unknown socket/session!");
 					Shutdown();
@@ -179,24 +179,25 @@ namespace EventCore {
 				}
 				else
 				{
-					auto& session = clientData->second.mSession;
+					auto& session = clientData->mSession;
+					const auto sessionId = session.GetSessionId();
 					if (!session.Recv())
 					{
 						LOG_ERROR("Some kind of error recv'ing from socket. Deleting client.");
-						std::stringstream ss;
-						ss << "Client socket: " << sock;
-						TCPClientDisconnectedEvent* disconnEvt = new TCPClientDisconnectedEvent(this, ss.str());
+						
+						TCPClientDisconnectedEvent* disconnEvt = new TCPClientDisconnectedEvent(this, sessionId);
 						Application::Get().GetEventQueue().EnqueueEvent(disconnEvt);
+
 						FD_CLR(sock, &mFDSet);
-						mClientMap.erase(sock);
+						mClientMap.erase(sessionId);
 					}
 					else if (session.BufferHasData())
 					{
-						if (!clientData->second.mParser->ConsumeFrom(session))
+						if (!clientData->mParser->ConsumeFrom(session))
 						{
 							LOG_ERROR("Some kind of error parsing socket data. Deleting client.");
 							FD_CLR(sock, &mFDSet);
-							mClientMap.erase(sock);
+							mClientMap.erase(sessionId);
 						}
 					}
 				}
@@ -206,12 +207,12 @@ namespace EventCore {
 		return true;
 	}
 
-	bool TCPServer::QueueWriteData(SOCKET sock, const ProtoMsgVariant& msg)
+	bool TCPServer::QueueOutgoingMessage(TCPSession::SessionId sessionId, const ProtoMsgVariant& msg)
 	{
-		auto it = mClientMap.find(sock);
+		auto it = mClientMap.find(sessionId);
 		if (it == mClientMap.end())
 			return false;
-		return it->second.mParser->QueueMessageToWrite(msg);
+		return it->second->mParser->QueueMessageToWrite(msg);
 	}
 
 	void TCPServer::Shutdown()

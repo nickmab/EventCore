@@ -11,6 +11,12 @@ using namespace EventCore;
 
 class DemoClient : public Application
 {
+public:
+	DemoClient() {}
+
+	ProtoParser* NewProtoParser();
+
+private:
 	std::unique_ptr<TCPClient> mTCPClient{nullptr};
 	std::unique_ptr<ProtoParser> mProtoParser{nullptr};
 	std::unique_ptr<EventPrinter> mEventPrinter{nullptr};

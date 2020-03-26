@@ -4,7 +4,9 @@
 
 #include <memory>
 
+#include "TCPEvents.h"
 #include "TCPSession.h"
+#include "TCPDataInterface.h"
 #include "Proto/ProtoParser.h"
 #include "Core/Event.h"
 
@@ -20,7 +22,7 @@ namespace EventCore {
 	public:
 		TCPClient(
 			EventProducer::EventCallbackFn,
-			ProtoParser*,
+			ProtoParser::ParserFactoryFn,
 			const char* serverAddr = DEFAULT_SERVER_ADDR, 
 			USHORT serverPort = DEFAULT_SERVER_PORT);
 		~TCPClient();
@@ -36,13 +38,15 @@ namespace EventCore {
 		
 		void Shutdown();
 
-		// temporary...
-		bool QueueWriteData(const ProtoMsgVariant&);
+		bool QueueOutgoingMessage(const ProtoMsgVariant&);
 
 	private:
 		sockaddr_in mSockAddrIn;
-		std::unique_ptr<TCPSession> mServerSession;
-		ProtoParser* mParser;
+		
+		ProtoParser::ParserFactoryFn mMakeNewParser;
+		// This is the thing that actually _owns_ the parser (and the events it produces/consumes).
+		std::unique_ptr<TCPDataInterface> mDataInterface{nullptr};
+		
 		bool mInitialized{false};
 		bool mRunning{false};
 		bool mShutdown{false};

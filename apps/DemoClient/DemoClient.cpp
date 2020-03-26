@@ -14,6 +14,14 @@ namespace EventCore {
 
 using namespace EventCore;
 
+ProtoParser* DemoClient::NewProtoParser()
+{
+	// This function lives here so we can bind it to the correct event production callback. 
+	// I don't fully love this pattern, it might change.
+	return new DemoProtoParser(
+		std::bind(&EventQueue::EnqueueEvent, &GetEventQueue(), std::placeholders::_1));
+}
+
 void DemoClient::Init()
 {
 	mEventPrinter.reset(new EventPrinter());
@@ -26,7 +34,7 @@ void DemoClient::Init()
 
 	mTCPClient.reset(new TCPClient(
 		std::bind(&EventQueue::EnqueueEvent, &GetEventQueue(), std::placeholders::_1),
-		mProtoParser.get()));
+		std::bind(&DemoClient::NewProtoParser, this)));
 	
 	if (!mTCPClient->Init())
 	{

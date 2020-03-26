@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package mathproto;
+
+enum ArithmeticOperator {
+    PLUS = 0;
+    MINUS = 1;
+    TIMES = 2;
+    DIVBY = 3;
+}
+
+message ArithmeticRequest {
+	uint64 request_id = 1; 
+	double lhs = 2;
+	ArithmeticOperator op = 3;
+	double rhs = 4;
+}
+
+message ArithmeticResponse {
+	uint64 request_id = 1;
+	double result = 2;
+}
+
+// for use sending / reading things on the wire
+message WrappedMessage {
+	oneof msg {
+		ArithmeticRequest arithmetic_request = 1;
+		ArithmeticResponse arithmetic_response = 2;
+	}
+}

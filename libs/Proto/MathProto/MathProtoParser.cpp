@@ -1,32 +1,32 @@
-#include "DemoProtoParser.h"
+#include "MathProtoParser.h"
 
 #include "Core/Logger.h"
 
 namespace EventCore {
 
-	ProtoParser* DemoProtoParser::New(EventProducer::EventCallbackFn callback)
+	ProtoParser* MathProtoParser::New(EventProducer::EventCallbackFn callback)
 	{
-		return new DemoProtoParser(callback);
+		return new MathProtoParser(callback);
 	}
 
-	DemoProtoParser::DemoProtoParser(EventProducer::EventCallbackFn callback)
+	MathProtoParser::MathProtoParser(EventProducer::EventCallbackFn callback)
 		: ProtoParser(callback)
 	{
 	}
-	
-	bool DemoProtoParser::ConsumeFrom(TCPSession& session)
+
+	bool MathProtoParser::ConsumeFrom(TCPSession& session)
 	{
 		mInputBuffer << session.GetAllRecvBufferContents();
 
 		// should have i) message size (4 bytes) then a ii) WrappedMessage.
 		// check the type of the WrappedMessage, then farm out events accordingly.
 		// ...obviously we might have message fragmentation too.
-		
+
 		std::string data = mInputBuffer.str();
 		size_t dataIndex = 0;
 		const size_t dataLength = data.length();
 		WrappedMessage wrapped;
-		
+
 		for (;;)
 		{
 			const size_t bytesLeft = dataLength - dataIndex;
@@ -79,21 +79,21 @@ namespace EventCore {
 		return true;
 	}
 
-	bool DemoProtoParser::QueueMessageToWrite(const ProtoMsgVariant& inMsg)
+	bool MathProtoParser::QueueMessageToWrite(const ProtoMsgVariant& inMsg)
 	{
 		WrappedMessage wrapped;
-		
+
 		// populate wrapped message with the correct internal data
 		// according to which "oneof" type the caller has provided...
-		if (std::holds_alternative<NumericMessage>(inMsg))
+		if (std::holds_alternative<ArithmeticRequest>(inMsg))
 		{
-			NumericMessage* msg = wrapped.mutable_numeric_message();
-			*msg = std::get<NumericMessage>(inMsg);
+			ArithmeticRequest* msg = wrapped.mutable_arithmetic_request();
+			*msg = std::get<ArithmeticRequest>(inMsg);
 		}
-		else if (std::holds_alternative<TextualMessage>(inMsg))
+		else if (std::holds_alternative<ArithmeticResponse>(inMsg))
 		{
-			TextualMessage* msg = wrapped.mutable_textual_message();
-			*msg = std::get<TextualMessage>(inMsg);
+			ArithmeticResponse* msg = wrapped.mutable_arithmetic_response();
+			*msg = std::get<ArithmeticResponse>(inMsg);
 		}
 		else
 		{
@@ -108,7 +108,7 @@ namespace EventCore {
 		return wrapped.SerializeToOstream(&mOutputBuffer);
 	}
 
-	bool DemoProtoParser::WriteTo(TCPSession& session)
+	bool MathProtoParser::WriteTo(TCPSession& session)
 	{
 		std::string data(mOutputBuffer.str());
 		mOutputBuffer.str(std::string()); // this is how you clear a stringstream.

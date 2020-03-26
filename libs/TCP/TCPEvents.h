@@ -2,6 +2,8 @@
 
 #include "Core/Event.h"
 
+#include "TCPSession.h"
+
 namespace EventCore {
 
 // throwaway macro
@@ -9,14 +11,20 @@ namespace EventCore {
 	class TCP ## who ## what ## Event : public Event \
 	{ \
 	public: \
-		TCP ## who ## what ## Event(const EventProducer* sender, std::string name = "(unnamed)"); \
+		TCP ## who ## what ## Event( \
+			const EventProducer* sender, \
+			TCPSession::SessionId, \
+			std::string name = "(unnamed)"); \
 \
 		inline virtual Event::Type GetType() const override { return Event::Type::TCP ## who ## what ## ; } \
 		inline virtual const char* const GetName() const override { return "TCP" #who #what "Event"; } \
 \
 		virtual std::string ToString() const override; \
 \
+		inline TCPSession::SessionId GetSessionId() const { return mSessionId; } \
+\
 	private: \
+		TCPSession::SessionId mSessionId; \
 		std::string mName; \
 	};
 

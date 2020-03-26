@@ -64,9 +64,9 @@ namespace EventCore {
 	{
 		const ProtoMsgVariant& msg = evt.GetMessage();
 		if (std::holds_alternative<demoproto::NumericMessage>(msg))
-			On_demoproto_NumericMessage(std::get<demoproto::NumericMessage>(msg));
+			On_demoproto_NumericMessage(evt, std::get<demoproto::NumericMessage>(msg));
 		else if (std::holds_alternative<demoproto::TextualMessage>(msg))
-			On_demoproto_TextualMessage(std::get<demoproto::TextualMessage>(msg));
+			On_demoproto_TextualMessage(evt, std::get<demoproto::TextualMessage>(msg));
 		else
 			ASSERT(false, "This should be unreachable; unrecognised event type.");
 	}
