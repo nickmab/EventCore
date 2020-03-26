@@ -64,12 +64,18 @@ namespace EventCore {
 			return false;
 		}
 
-		LOG_INFO("Successfully initialized client and connected to server.");
-		TCPDataInterface* newInterface = new TCPDataInterface(
-			ProtoParser::New(mProtocol, mCallback), 
-			sock);
+		ProtoParser* parser = ProtoParser::New(mProtocol, mCallback);
+		if (!parser)
+		{
+			LOGF_ERROR("Unrecognised protocol; unable to create parser: {}", mProtocol);
+			closesocket(sock);
+			return false;
+		}
+
+		TCPDataInterface* newInterface = new TCPDataInterface(parser, sock);
 		mDataInterface.reset(newInterface);
 
+		LOG_INFO("Successfully initialized client and connected to server.");
 		RaiseEvent(new TCPServerConnectedEvent(this, newInterface->mSession.GetSessionId()));
 
 		mInitialized = true;

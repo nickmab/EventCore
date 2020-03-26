@@ -15,6 +15,7 @@ namespace EventCore {
 			return new MathProtoParser(callback);
 		default:
 			ASSERTF(false, "This should be unreachable! Unknown proto: {}", proto);
+			return nullptr;
 		}
 	}
 	

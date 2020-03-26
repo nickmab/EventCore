@@ -156,9 +156,13 @@ namespace EventCore {
 				// OK I've accidentally made this kind of awkward because we need to construct the object
 				// to get a unique session id, but we want to key the map of the instances by session id. heh.
 				// easily fixed, but leaving it like this for now.
-				TCPDataInterface* newDataInterface = new TCPDataInterface(
-					ProtoParser::New(mProtocol, mCallback),
-					newClient);
+				ProtoParser* parser = ProtoParser::New(mProtocol, mCallback);
+				if (!parser)
+				{
+					LOGF_ERROR("Unrecognised protocol; unable to create parser: {}", mProtocol);
+					return false;
+				}
+				TCPDataInterface* newDataInterface = new TCPDataInterface(parser, newClient);
 				const auto sessionId = newDataInterface->mSession.GetSessionId();
 				mClientMap.emplace(sessionId, newDataInterface);
 				
