@@ -11,12 +11,12 @@
 namespace EventCore {
 
 	TCPServer::TCPServer(
-		ProtoParser::ParserFactoryFn makeNewParser,
+		ProtoParser::Protocol proto,
 		EventProducer::EventCallbackFn evtCallback,
 		ULONG inAddr, 
 		USHORT listeningPort)
 		: EventProducer(evtCallback)
-		, mMakeNewParser(makeNewParser)
+		, mProtocol(proto)
 	{
 		mSockAddrIn.sin_family = AF_INET;
 		mSockAddrIn.sin_port = htons(listeningPort);
@@ -156,7 +156,9 @@ namespace EventCore {
 				// OK I've accidentally made this kind of awkward because we need to construct the object
 				// to get a unique session id, but we want to key the map of the instances by session id. heh.
 				// easily fixed, but leaving it like this for now.
-				TCPDataInterface* newDataInterface = new TCPDataInterface(mMakeNewParser(), newClient);
+				TCPDataInterface* newDataInterface = new TCPDataInterface(
+					ProtoParser::New(mProtocol, mCallback),
+					newClient);
 				const auto sessionId = newDataInterface->mSession.GetSessionId();
 				mClientMap.emplace(sessionId, newDataInterface);
 				

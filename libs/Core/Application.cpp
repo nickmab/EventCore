@@ -35,6 +35,16 @@ namespace EventCore {
 			mEventProducers.erase(it);
 	}
 
+	void Application::RegisterEventConsumer(EventConsumer* consumer)
+	{
+		mEventQueue.RegisterConsumer(consumer);
+	}
+
+	void Application::UnregisterEventConsumer(EventConsumer* consumer)
+	{
+		mEventQueue.UnregisterConsumer(consumer);
+	}
+
 	void Application::Run()
 	{
 		for (;;)

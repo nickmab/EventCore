@@ -23,7 +23,7 @@ namespace EventCore {
 	{
 	public:
 		TCPServer(
-			ProtoParser::ParserFactoryFn,
+			ProtoParser::Protocol,
 			EventProducer::EventCallbackFn evtCallback = nullptr,
 			ULONG inAddr = DEFAULT_IN_ADDR, 
 			USHORT listeningPort = DEFAULT_LISTENING_PORT);
@@ -47,7 +47,8 @@ namespace EventCore {
 		SOCKET mListeningSocket{0};
 		fd_set mFDSet{0};
 
-		ProtoParser::ParserFactoryFn mMakeNewParser;
+		ProtoParser::Protocol mProtocol;
+
 		// TCPDataInterface actually _owns_ the parser (and the events it produces/consumes).
 		// The use of unique_ptr here is due to the awkwardness of construction and moving/emplacement
 		// within the map (awkard due to the way I chose to key this map on session ID. No biggie. Fix later.

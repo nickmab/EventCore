@@ -1,6 +1,7 @@
 ﻿#include "DemoServer.h"
 
 #include "Core/Logger.h"
+#include <Proto/ProtoParser.h>
 
 namespace EventCore {
 	Application* CreateApplication()
@@ -9,23 +10,16 @@ namespace EventCore {
 	}
 }
 
-ProtoParser* DemoServer::NewProtoParser()
-{
-	// This function lives here so we can bind it to the correct event production callback. 
-	// I don't fully love this pattern, it might change.
-	return new DemoProtoParser();
-}
-
 void DemoServer::Init()
 {
 	mTickEventProducer.reset(new TickEventProducer(1000));
-	
 	RegisterEventProducer(mTickEventProducer.get());
 
 	mEventPrinter.reset(new EventPrinter());
-	GetEventQueue().RegisterConsumer(mEventPrinter.get());
+	RegisterEventConsumer(mEventPrinter.get());
 
-	mServer.reset(new TCPServer(std::bind(&DemoServer::NewProtoParser, this)));
+	mServer.reset(new TCPServer(ProtoParser::Protocol::DemoProto));
+	RegisterEventProducer(mServer.get());
 
 	if (!mServer->Init())
 	{

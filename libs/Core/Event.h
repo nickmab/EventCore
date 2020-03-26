@@ -81,8 +81,6 @@ namespace EventCore {
 		// The ownership will be transferred to the EventQueue object at the Application level.
 		// Should return nullptr if no event needs to be raised/produced.
 		void RaiseEvent(Event*) const;
-
-	private:
 		EventCallbackFn mCallback;
 	};
 
@@ -117,7 +115,7 @@ namespace EventCore {
 		friend class EventProducer;
 
 	public:
-		// Whatever creates the EventConsumeris responsible for 
+		// Whatever creates the EventConsumer is responsible for 
 		// the lifetime of that event consumer, including ensuring it is
 		// removed / unregistered from here before the memory is freed.
 		// Otherwise we'll keep trying to call on them during the

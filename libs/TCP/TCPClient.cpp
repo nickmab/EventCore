@@ -10,12 +10,12 @@
 namespace EventCore {
 
 	TCPClient::TCPClient(
-		ProtoParser::ParserFactoryFn makeNewParser,
+		ProtoParser::Protocol proto,
 		EventProducer::EventCallbackFn evtCallback,
 		const char* serverAddr, 
 		USHORT serverPort)
 		: EventProducer(evtCallback)
-		, mMakeNewParser(makeNewParser)
+		, mProtocol(proto)
 	{
 		mSockAddrIn.sin_family = AF_INET;
 		mSockAddrIn.sin_port = htons(serverPort);
@@ -65,7 +65,9 @@ namespace EventCore {
 		}
 
 		LOG_INFO("Successfully initialized client and connected to server.");
-		TCPDataInterface* newInterface = new TCPDataInterface(mMakeNewParser(), sock);
+		TCPDataInterface* newInterface = new TCPDataInterface(
+			ProtoParser::New(mProtocol, mCallback), 
+			sock);
 		mDataInterface.reset(newInterface);
 
 		RaiseEvent(new TCPServerConnectedEvent(this, newInterface->mSession.GetSessionId()));

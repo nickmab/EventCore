@@ -23,8 +23,15 @@ namespace EventCore {
 	class ProtoParser : public EventProducer
 	{
 	public:
-		using ParserFactoryFn = std::function<ProtoParser * (void)>;
 		
+		enum class Protocol
+		{
+			DemoProto = 0,
+			MathProto
+		};
+		
+		static ProtoParser* New(Protocol, EventProducer::EventCallbackFn callback = nullptr);
+
 		ProtoParser(EventProducer::EventCallbackFn callback = nullptr);
 		virtual ~ProtoParser() {}
 		

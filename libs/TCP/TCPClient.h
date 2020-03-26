@@ -21,7 +21,7 @@ namespace EventCore {
 	{
 	public:
 		TCPClient(
-			ProtoParser::ParserFactoryFn,
+			ProtoParser::Protocol,
 			EventProducer::EventCallbackFn evtCallback = nullptr,
 			const char* serverAddr = DEFAULT_SERVER_ADDR, 
 			USHORT serverPort = DEFAULT_SERVER_PORT);
@@ -43,7 +43,7 @@ namespace EventCore {
 	private:
 		sockaddr_in mSockAddrIn;
 		
-		ProtoParser::ParserFactoryFn mMakeNewParser;
+		ProtoParser::Protocol mProtocol;
 		// This is the thing that actually _owns_ the parser (and the events it produces/consumes).
 		std::unique_ptr<TCPDataInterface> mDataInterface{nullptr};
 		

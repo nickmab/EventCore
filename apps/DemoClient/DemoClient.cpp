@@ -4,6 +4,7 @@
 #include "DemoClient.h"
 
 #include <Core/Logger.h>
+#include <Proto/ProtoParser.h>
 
 namespace EventCore {
 	Application* CreateApplication()
@@ -14,23 +15,13 @@ namespace EventCore {
 
 using namespace EventCore;
 
-ProtoParser* DemoClient::NewProtoParser()
-{
-	// This function lives here so we can bind it to the correct event production callback. 
-	// I don't fully love this pattern, it might change.
-	return new DemoProtoParser();
-}
-
 void DemoClient::Init()
 {
 	mEventPrinter.reset(new EventPrinter());
-	GetEventQueue().RegisterConsumer(mEventPrinter.get());
+	RegisterEventConsumer(mEventPrinter.get());
 
-	mProtoParser.reset(new DemoProtoParser());
-
-	RegisterEventProducer(mProtoParser.get());
-
-	mTCPClient.reset(new TCPClient(std::bind(&DemoClient::NewProtoParser, this)));
+	mTCPClient.reset(new TCPClient(ProtoParser::Protocol::DemoProto));
+	RegisterEventProducer(mTCPClient.get());
 	
 	if (!mTCPClient->Init())
 	{
@@ -41,7 +32,6 @@ void DemoClient::Init()
 
 void DemoClient::OnUpdate()
 {	
-	// temporary crappy hack...
 	if (!mTCPClient->OnUpdate())
 	{
 		LOG_CRITICAL("Encountered some kind of error; shutting down.");
