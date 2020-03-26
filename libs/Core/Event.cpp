@@ -26,7 +26,10 @@ namespace EventCore {
 	
 	void EventProducer::RaiseEvent(Event* evt) const
 	{
-		mCallback(evt);
+		if (mCallback)
+			mCallback(evt);
+		else
+			Application::Get().GetEventQueue().EnqueueEvent(evt);
 	}
 
 	bool EventConsumer::DoesCareAboutEventType(Event::Type type) const

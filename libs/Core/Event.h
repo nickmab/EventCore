@@ -63,10 +63,10 @@ namespace EventCore {
 	{
 	public:
 		using EventCallbackFn = std::function<void(Event*)>;
-		
+
 		// specify callback function (e.g. Application::OnEvent) to forward events
-		// to when we instantiate the producer.
-		EventProducer(EventCallbackFn);
+		// to when we instantiate the producer. If left as null, will use default.
+		EventProducer(EventCallbackFn fn = nullptr);
 		virtual ~EventProducer() {}
 		
 		// will be periodically called every run loop
@@ -114,6 +114,8 @@ namespace EventCore {
 	// Takes ownership of the lifetime of the Event instances.
 	class EventQueue
 	{
+		friend class EventProducer;
+
 	public:
 		// Whatever creates the EventConsumeris responsible for 
 		// the lifetime of that event consumer, including ensuring it is

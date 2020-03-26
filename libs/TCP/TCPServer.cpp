@@ -11,8 +11,8 @@
 namespace EventCore {
 
 	TCPServer::TCPServer(
-		EventProducer::EventCallbackFn evtCallback, 
 		ProtoParser::ParserFactoryFn makeNewParser,
+		EventProducer::EventCallbackFn evtCallback,
 		ULONG inAddr, 
 		USHORT listeningPort)
 		: EventProducer(evtCallback)

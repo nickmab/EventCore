@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Application.h"
 #include "Core/Event.h"
 #include "TCP/TCPSession.h"
 #include "DemoProto/DemoProto.pb.h"
@@ -24,7 +25,7 @@ namespace EventCore {
 	public:
 		using ParserFactoryFn = std::function<ProtoParser * (void)>;
 		
-		ProtoParser(EventProducer::EventCallbackFn);
+		ProtoParser(EventProducer::EventCallbackFn callback = nullptr);
 		virtual ~ProtoParser() {}
 		
 		// false indicates error.

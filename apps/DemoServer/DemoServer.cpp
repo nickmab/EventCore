@@ -13,24 +13,19 @@ ProtoParser* DemoServer::NewProtoParser()
 {
 	// This function lives here so we can bind it to the correct event production callback. 
 	// I don't fully love this pattern, it might change.
-	return new DemoProtoParser(
-		std::bind(&EventQueue::EnqueueEvent, &GetEventQueue(), std::placeholders::_1));
+	return new DemoProtoParser();
 }
 
 void DemoServer::Init()
 {
-	mTickEventProducer.reset(new TickEventProducer(
-		std::bind(&EventQueue::EnqueueEvent, &GetEventQueue(), std::placeholders::_1),
-		1000));
+	mTickEventProducer.reset(new TickEventProducer(1000));
 	
 	RegisterEventProducer(mTickEventProducer.get());
 
 	mEventPrinter.reset(new EventPrinter());
 	GetEventQueue().RegisterConsumer(mEventPrinter.get());
 
-	mServer.reset(new TCPServer(
-		std::bind(&EventQueue::EnqueueEvent, &GetEventQueue(), std::placeholders::_1),
-		std::bind(&DemoServer::NewProtoParser, this)));
+	mServer.reset(new TCPServer(std::bind(&DemoServer::NewProtoParser, this)));
 
 	if (!mServer->Init())
 	{

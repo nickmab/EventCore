@@ -33,6 +33,7 @@ namespace EventCore {
 		// Event Queue's OnUpdate callbacks.
 		void RegisterEventProducer(EventProducer*);
 		void UnregisterEventProducer(EventProducer*);
+		
 		EventQueue& GetEventQueue() { return mEventQueue; }
 
 	private:

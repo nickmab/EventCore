@@ -1,5 +1,7 @@
 #include "Application.h"
 
+#include "Event.h"
+
 int main(int argc, char* argv[])
 {
 	return EventCore::EntryPoint::MainFunction(argc, argv);
@@ -9,7 +11,7 @@ namespace EventCore {
 
 	// see declaration of extern static Application* CreateApplication(); in Application.h
 	Application* Application::sInstance = nullptr;
-	
+
 	Application::~Application()
 	{
 	}

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Application.h"
 #include "Core/Event.h"
 #include "TCP/TCPSession.h"
 #include "Proto/ProtoParser.h"
@@ -17,9 +18,9 @@ namespace EventCore {
 	{
 	public:
 
-		static ProtoParser* New(EventProducer::EventCallbackFn);
+		static ProtoParser* New(EventProducer::EventCallbackFn callback = nullptr);
 
-		MathProtoParser(EventProducer::EventCallbackFn);
+		MathProtoParser(EventProducer::EventCallbackFn callback = nullptr);
 
 		// false indicates error.
 		virtual bool ConsumeFrom(TCPSession&) override;

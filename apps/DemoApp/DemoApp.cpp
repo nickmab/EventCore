@@ -22,9 +22,7 @@ DemoApp::DemoApp(double secondsToStayAlive)
 
 void DemoApp::Init()
 {
-	mTickEventProducer.reset(new TickEventProducer(
-		std::bind(&EventQueue::EnqueueEvent, &GetEventQueue(), std::placeholders::_1),
-		1000));
+	mTickEventProducer.reset(new TickEventProducer(1000));
 	
 	RegisterEventProducer(mTickEventProducer.get());
 

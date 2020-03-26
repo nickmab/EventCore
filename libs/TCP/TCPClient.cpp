@@ -10,8 +10,8 @@
 namespace EventCore {
 
 	TCPClient::TCPClient(
-		EventProducer::EventCallbackFn evtCallback,
 		ProtoParser::ParserFactoryFn makeNewParser,
+		EventProducer::EventCallbackFn evtCallback,
 		const char* serverAddr, 
 		USHORT serverPort)
 		: EventProducer(evtCallback)

@@ -1,6 +1,8 @@
 #pragma once
 
+#include "Core/Application.h"
 #include "Core/Events/TickEvent.h"
+
 #include <chrono>
 
 namespace EventCore {
@@ -8,7 +10,7 @@ namespace EventCore {
 	class TickEventProducer : public EventProducer
 	{
 	public:
-		TickEventProducer(EventCallbackFn, int millisFrequency);
+		TickEventProducer(int millisFrequency, EventCallbackFn callback = nullptr);
 		
 	private:
 		double mSecondsFrequency;
