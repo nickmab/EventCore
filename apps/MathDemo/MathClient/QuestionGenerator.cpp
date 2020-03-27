@@ -6,9 +6,9 @@
 
 uint64_t ArithmeticRequestFactory::sUniqueId = 0;
 
-mathproto::ArithmeticRequest* ArithmeticRequestFactory::New()
+ArithmeticRequest* ArithmeticRequestFactory::New()
 {
-    auto* instance = new mathproto::ArithmeticRequest();
+    auto* instance = new ArithmeticRequest();
     instance->set_request_id(sUniqueId++);
     return instance;
 }
@@ -32,9 +32,9 @@ void QuestionGenerator::OnTick(const TickEvent&)
 
 void QuestionGenerator::PoseAQuestion()
 {
-    mathproto::ArithmeticRequest* request = ArithmeticRequestFactory::New();
+    ArithmeticRequest* request = ArithmeticRequestFactory::New();
     request->set_lhs(RandomOperand());
-    request->set_op(static_cast<mathproto::ArithmeticOperator>(RandomOperator()));
+    request->set_op(static_cast<ArithmeticOperator>(RandomOperator()));
     request->set_rhs(RandomOperand());
     mOutstandingQuestions.emplace(request->request_id(), request);
     mRouter.SendQuestion(this, *request);
@@ -51,7 +51,7 @@ double QuestionGenerator::RandomOperand() const
     return 200.0 * (-0.5 + (float)rand() / RAND_MAX);
 }
 
-void QuestionGenerator::HandleResponse(const mathproto::ArithmeticResponse& response)
+void QuestionGenerator::HandleResponse(const ArithmeticResponse& response)
 {
     auto request = mOutstandingQuestions.find(response.request_id());
     if (request == mOutstandingQuestions.end())
@@ -62,7 +62,7 @@ void QuestionGenerator::HandleResponse(const mathproto::ArithmeticResponse& resp
     }
     
     auto& qn = *request->second;
-    auto des = mathproto::ArithmeticOperator_descriptor();
+    auto des = ArithmeticOperator_descriptor();
     auto opName = des->FindValueByNumber(qn.op())->name();
     LOGF_WARN("The question was: {:.2f} {} {:.2f} (request ID: {})", 
         qn.lhs(), opName, qn.rhs(), qn.request_id());

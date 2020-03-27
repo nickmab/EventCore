@@ -13,23 +13,23 @@ bool QuestionAnswerer::DoesCareAboutEventType(Event::Type type) const
 
 void QuestionAnswerer::On_mathproto_ArithmeticRequest(
     const ProtoMessageReceivedEvent& evt,
-    const mathproto::ArithmeticRequest& request)
+    const ArithmeticRequest& request)
 {
-    mathproto::ArithmeticResponse answer;
+    ArithmeticResponse answer;
     answer.set_request_id(request.request_id());
 
     switch (request.op())
     {
-    case mathproto::ArithmeticOperator::PLUS:
+    case ArithmeticOperator::PLUS:
         answer.set_result(request.lhs() + request.rhs());
         break;
-    case mathproto::ArithmeticOperator::MINUS:
+    case ArithmeticOperator::MINUS:
         answer.set_result(request.lhs() - request.rhs());
         break;
-    case mathproto::ArithmeticOperator::TIMES:
+    case ArithmeticOperator::TIMES:
         answer.set_result(request.lhs() * request.rhs());
         break;
-    case mathproto::ArithmeticOperator::DIVBY:
+    case ArithmeticOperator::DIVBY:
         answer.set_result(request.lhs() / request.rhs());
         break;
     default:

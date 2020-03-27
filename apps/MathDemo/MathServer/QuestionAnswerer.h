@@ -3,6 +3,7 @@
 #include "MathServer.h"
 
 using namespace EventCore;
+using namespace mathproto;
 
 class QuestionAnswerer : public EventConsumer
 {
@@ -14,5 +15,5 @@ public:
 private:
     virtual void On_mathproto_ArithmeticRequest(
         const ProtoMessageReceivedEvent&,
-        const mathproto::ArithmeticRequest&) override;
+        const ArithmeticRequest&) override;
 };

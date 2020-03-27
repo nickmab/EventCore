@@ -5,12 +5,10 @@
 
 #include "QandARouter.h"
 
-using namespace EventCore;
-
 class ArithmeticRequestFactory
 {
 public:
-    static mathproto::ArithmeticRequest* New();
+    static ArithmeticRequest* New();
 private:
     static uint64_t sUniqueId;
 };
@@ -25,7 +23,7 @@ public:
     virtual bool DoesCareAboutEventType(Event::Type) const override;
     virtual void OnTick(const TickEvent&) override;
 
-    virtual void HandleResponse(const mathproto::ArithmeticResponse&) override;
+    virtual void HandleResponse(const ArithmeticResponse&) override;
 
 private:
     void PoseAQuestion();
@@ -33,5 +31,5 @@ private:
     int RandomOperator() const;
     double RandomOperand() const;
 
-    std::map<uint64_t, std::unique_ptr<mathproto::ArithmeticRequest> > mOutstandingQuestions;
+    std::map<uint64_t, std::unique_ptr<ArithmeticRequest> > mOutstandingQuestions;
 };

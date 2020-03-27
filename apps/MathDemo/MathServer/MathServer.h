@@ -8,7 +8,7 @@
 
 using namespace EventCore;
 
-// forward dec for circularity.
+// circularity in these classes due to the SendAnswer method.
 class QuestionAnswerer;
 
 class MathServer : public Application
