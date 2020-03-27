@@ -12,6 +12,10 @@ if (NOT WIN32)
 	message (FATAL_ERROR "Project currently only supports Windows.")
 endif ()
 
+if (NOT MSVC)
+    message (FATAL_ERROR "Project currently only works with MSVC.")
+endif ()
+
 set (SPDLOG_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/vendor/spdlog/include")
 set (PROTOBUF_INCLUDE_DIR "C:/Dev/protobuf/include")
 
@@ -29,24 +33,27 @@ endif ()
 
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
-MACRO(ADD_MSVC_PRECOMPILED_HEADER PrecompiledHeader PrecompiledSource SourcesVar)
-  IF(MSVC)
-    GET_FILENAME_COMPONENT(PrecompiledBasename ${PrecompiledHeader} NAME_WE)
-    SET(PrecompiledBinary "${CMAKE_CURRENT_BINARY_DIR}/${PrecompiledBasename}.pch")
+# See example use case in libs/CMakeLists.txt
+macro (add_msvc_precompiled_header PRECOMPILED_HDR PRECOMPILED_SRC TARGET_SRC_LIST)
     
-    SET(Sources ${${SourcesVar}})
+    get_filename_component (PRECOMPILED_BASENAME ${PRECOMPILED_HDR} NAME_WE)
+    set (PRECOMPILED_BIN "${CMAKE_CURRENT_BINARY_DIR}/${PRECOMPILED_BASENAME}.pch")
+    
+    set (TARGET_SRC_LIST_EXPANDED ${${TARGET_SRC_LIST}})
 
-    SET_SOURCE_FILES_PROPERTIES(${PrecompiledSource}
-                                PROPERTIES COMPILE_FLAGS "/Yc\"${PrecompiledBasename}.h\" /Fp\"${PrecompiledBinary}\""
-                                           OBJECT_OUTPUTS "${PrecompiledBinary}")
-    SET_SOURCE_FILES_PROPERTIES(${Sources}
-                                PROPERTIES COMPILE_FLAGS "/Yu\"${PrecompiledBasename}.h\" /FI\"${PrecompiledBasename}.h\" /Fp\"${PrecompiledBinary}\""
-                                           OBJECT_DEPENDS "${PrecompiledBinary}")  
-    # Add precompiled header to SourcesVar
-    LIST(APPEND ${SourcesVar} ${PrecompiledSource})
-  ENDIF(MSVC)
-ENDMACRO(ADD_MSVC_PRECOMPILED_HEADER)
+    set_source_files_properties (${PRECOMPILED_SRC}
+                                  PROPERTIES COMPILE_FLAGS "/Yc\"${PRECOMPILED_BASENAME}.h\" /Fp\"${PRECOMPILED_BIN}\""
+                                            OBJECT_OUTPUTS "${PRECOMPILED_BIN}")
+    
+    set_source_files_properties (${TARGET_SRC_LIST_EXPANDED}
+                                 PROPERTIES COMPILE_FLAGS "/Yu\"${PRECOMPILED_BASENAME}.h\" /FI\"${PRECOMPILED_BASENAME}.h\" /Fp\"${PRECOMPILED_BIN}\""
+                                            OBJECT_DEPENDS "${PRECOMPILED_BIN}")  
+    
+    list (APPEND ${TARGET_SRC_LIST} ${PRECOMPILED_SRC})
 
-# Include sub-projects.
+endmacro (add_msvc_precompiled_header)
+
+# It's important that we include the libs before the apps, because the libs 
+# defines some variables and targets subsequently referred to by the apps.
 add_subdirectory ("libs")
 add_subdirectory ("apps")
