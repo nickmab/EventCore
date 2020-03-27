@@ -7,8 +7,6 @@
 #include "Proto/ProtoEvents.h"
 #include "DemoProto.pb.h"
 
-#include <sstream>
-
 using namespace demoproto;
 
 namespace EventCore {

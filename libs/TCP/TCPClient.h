@@ -1,9 +1,5 @@
 #pragma once
 
-#include <WS2tcpip.h>
-
-#include <memory>
-
 #include "TCPEvents.h"
 #include "TCPSession.h"
 #include "TCPDataInterface.h"

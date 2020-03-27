@@ -6,8 +6,6 @@
 
 #include "QuestionAnswerer.h"
 
-#include <memory>
-
 using namespace EventCore;
 
 // forward dec for circularity.

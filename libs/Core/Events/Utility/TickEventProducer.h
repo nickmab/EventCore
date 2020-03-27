@@ -3,8 +3,6 @@
 #include "Core/Application.h"
 #include "Core/Events/TickEvent.h"
 
-#include <chrono>
-
 namespace EventCore {
 
 	class TickEventProducer : public EventProducer

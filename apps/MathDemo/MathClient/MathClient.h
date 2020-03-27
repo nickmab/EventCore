@@ -9,8 +9,6 @@
 #include "QandARouter.h"
 #include "QuestionGenerator.h"
 
-#include <memory>
-
 using namespace EventCore;
 
 class MathClient : public Application

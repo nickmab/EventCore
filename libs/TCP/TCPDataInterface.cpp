@@ -1,3 +1,5 @@
+#include "pch.h"
+
 #include "TCPDataInterface.h"
 
 #include "Core/Application.h"

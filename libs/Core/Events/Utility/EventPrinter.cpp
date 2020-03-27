@@ -1,5 +1,6 @@
+#include "pch.h"
+
 #include "EventPrinter.h"
-#include "Core/Logger.h"
 
 namespace EventCore {
 

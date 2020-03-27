@@ -5,10 +5,6 @@
 
 #include "QandARouter.h"
 
-#include <map>
-#include <memory>
-#include <string_view>
-
 using namespace EventCore;
 
 class ArithmeticRequestFactory

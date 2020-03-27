@@ -1,12 +1,10 @@
+#include "pch.h"
+
 #include "TCPServer.h"
 
 #include "Core/Application.h"
 #include "TCPUtils.h"
-#include "Core/Logger.h"
 #include "TCPEvents.h"
-
-#include <sstream>
-#include <tuple>
 
 namespace EventCore {
 

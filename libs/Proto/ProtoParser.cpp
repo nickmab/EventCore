@@ -1,3 +1,5 @@
+#include "pch.h"
+
 #include "ProtoParser.h"
 
 #include "Proto/DemoProto/DemoProtoParser.h"

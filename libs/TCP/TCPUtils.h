@@ -1,8 +1,5 @@
 #pragma once
 
-#include <optional>
-#include <sstream>
-
 namespace EventCore {
 
 	// Logs the custom string message if provided.

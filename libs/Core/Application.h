@@ -5,9 +5,6 @@
 #endif
 
 #include "Event.h"
-#include "Logger.h"
-
-#include <vector>
 
 int main(int argc, char* argv[]);
 

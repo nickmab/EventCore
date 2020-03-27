@@ -1,3 +1,5 @@
+#include <pch.h>
+
 #include "QuestionAnswerer.h"
 
 QuestionAnswerer::QuestionAnswerer()

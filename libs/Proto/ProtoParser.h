@@ -6,8 +6,6 @@
 #include "DemoProto/DemoProto.pb.h"
 #include "MathProto/MathProto.pb.h"
 
-#include <variant>
-
 namespace EventCore {
 
 	// ALL potential message types from all protocols must be 

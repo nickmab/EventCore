@@ -1,6 +1,6 @@
-#include "DemoProtoParser.h"
+#include "pch.h"
 
-#include "Core/Logger.h"
+#include "DemoProtoParser.h"
 
 namespace EventCore {
 

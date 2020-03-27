@@ -1,11 +1,11 @@
+#include "pch.h"
+
 #include "Event.h"
 #include "Application.h"
 
 #include "Events/TickEvent.h"
 #include "Proto/ProtoEvents.h"
 #include "TCP/TCPEvents.h"
-
-#include <sstream>
 
 namespace EventCore {
 

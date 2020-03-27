@@ -1,12 +1,5 @@
 #pragma once
 
-#include <functional>
-#include <map>
-#include <memory>
-#include <set>
-#include <string>
-#include <vector>
-
 // Forward decs of message types.
 namespace demoproto {
 	class NumericMessage;

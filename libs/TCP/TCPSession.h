@@ -1,9 +1,5 @@
 #pragma once
 
-#include <WS2tcpip.h>
-
-#include <string>
-
 namespace EventCore {
 
 	// sanity check as we keep allocing more if the buffer needs to grow. 

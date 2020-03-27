@@ -1,6 +1,6 @@
-#include "MathProtoParser.h"
+#include "pch.h"
 
-#include "Core/Logger.h"
+#include "MathProtoParser.h"
 
 namespace EventCore {
 

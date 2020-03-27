@@ -3,9 +3,6 @@
 #include <Core/Event.h>
 #include <Proto/MathProto/MathProto.pb.h>
 
-#include <cstdint>
-#include <map>
-
 using namespace EventCore;
 
 // forward dec

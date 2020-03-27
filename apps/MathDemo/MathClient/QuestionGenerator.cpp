@@ -1,10 +1,8 @@
+#include <pch.h>
+
 #include "QuestionGenerator.h"
 
 #include <Core/Application.h>
-#include <Core/Logger.h>
-
-#include <cstdlib>
-#include <ctime>
 
 uint64_t ArithmeticRequestFactory::sUniqueId = 0;
 

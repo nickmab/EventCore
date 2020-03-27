@@ -7,8 +7,6 @@
 #include "Proto/ProtoEvents.h"
 #include "MathProto.pb.h"
 
-#include <sstream>
-
 using namespace mathproto;
 
 namespace EventCore {

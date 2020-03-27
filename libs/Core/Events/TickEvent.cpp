@@ -1,3 +1,5 @@
+#include "pch.h"
+
 #include "TickEvent.h"
 
 namespace EventCore {

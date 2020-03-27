@@ -1,9 +1,10 @@
+#include <pch.h>
+
 #include "QandARouter.h"
 
 #include "MathClient.h"
 
 #include <Core/Application.h>
-#include <Core/Logger.h>
 
 QuestionAsker::QuestionAsker(QAndARouter& router)
 	: mRouter(router)

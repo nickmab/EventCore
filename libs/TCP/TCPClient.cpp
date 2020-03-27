@@ -1,9 +1,8 @@
+#include "pch.h"
+
 #include "TCPClient.h"
 #include "TCPUtils.h"
 #include "Core/Application.h"
-#include "Core/Logger.h"
-
-#include <sstream>
 
 #include "Proto/DemoProto/DemoProto.pb.h"
 

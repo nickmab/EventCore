@@ -1,8 +1,6 @@
+#include <pch.h>
+
 #include "MathClient.h"
-
-#include <Core/Logger.h>
-
-#include <variant>
 
 namespace EventCore {
 	Application* CreateApplication()

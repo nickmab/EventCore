@@ -1,8 +1,6 @@
-#pragma once
+#include "pch.h"
 
 #include "ProtoEvents.h"
-
-#include <sstream>
 
 namespace EventCore {
 

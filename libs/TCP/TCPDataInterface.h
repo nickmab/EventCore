@@ -1,11 +1,7 @@
 #pragma once
 
-#include <WS2tcpip.h>
-
 #include "TCPSession.h"
 #include "Proto/ProtoParser.h"
-
-#include <memory>
 
 namespace EventCore {
 
