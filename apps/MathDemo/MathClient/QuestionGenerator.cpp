@@ -3,6 +3,9 @@
 #include <Core/Application.h>
 #include <Core/Logger.h>
 
+#include <cstdlib>
+#include <ctime>
+
 uint64_t ArithmeticRequestFactory::sUniqueId = 0;
 
 mathproto::ArithmeticRequest* ArithmeticRequestFactory::New()
@@ -15,7 +18,9 @@ mathproto::ArithmeticRequest* ArithmeticRequestFactory::New()
 QuestionGenerator::QuestionGenerator(QAndARouter& router)
 	: EventConsumer()
 	, QuestionAsker(router)
-{}
+{
+	srand((unsigned)time(0));
+}
 
 bool QuestionGenerator::DoesCareAboutEventType(Event::Type type) const
 {
@@ -30,11 +35,22 @@ void QuestionGenerator::OnTick(const TickEvent&)
 void QuestionGenerator::PoseAQuestion()
 {
 	mathproto::ArithmeticRequest* request = ArithmeticRequestFactory::New();
-	request->set_lhs(3.5);
-	request->set_op(mathproto::ArithmeticOperator::PLUS);
-	request->set_rhs(7.1);
+	request->set_lhs(RandomOperand());
+	request->set_op(static_cast<mathproto::ArithmeticOperator>(RandomOperator()));
+	request->set_rhs(RandomOperand());
 	mOutstandingQuestions.emplace(request->request_id(), request);
 	mRouter.SendQuestion(this, *request);
+}
+
+int QuestionGenerator::RandomOperator() const
+{
+	return rand() % 4;
+}
+
+double QuestionGenerator::RandomOperand() const
+{
+	// crappy hard coded to numbers between -100 and 100
+	return 200.0 * (-0.5 + (float)rand() / RAND_MAX);
 }
 
 void QuestionGenerator::HandleResponse(const mathproto::ArithmeticResponse& response)

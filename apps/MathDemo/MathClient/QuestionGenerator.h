@@ -5,8 +5,11 @@
 
 #include "QandARouter.h"
 
+#include <chrono>
+#include <functional>
 #include <map>
 #include <memory>
+#include <random>
 
 using namespace EventCore;
 
@@ -32,6 +35,9 @@ public:
 
 private:
 	void PoseAQuestion();
+
+	int RandomOperator() const;
+	double RandomOperand() const;
 
 	std::map<uint64_t, std::unique_ptr<mathproto::ArithmeticRequest> > mOutstandingQuestions;
 };
