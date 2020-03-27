@@ -32,25 +32,28 @@ namespace EventCore {
 	#error "Build configuration defines not provided!"
 #endif
 
-#if VERBOSE_LOGGING
+	constexpr std::string_view SplitByTokenAndReturnLast(const char* input, std::string_view token)
+	{
+		std::string_view s(input);
+		auto found = s.rfind(token);
+		if (found != std::string::npos)
+		{
+			return s.substr(found + token.length());
+		}
+		return input;
+	}
+
 #define _LOGF(level, fmt, ...) \
 	::EventCore::Logger::Get()->##level("{}::{}()#{}: " fmt, \
-			__FILE__ , __FUNCTION__, __LINE__, __VA_ARGS__)
+			SplitByTokenAndReturnLast(__FILE__, "\\"), \
+			SplitByTokenAndReturnLast(__FUNCTION__, "::"), \
+			__LINE__, __VA_ARGS__)
 
 #define _LOG(level, msg) \
 	::EventCore::Logger::Get()->##level("{}::{}()#{}: {}", \
-			__FILE__ , __FUNCTION__, __LINE__, msg)
-#elif NORMAL_LOGGING
-	#define _LOGF(level, fmt, ...) \
-		::EventCore::Logger::Get()->##level("{}()#{}: " fmt, \
-			__FUNCTION__, __LINE__, __VA_ARGS__)
-	#define _LOG(level, msg) \
-		::EventCore::Logger::Get()->##level("{}()#{}: {}", \
-			__FUNCTION__, __LINE__, msg)
-#else
-	#define _LOGF(level, fmt, ...) ::EventCore::Logger::Get()->##level(fmt, __VA_ARGS__)
-	#define _LOG(level, msg) ::EventCore::Logger::Get()->##level(msg)
-#endif
+			SplitByTokenAndReturnLast(__FILE__, "\\"), \
+			SplitByTokenAndReturnLast(__FUNCTION__, "::"), \
+			__LINE__, msg)
 	   
 #define LOGF_TRACE(fmt, ...)    _LOGF(trace, fmt, __VA_ARGS__)
 #define LOGF_INFO(fmt, ...)     _LOGF(info, fmt, __VA_ARGS__)

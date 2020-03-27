@@ -66,8 +66,8 @@ void QuestionGenerator::HandleResponse(const mathproto::ArithmeticResponse& resp
 	auto& qn = *request->second;
 	auto des = mathproto::ArithmeticOperator_descriptor();
 	auto opName = des->FindValueByNumber(qn.op())->name();
-	LOGF_WARN("The question was: {} {} {} (request ID: {})", 
+	LOGF_WARN("The question was: {:.2f} {} {:.2f} (request ID: {})", 
 		qn.lhs(), opName, qn.rhs(), qn.request_id());
-	LOGF_WARN("The answer is: {}", response.result());
+	LOGF_WARN("The answer is: {:.2f}", response.result());
 	mOutstandingQuestions.erase(request);
 }
