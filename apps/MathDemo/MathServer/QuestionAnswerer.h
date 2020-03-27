@@ -7,12 +7,12 @@ using namespace EventCore;
 class QuestionAnswerer : public EventConsumer
 {
 public:
-	QuestionAnswerer();
+    QuestionAnswerer();
 
-	virtual bool DoesCareAboutEventType(Event::Type) const override;
-	
+    virtual bool DoesCareAboutEventType(Event::Type) const override;
+    
 private:
-	virtual void On_mathproto_ArithmeticRequest(
-		const ProtoMessageReceivedEvent&,
-		const mathproto::ArithmeticRequest&) override;
+    virtual void On_mathproto_ArithmeticRequest(
+        const ProtoMessageReceivedEvent&,
+        const mathproto::ArithmeticRequest&) override;
 };

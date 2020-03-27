@@ -3,19 +3,19 @@ syntax = "proto3";
 package demoproto;
 
 message NumericMessage {
-	int32 an_integer = 1;
-	double a_double = 2;
+    int32 an_integer = 1;
+    double a_double = 2;
 }
 
 message TextualMessage {
-	bool is_interesting = 1;
-	string a_sentence = 2;
+    bool is_interesting = 1;
+    string a_sentence = 2;
 }
 
 // for use sending / reading things on the wire
 message WrappedMessage {
-	oneof msg {
-		NumericMessage numeric_message = 1;
-		TextualMessage textual_message = 2;
-	}
+    oneof msg {
+        NumericMessage numeric_message = 1;
+        TextualMessage textual_message = 2;
+    }
 }

@@ -10,28 +10,28 @@ using namespace EventCore;
 class ArithmeticRequestFactory
 {
 public:
-	static mathproto::ArithmeticRequest* New();
+    static mathproto::ArithmeticRequest* New();
 private:
-	static uint64_t sUniqueId;
+    static uint64_t sUniqueId;
 };
 
 class QuestionGenerator
-	: public EventConsumer
-	, public QuestionAsker
+    : public EventConsumer
+    , public QuestionAsker
 {
 public:
-	QuestionGenerator(QAndARouter&);
+    QuestionGenerator(QAndARouter&);
 
-	virtual bool DoesCareAboutEventType(Event::Type) const override;
-	virtual void OnTick(const TickEvent&) override;
+    virtual bool DoesCareAboutEventType(Event::Type) const override;
+    virtual void OnTick(const TickEvent&) override;
 
-	virtual void HandleResponse(const mathproto::ArithmeticResponse&) override;
+    virtual void HandleResponse(const mathproto::ArithmeticResponse&) override;
 
 private:
-	void PoseAQuestion();
+    void PoseAQuestion();
 
-	int RandomOperator() const;
-	double RandomOperand() const;
+    int RandomOperator() const;
+    double RandomOperand() const;
 
-	std::map<uint64_t, std::unique_ptr<mathproto::ArithmeticRequest> > mOutstandingQuestions;
+    std::map<uint64_t, std::unique_ptr<mathproto::ArithmeticRequest> > mOutstandingQuestions;
 };

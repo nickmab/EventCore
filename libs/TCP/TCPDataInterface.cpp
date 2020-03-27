@@ -6,16 +6,16 @@
 
 namespace EventCore {
 
-	TCPDataInterface::TCPDataInterface(ProtoParser* parser, SOCKET sock, size_t initialRecvBufSize)
-		: mSession(sock, initialRecvBufSize)
-		, mParser(parser)
-	{
-		Application::Get().RegisterEventProducer(parser);
-	}
+    TCPDataInterface::TCPDataInterface(ProtoParser* parser, SOCKET sock, size_t initialRecvBufSize)
+        : mSession(sock, initialRecvBufSize)
+        , mParser(parser)
+    {
+        Application::Get().RegisterEventProducer(parser);
+    }
 
-	TCPDataInterface::~TCPDataInterface()
-	{
-		Application::Get().UnregisterEventProducer(mParser.get());
-	}
+    TCPDataInterface::~TCPDataInterface()
+    {
+        Application::Get().UnregisterEventProducer(mParser.get());
+    }
 
 }

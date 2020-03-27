@@ -14,16 +14,16 @@ using namespace EventCore;
 class MathClient : public Application
 {
 public:
-	void SendQuestion(const ProtoMsgVariant&);
+    void SendQuestion(const ProtoMsgVariant&);
 
 private:
-	std::unique_ptr<TCPClient> mTCPClient{nullptr};
-	std::unique_ptr<TickEventProducer> mTickEventProducer{nullptr};
-	std::unique_ptr<QAndARouter> mRouter{nullptr};
-	std::unique_ptr<QuestionGenerator> mQuestionGen{nullptr};
+    std::unique_ptr<TCPClient> mTCPClient{nullptr};
+    std::unique_ptr<TickEventProducer> mTickEventProducer{nullptr};
+    std::unique_ptr<QAndARouter> mRouter{nullptr};
+    std::unique_ptr<QuestionGenerator> mQuestionGen{nullptr};
 
-	virtual void Init() override;
-	virtual void OnUpdate() override;
+    virtual void Init() override;
+    virtual void OnUpdate() override;
 };
 
 Application* CreateApplication();

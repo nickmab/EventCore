@@ -4,11 +4,11 @@
 
 namespace EventCore {
 
-	class EventPrinter : public EventConsumer
-	{
-	public:
-		virtual bool DoesCareAboutEventType(Event::Type) const override;
-		virtual void OnEvent(const Event&) override;
-	};
+    class EventPrinter : public EventConsumer
+    {
+    public:
+        virtual bool DoesCareAboutEventType(Event::Type) const override;
+        virtual void OnEvent(const Event&) override;
+    };
 
 }

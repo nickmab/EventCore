@@ -4,8 +4,8 @@
 
 namespace EventCore {
 
-	TickEvent::TickEvent(const EventProducer* sender)
-		: Event(sender)
-	{}
+    TickEvent::TickEvent(const EventProducer* sender)
+        : Event(sender)
+    {}
 
 }
