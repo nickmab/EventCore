@@ -3,8 +3,6 @@
 #include "Core/Application.h"
 #include "Core/Event.h"
 #include "TCP/TCPSession.h"
-#include "DemoProto/DemoProto.pb.h"
-#include "MathProto/MathProto.pb.h"
 
 namespace EventCore {
 

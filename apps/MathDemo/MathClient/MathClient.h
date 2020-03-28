@@ -3,7 +3,6 @@
 #include <Core/Application.h>
 #include <Core/Events/Utility/TickEventProducer.h>
 #include <TCP/TCPClient.h>
-#include <Proto/ProtoParser.h>
 
 #include "QandARouter.h"
 #include "QuestionGenerator.h"

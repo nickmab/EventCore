@@ -4,7 +4,6 @@
 #include "TCPDataInterface.h"
 
 #include "Core/Event.h"
-#include "Proto/ProtoParser.h"
 #include "Proto/DemoProto/DemoProtoParser.h"
 
 namespace EventCore {

@@ -3,9 +3,7 @@
 #include "Core/Application.h"
 #include "Core/Event.h"
 #include "TCP/TCPSession.h"
-#include "Proto/ProtoParser.h"
 #include "Proto/ProtoEvents.h"
-#include "DemoProto.pb.h"
 
 using namespace demoproto;
 

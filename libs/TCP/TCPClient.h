@@ -3,7 +3,6 @@
 #include "TCPEvents.h"
 #include "TCPSession.h"
 #include "TCPDataInterface.h"
-#include "Proto/ProtoParser.h"
 #include "Core/Event.h"
 
 namespace EventCore {

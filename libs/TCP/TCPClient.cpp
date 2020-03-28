@@ -4,8 +4,6 @@
 #include "TCPUtils.h"
 #include "Core/Application.h"
 
-#include "Proto/DemoProto/DemoProto.pb.h"
-
 namespace EventCore {
 
     TCPClient::TCPClient(
