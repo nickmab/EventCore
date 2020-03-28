@@ -16,7 +16,7 @@ namespace EventCore {
 
     bool MathProtoParser::ConsumeFrom(TCPSession& session)
     {
-        InstrumentationTimer timer(__FUNCSIG__);
+        TIME_SCOPE;
         
         mInputBuffer << session.GetAllRecvBufferContents();
 

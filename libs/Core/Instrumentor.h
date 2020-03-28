@@ -14,7 +14,7 @@
 //
 // Instrumentor::Get().BeginSession("Session Name");        // Begin session 
 // {
-//     InstrumentationTimer timer("Profiled Scope Name");   // Place code like this in scopes you'd like to include in profiling
+//     TInstrumentationTimer timer("my_scope_name");   // Place code like this in scopes you'd like to include in profiling
 //     // Code
 // }
 // Instrumentor::Get().EndSession();                        // End Session
@@ -27,6 +27,8 @@
     Instrumentor::Get().BeginSession( \
         session_name, std::string(file_name_prefix) + "_perf.json")
 #define END_PROFILE Instrumentor::Get().EndSession()
+
+#define TIME_SCOPE InstrumentationTimer timer(__FUNCSIG__)
 
 struct ProfileResult
 {
