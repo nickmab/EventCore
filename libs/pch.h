@@ -27,3 +27,5 @@
 
 #include "Core/Logger.h"
 #include "Core/Instrumentor.h"
+#include "Proto/DemoProto/DemoProto.pb.h"
+#include "Proto/MathProto/MathProto.pb.h"
