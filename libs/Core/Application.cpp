@@ -1,10 +1,7 @@
 #include "pch.h"
 
 #include "Application.h"
-
 #include "Event.h"
-
-
 
 int main(int argc, char* argv[])
 {
@@ -50,34 +47,20 @@ namespace EventCore {
         for (;;)
         {
             if (mIsRunning)
-            {
                 OnUpdate();
-            }
             else
-            {
                 return;
-            }
 
             for (auto* producer : mEventProducers)
-            {
                 if (mIsRunning)
-                {
                     producer->EventProducerOnUpdate();
-                }
                 else
-                {
                     return;
-                }
-            }
 
             if (mIsRunning)
-            {
                 mEventQueue.PublishEvents();
-            }
             else
-            {
                 return;
-            }
         }
     }
 
