@@ -17,7 +17,7 @@ namespace EventCore {
         friend class EntryPoint;
 
     public:
-        virtual ~Application();
+        virtual ~Application() {}
         void Shutdown(int exitCode = 0);
         
         static Application& Get() { return *sInstance; }
@@ -76,6 +76,8 @@ namespace EventCore {
     {
     public:
         static int MainFunction(int argc, char* argv[]);
+
+        static BOOL WINAPI ConsoleHandler(DWORD dwCtrlType);
     };
     
 }

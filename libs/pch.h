@@ -1,6 +1,10 @@
 #pragma once
 
+#define WIN32_LEAN_AND_MEAN   
+#include <windows.h>
 #include <WS2tcpip.h>
+#include <tchar.h>
+#include <signal.h>
 
 #include <chrono>
 #include <cstdint>

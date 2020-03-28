@@ -3,7 +3,7 @@
 #include "spdlog/spdlog.h"
 #include "spdlog/fmt/ostr.h"
 
-namespace EventCore {
+namespace Logging {
 
     class Logger
     {
@@ -41,15 +41,15 @@ namespace EventCore {
     }
 
 #define _LOGF(level, fmt, ...) \
-    ::EventCore::Logger::Get()->##level("{}::{}()#{}: " fmt, \
-            SplitByTokenAndReturnLast(__FILE__, "\\"), \
-            SplitByTokenAndReturnLast(__FUNCTION__, "::"), \
+    ::Logging::Logger::Get()->##level("{}::{}()#{}: " fmt, \
+            ::Logging::SplitByTokenAndReturnLast(__FILE__, "\\"), \
+            ::Logging::SplitByTokenAndReturnLast(__FUNCTION__, "::"), \
             __LINE__, __VA_ARGS__)
 
 #define _LOG(level, msg) \
-    ::EventCore::Logger::Get()->##level("{}::{}()#{}: {}", \
-            SplitByTokenAndReturnLast(__FILE__, "\\"), \
-            SplitByTokenAndReturnLast(__FUNCTION__, "::"), \
+    ::Logging::Logger::Get()->##level("{}::{}()#{}: {}", \
+            ::Logging::SplitByTokenAndReturnLast(__FILE__, "\\"), \
+            ::Logging::SplitByTokenAndReturnLast(__FUNCTION__, "::"), \
             __LINE__, msg)
        
 #define LOGF_TRACE(fmt, ...)    _LOGF(trace, fmt, __VA_ARGS__)

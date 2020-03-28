@@ -2,7 +2,7 @@
 
 #include "spdlog/sinks/stdout_color_sinks.h"
 
-namespace EventCore {
+namespace Logging {
 
     Logger::log_sptr Logger::sLogger = nullptr;
 
