@@ -21,6 +21,7 @@ namespace EventCore {
         void Shutdown(int exitCode = 0);
         
         static Application& Get() { return *sInstance; }
+        inline const std::string GetBinaryName() const { return mBinaryName; }
         inline bool IsRunning() const { return mIsRunning; }
 
         // Whatever creates the EventProducer is responsible for 
@@ -39,9 +40,22 @@ namespace EventCore {
 
     private:
         static Application* sInstance;
+        std::string mBinaryName;
         
         virtual void Init() = 0;
         virtual void OnUpdate() = 0;
+        
+        enum class ConsoleSignal
+        {
+            CTRL_C = 0,
+            BREAK,
+            CLOSE,
+            LOGOFF,
+            SHUTDOWN
+        };
+        // Could eventually make this virtual and incorporate
+        // a whole interface for this, but yeah nah.
+        void OnConsoleSignal(ConsoleSignal);
 
         void Run();
 

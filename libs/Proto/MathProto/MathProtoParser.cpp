@@ -16,6 +16,8 @@ namespace EventCore {
 
     bool MathProtoParser::ConsumeFrom(TCPSession& session)
     {
+        InstrumentationTimer timer(__FUNCSIG__);
+        
         mInputBuffer << session.GetAllRecvBufferContents();
 
         // should have i) message size (4 bytes) then a ii) WrappedMessage.

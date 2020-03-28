@@ -81,17 +81,38 @@ namespace EventCore {
                 return;
             }
         }
-            
+    }
+
+    void Application::OnConsoleSignal(ConsoleSignal sig)
+    {
+        LOGF_CRITICAL("Signal: {}", sig);
+        Shutdown(0);
     }
 
     int EntryPoint::MainFunction(int argc, char* argv[])
     {
+        std::filesystem::path thisBinaryPath = argv[0];
+        const std::string thisBinaryName = thisBinaryPath.filename().replace_extension("").string();
+    
         Application* instance = CreateApplication();
         Application::sInstance = instance;
+        instance->mBinaryName = thisBinaryName;
+
+        LOG_WARN("Initializing application...");
+        START_PROFILE("App_Init", thisBinaryName);
         instance->Init();
+        END_PROFILE;
+        
+        LOG_WARN("Entering run loop of application...");
+        START_PROFILE("App_Run", thisBinaryName);
         instance->Run();
+        END_PROFILE;
+        
         int exitCode = instance->mExitCode;
+        LOG_WARN("Destroying application instance...");
         delete instance;
+        
+        LOGF_WARN("Exiting with code: {}", exitCode);
         return exitCode;
     }
         

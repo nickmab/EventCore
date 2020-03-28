@@ -12,9 +12,13 @@ if (NOT WIN32)
     message (FATAL_ERROR "Project currently only supports Windows.")
 endif ()
 
-if (NOT MSVC)
+if(MSVC)
+	# Use multiple processors when building
+    add_compile_options(/MP)				
+else()
+	# add_compile_options(-W -Wall -Werror)
     message (FATAL_ERROR "Project currently only works with MSVC.")
-endif ()
+endif()
 
 set (SPDLOG_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/vendor/spdlog/include")
 set (PROTOBUF_INCLUDE_DIR "C:/Dev/protobuf/include")

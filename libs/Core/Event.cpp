@@ -29,7 +29,10 @@ namespace EventCore {
         if (mCallback)
             mCallback(evt);
         else
+        {
+            InstrumentationTimer timer(__FUNCSIG__);
             Application::Get().GetEventQueue().EnqueueEvent(evt);
+        }
     }
 
     bool EventConsumer::DoesCareAboutEventType(Event::Type type) const
@@ -39,6 +42,8 @@ namespace EventCore {
 
     void EventConsumer::OnEvent(const Event& evt)
     {
+        InstrumentationTimer timer(__FUNCSIG__);
+        
         const Event::Type type = evt.GetType();
         if (DoesCareAboutEventType(type))
         {
