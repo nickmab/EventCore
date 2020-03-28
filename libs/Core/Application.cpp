@@ -1,7 +1,6 @@
 #include "pch.h"
 
 #include "Application.h"
-#include "Event.h"
 
 int main(int argc, char* argv[])
 {
