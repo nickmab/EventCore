@@ -10,8 +10,10 @@ int main(int argc, char* argv[]);
 
 namespace EventCore {
 
-    // The Application class owns the Events from when they are raised 
-    // (via the EventQueue instance). They are freed after the OnEvent callback loop.
+    // Application singleton.
+    // Takes ownership of Events when they are raised 
+    // (via the EventQueue instance). 
+    // They are freed after the OnEvent callback loop.
     class Application
     {
         friend class EntryPoint;
@@ -25,14 +27,12 @@ namespace EventCore {
         inline bool IsRunning() const { return mIsRunning; }
 
         // Whatever creates the EventProducer is responsible for 
-        // the lifetime of that event producer, including ensuring it is
-        // removed / unregistered from here before the memory is freed.
-        // Otherwise we'll keep trying to call on them during the
-        // Event Queue's OnUpdate callbacks.
+        // the memory/lifetime AND including ensuring that it is
+        // unregistered from here before/when the memory is freed.
         void RegisterEventProducer(EventProducer*);
         void UnregisterEventProducer(EventProducer*);
 
-        // As above.
+        // As above for the producers.
         void RegisterEventConsumer(EventConsumer*);
         void UnregisterEventConsumer(EventConsumer*);
         
@@ -45,6 +45,8 @@ namespace EventCore {
         virtual void Init() = 0;
         virtual void OnUpdate() = 0;
         
+        void Run();
+
         enum class ConsoleSignal
         {
             CTRL_C = 0,
@@ -57,14 +59,12 @@ namespace EventCore {
         // a whole interface for this, but yeah nah.
         void OnConsoleSignal(ConsoleSignal);
 
-        void Run();
-
         bool mIsRunning{true};
         int mExitCode{0};
 
         // The EventQueue takes ownership of the Events when they are raised.
         EventQueue mEventQueue;
-        // The Application base class does not own these event producers.
+        // The Application base class does NOT own these event producers.
         std::vector<EventProducer*> mEventProducers;
     };
 
