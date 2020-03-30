@@ -22,6 +22,9 @@ endif()
 
 set (SPDLOG_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/vendor/spdlog/include")
 set (PROTOBUF_INCLUDE_DIR "C:/Dev/protobuf/include")
+set (PROTOBUF_LIB_DIR "C:/Dev/protobuf/lib/${CMAKE_BUILD_TYPE}")
+set (LUA_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/vendor/lua/src")
+set (LUA_LIB_DIR "${CMAKE_CURRENT_BINARY_DIR}/vendor/lua/src")
 
 add_compile_definitions (GOOGLE_PROTOBUF_NO_THREAD_SAFETY)
 
@@ -59,5 +62,6 @@ endmacro (add_msvc_precompiled_header)
 
 # It's important that we include the libs before the apps, because the libs 
 # defines some variables and targets subsequently referred to by the apps.
+add_subdirectory ("vendor/lua")
 add_subdirectory ("libs")
 add_subdirectory ("apps")

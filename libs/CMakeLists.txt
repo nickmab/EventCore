@@ -1,14 +1,18 @@
 cmake_minimum_required (VERSION 3.15)
 
 find_library (PROTOBUF_LIB
-              NAMES libprotobuf.lib
-              PATHS "C:/Dev/protobuf/lib"
-              PATH_SUFFIXES "${CMAKE_BUILD_TYPE}"
+              NAMES libprotobuf#.lib
+              PATHS ${PROTOBUF_LIB_DIR}
+              #PATHS "C:/Dev/protobuf/lib"
+              #PATH_SUFFIXES "${CMAKE_BUILD_TYPE}"
               NO_DEFAULT_PATH
               )
 
 set (LIB_NAME "EventCoreLib")
-include_directories(${CMAKE_CURRENT_LIST_DIR} ${SPDLOG_INCLUDE_DIR} ${PROTOBUF_INCLUDE_DIR})
+include_directories(${CMAKE_CURRENT_LIST_DIR} 
+                    ${SPDLOG_INCLUDE_DIR} 
+                    ${PROTOBUF_INCLUDE_DIR}
+                    ${LUA_INCLUDE_DIR})
 
 file (GLOB_RECURSE CPP_SRC "*.cpp")
 # Deal with the pch files separately, so need to filter them out of the glob.
@@ -26,9 +30,8 @@ file (GLOB_RECURSE PROTO_SRC "*.pb.cc")
 # #include "pch.h" in all their source files and take advantage. 
 # No further weird build commands required.
 add_library(${LIB_NAME} STATIC ${PROTO_SRC} ${CPP_SRC})
-
-target_link_libraries(${LIB_NAME} ws2_32.lib ${PROTOBUF_LIB})
-set_target_properties (${LIB_NAME} PROPERTIES LIB_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
+target_link_libraries(${LIB_NAME} ws2_32.lib ${PROTOBUF_LIB} lua_dynamic_lib)
+set_target_properties (${LIB_NAME} PROPERTIES ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
 
 add_subdirectory ("Core")
 add_subdirectory ("TCP")

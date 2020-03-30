@@ -8,9 +8,10 @@ set (CLIENT_EXE MathClient)
 file (GLOB_RECURSE CLIENT_SRC "MathClient/*.cpp")
 add_executable (${CLIENT_EXE} ${CLIENT_SRC})
 
-get_target_property(EventCoreLib_LIB_ROOT_DIR EventCoreLib LIB_ROOT_DIR)
-include_directories("${EventCoreLib_LIB_ROOT_DIR}" ${SPDLOG_INCLUDE_DIR} ${PROTOBUF_INCLUDE_DIR})
-link_directories("${EventCoreLib_LIB_ROOT_DIR}")
+get_target_property(EVENTCORELIB_ROOT_DIR EventCoreLib ROOT_DIR)
+include_directories(${EVENTCORELIB_ROOT_DIR} 
+                    ${SPDLOG_INCLUDE_DIR} 
+                    ${PROTOBUF_INCLUDE_DIR})
 
 target_link_libraries(${SERVER_EXE} EventCoreLib)
 target_link_libraries(${CLIENT_EXE} EventCoreLib)
