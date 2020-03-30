@@ -8,7 +8,6 @@ set (CLIENT_EXE MathClient)
 file (GLOB_RECURSE CLIENT_SRC "MathClient/*.cpp")
 add_executable (${CLIENT_EXE} ${CLIENT_SRC})
 
-get_target_property(EVENTCORELIB_ROOT_DIR EventCoreLib ROOT_DIR)
 include_directories(${EVENTCORELIB_ROOT_DIR} 
                     ${SPDLOG_INCLUDE_DIR} 
                     ${PROTOBUF_INCLUDE_DIR})

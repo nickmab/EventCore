@@ -34,5 +34,6 @@ target_link_libraries(${LIB_NAME} ws2_32.lib ${PROTOBUF_LIB} lua_dynamic_lib)
 set_target_properties (${LIB_NAME} PROPERTIES ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
 
 add_subdirectory ("Core")
-add_subdirectory ("TCP")
+add_subdirectory ("Lua")
 add_subdirectory ("Proto")
+add_subdirectory ("TCP")
