@@ -10,6 +10,7 @@ add_custom_command(TARGET ${APP_NAME}
 
 include_directories(${EVENTCORELIB_ROOT_DIR} 
                     ${SPDLOG_INCLUDE_DIR} 
+                    ${TCLAP_INCLUDE_DIR}
                     ${PROTOBUF_INCLUDE_DIR}
                     ${LUA_INCLUDE_DIR})
 

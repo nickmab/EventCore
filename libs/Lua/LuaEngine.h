@@ -7,7 +7,7 @@ namespace EventCore {
     class LuaEngine
     {
     public:
-        LuaEngine();
+        LuaEngine(const char* filename);
     };
 
 }

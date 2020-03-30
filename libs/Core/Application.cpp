@@ -9,7 +9,6 @@ int main(int argc, char* argv[])
 
 namespace EventCore {
 
-    // see declaration of extern static Application* CreateApplication(); in Application.h
     Application* Application::sInstance = nullptr;
 
     void Application::Shutdown(int exitCode)
@@ -80,7 +79,7 @@ namespace EventCore {
         std::filesystem::path thisBinaryPath = argv[0];
         const std::string thisBinaryName = thisBinaryPath.filename().replace_extension("").string();
     
-        Application* instance = CreateApplication();
+        Application* instance = CreateApplication(argc, argv);
         Application::sInstance = instance;
         instance->mBinaryName = thisBinaryName;
 

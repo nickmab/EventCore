@@ -24,4 +24,4 @@ private:
     virtual void OnUpdate() override;
 };
 
-Application* CreateApplication();
+Application* CreateApplication(int argc, char* argv[]);

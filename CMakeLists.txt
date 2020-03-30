@@ -20,9 +20,15 @@ else()
     message (FATAL_ERROR "Project currently only works with MSVC.")
 endif()
 
+# Header only...
 set (SPDLOG_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/vendor/spdlog/include")
+set (TCLAP_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/vendor/tclap/include")
+
+# Must already be installed somewhere...
 set (PROTOBUF_INCLUDE_DIR "C:/Dev/protobuf/include")
 set (PROTOBUF_LIB_DIR "C:/Dev/protobuf/lib/${CMAKE_BUILD_TYPE}")
+
+# This we will build ourselves...
 set (LUA_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/vendor/lua/src")
 set (LUA_LIB_DIR "${CMAKE_CURRENT_BINARY_DIR}/vendor/lua/src")
 

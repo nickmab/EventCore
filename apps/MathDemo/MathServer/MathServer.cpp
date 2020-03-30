@@ -3,7 +3,7 @@
 #include "MathServer.h"
 
 namespace EventCore {
-    Application* CreateApplication()
+    Application* CreateApplication(int argc, char* argv[])
     {
         return new ::MathServer();
     }

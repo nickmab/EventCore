@@ -70,7 +70,7 @@ namespace EventCore {
 
     // Application must be subclassed by an app that uses this class, 
     // and it must implement this function to return the application instance.
-    Application* CreateApplication();
+    Application* CreateApplication(int argc, char* argv[]);
 
     class EntryPoint
     {

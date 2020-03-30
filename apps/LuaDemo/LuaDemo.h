@@ -7,10 +7,14 @@ using namespace EventCore;
 
 class LuaDemo: public Application
 {
-    LuaEngine mEngine;
+public:
+    LuaDemo(int argc, char* argv[]);
+    
+private:
+    std::unique_ptr<LuaEngine> mEngine;
     
     virtual void Init() override;
     virtual void OnUpdate() override;
 };
 
-Application* CreateApplication();
+Application* CreateApplication(int argc, char* argv[]);
