@@ -23,12 +23,18 @@
 //
 #pragma once
 
-#define START_PROFILE(session_name, file_name_prefix) \
-    Instrumentor::Get().BeginSession( \
-        session_name, std::string(file_name_prefix) + "_perf.json")
-#define END_PROFILE Instrumentor::Get().EndSession()
+#if PROFILE_BUILD
+    #define START_PROFILE(session_name, file_name_prefix) \
+        Instrumentor::Get().BeginSession( \
+            session_name, std::string(file_name_prefix) + "_perf.json")
+    #define END_PROFILE Instrumentor::Get().EndSession()
 
-#define TIME_SCOPE InstrumentationTimer timer(__FUNCSIG__)
+    #define TIME_SCOPE InstrumentationTimer timer(__FUNCSIG__)
+#else
+    #define START_PROFILE(session_name, file_name_prefix) 
+    #define END_PROFILE
+    #define TIME_SCOPE
+#endif
 
 struct ProfileResult
 {

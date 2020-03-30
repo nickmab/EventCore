@@ -40,6 +40,8 @@ elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
     add_compile_definitions  (BUILD_RelWithDebInfo)
 elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
     add_compile_definitions  (BUILD_Release)
+    # comment this out if you like.
+    add_compile_definitions  (PROFILE_BUILD)
 else ()
     message (FATAL_ERROR "Build configuration '${CMAKE_BUILD_TYPE}' not supported.")
 endif ()
