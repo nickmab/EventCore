@@ -4,3 +4,6 @@
 [submodule "vendor\\lua"]
 	path = vendor\\lua
 	url = https://github.com/nickmab/lua.git
+[submodule "vendor\\tclap"]
+	path = vendor\\tclap
+	url = https://github.com/nickmab/tclap.git
