@@ -85,7 +85,8 @@ namespace EventCore {
             }
             else
             {
-                ASSERT(false, "Unreachable: unrecognised message type.");
+                LOG_CRITICAL("Unrecognized message type in demoproto::WrappedMessage!");
+                Application::Get().Shutdown(1);
             }
         }
         else if (std::holds_alternative<mathproto::WrappedMessage>(msg))
@@ -101,12 +102,14 @@ namespace EventCore {
             }
             else
             {
-                ASSERT(false, "Unreachable: unrecognised message type.");
+                LOG_CRITICAL("Unrecognized message type in mathproto::WrappedMessage!");
+                Application::Get().Shutdown(1);
             }
         }
         else
         {
-            ASSERT(false, "This should be unreachable; unrecognised event type.");
+            LOG_CRITICAL("This function must be called with a Wrapped message type!");
+            Application::Get().Shutdown(1);
         }
     }
 
@@ -117,7 +120,6 @@ namespace EventCore {
             Event::Type eventType = static_cast<Event::Type>(i);
             if (consumer->DoesCareAboutEventType(eventType))
                 mEventTypeToConsumerMap[eventType].push_back(consumer);
-                
         }
     }
 
