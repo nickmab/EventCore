@@ -113,7 +113,7 @@ namespace EventCore {
                 
                 FD_CLR(session.GetSocket(), &mFDSet);
                 
-                RaiseEvent(new TCPClientDisconnectedEvent(this, sessionId));
+                RaiseEvent(new TCPConnectionEvent(this, sessionId, TCPConnectionEvent::Type::ClientDisconnected));
                 mapItemsToErase.push_back(sessionId);
             }
         }
@@ -164,7 +164,7 @@ namespace EventCore {
                 const auto sessionId = newDataInterface->mSession.GetSessionId();
                 mClientMap.emplace(sessionId, newDataInterface);
                 
-                RaiseEvent(new TCPClientConnectedEvent(this, sessionId));
+                RaiseEvent(new TCPConnectionEvent(this, sessionId, TCPConnectionEvent::Type::ClientConnected));
             }
             else
             {
@@ -187,7 +187,7 @@ namespace EventCore {
                     {
                         LOG_ERROR("Some kind of error recv'ing from socket. Deleting client.");
                         
-                        RaiseEvent(new TCPClientDisconnectedEvent(this, sessionId));
+                        RaiseEvent(new TCPConnectionEvent(this, sessionId, TCPConnectionEvent::Type::ClientDisconnected));
 
                         FD_CLR(sock, &mFDSet);
                         mClientMap.erase(sessionId);

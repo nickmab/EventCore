@@ -73,7 +73,8 @@ namespace EventCore {
         mDataInterface.reset(newInterface);
 
         LOG_INFO("Successfully initialized client and connected to server.");
-        RaiseEvent(new TCPServerConnectedEvent(this, newInterface->mSession.GetSessionId()));
+        RaiseEvent(new TCPConnectionEvent(this, newInterface->mSession.GetSessionId(), 
+            TCPConnectionEvent::Type::ServerConnected));
 
         mInitialized = true;
         mRunning = true;
@@ -122,7 +123,8 @@ namespace EventCore {
     {
         // the mServerSession going out of scope should automatically call 
         // destructors to free memory and close the socket.
-        RaiseEvent(new TCPServerDisconnectedEvent(this, mDataInterface->mSession.GetSessionId()));
+        RaiseEvent(new TCPConnectionEvent(this, mDataInterface->mSession.GetSessionId(),
+            TCPConnectionEvent::Type::ServerDisconnected));
         
         WSACleanup();
         mRunning = false;

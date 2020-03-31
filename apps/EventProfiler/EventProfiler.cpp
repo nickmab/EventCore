@@ -79,6 +79,7 @@ SpamGenerator::SpamGenerator(unsigned maxIterations)
     , EventProducer()
     , mMaxIterations(maxIterations)
 {
+    /* 
     mEventRaiserDispatchTable[0] = [this]() { 
         InstrumentationTimer t("RaiseTCPClientConnectedEvent");
         this->RaiseEvent(new TCPClientConnectedEvent(nullptr, 0)); 
@@ -129,6 +130,7 @@ SpamGenerator::SpamGenerator(unsigned maxIterations)
         msg.set_request_id(1);
         this->RaiseEvent(ProtoMessageReceivedEvent::New(nullptr, 0, wrapped));
     };
+    */
 }
 
 bool SpamGenerator::DoesCareAboutEventType(Event::Type type) const
@@ -152,7 +154,7 @@ bool AllEventConsumer::DoesCareAboutEventType(Event::Type type) const
 {
     return type != Event::Type::Tick;
 }
-
+/*
 void AllEventConsumer::OnTCPClientConnected(const TCPClientConnectedEvent& evt)
 {
     mAUselessThingToIncrement += evt.GetSessionId();
@@ -172,6 +174,8 @@ void AllEventConsumer::OnTCPServerDisconnected(const TCPServerDisconnectedEvent&
 {
     mAUselessThingToIncrement += evt.GetSessionId();
 }
+
+*/
 
 void AllEventConsumer::On_demoproto_NumericMessage(const ProtoMessageReceivedEvent& evt, const demoproto::NumericMessage& msg)
 {

@@ -15,10 +15,7 @@ namespace EventCore {
 
     // Forward decs of event types
     class TickEvent;
-    class TCPClientConnectedEvent;
-    class TCPClientDisconnectedEvent;
-    class TCPServerConnectedEvent;
-    class TCPServerDisconnectedEvent;
+    class TCPConnectionEvent;
     class ProtoMessageReceivedEvent;
 
     // another forward dec for later in this file.
@@ -36,10 +33,7 @@ namespace EventCore {
             
             // Insert events in here. "Begin" and "End" are used just for iteration.
             Tick,
-            TCPClientConnected,
-            TCPClientDisconnected,
-            TCPServerConnected,
-            TCPServerDisconnected,
+            TCPConnection,
             ProtoMessageReceived,
             
             // Insert events in the section above. "Begin" and "End" are used just for iteration.
@@ -96,10 +90,7 @@ namespace EventCore {
 
     private:
         virtual void OnTick(const TickEvent&) {}
-        virtual void OnTCPClientConnected(const TCPClientConnectedEvent&) {}
-        virtual void OnTCPClientDisconnected(const TCPClientDisconnectedEvent&) {}
-        virtual void OnTCPServerConnected(const TCPServerConnectedEvent&) {}
-        virtual void OnTCPServerDisconnected(const TCPServerDisconnectedEvent&) {}
+        virtual void OnTCPConnection(const TCPConnectionEvent&) {}
         
         virtual void OnProtoMessageReceived(const ProtoMessageReceivedEvent&);
         virtual void On_demoproto_NumericMessage(const ProtoMessageReceivedEvent&, const demoproto::NumericMessage&) {}

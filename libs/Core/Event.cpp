@@ -54,10 +54,7 @@ namespace EventCore {
             switch (type)
             {
                 TYPE_SWITCH(Tick)
-                TYPE_SWITCH(TCPClientConnected)
-                TYPE_SWITCH(TCPClientDisconnected)
-                TYPE_SWITCH(TCPServerConnected)
-                TYPE_SWITCH(TCPServerDisconnected)
+                TYPE_SWITCH(TCPConnection)
                 TYPE_SWITCH(ProtoMessageReceived)
             default:
                 ASSERTF(false, "This should be unreachable; unhandled event type: {}", type);
