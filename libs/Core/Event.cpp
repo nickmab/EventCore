@@ -46,9 +46,6 @@ namespace EventCore {
 
         const Event::Type type = evt.GetType();
 
-        if (DoesCareAboutEventType(type))
-        {
-
 #define TYPE_SWITCH(evt_type) \
     case Event::Type:: ## evt_type: \
         On ## evt_type ## (reinterpret_cast<const evt_type ## Event&>(evt)); \
@@ -65,7 +62,6 @@ namespace EventCore {
             default:
                 ASSERTF(false, "This should be unreachable; unhandled event type: {}", type);
             }
-        }
 #undef TYPE_SWITCH
     }
 
