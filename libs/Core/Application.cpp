@@ -80,6 +80,12 @@ namespace EventCore {
         const std::string thisBinaryName = thisBinaryPath.filename().replace_extension("").string();
     
         Application* instance = CreateApplication(argc, argv);
+        if (!instance)
+        {
+            LOG_CRITICAL("Unable to create application! Shutting down.");
+            return -1;
+        }
+
         Application::sInstance = instance;
         instance->mBinaryName = thisBinaryName;
 
