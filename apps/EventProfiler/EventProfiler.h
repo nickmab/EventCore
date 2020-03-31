@@ -14,8 +14,17 @@ class AllEventConsumer;
 
 class EventProfiler: public Application
 {
+public:
+    static auto EventProfiler::ParseArgs(int argc, char* argv[]);
+    
+    EventProfiler(int totalLoopsToRun, int loopEveryNMillis);
+
+private:
     virtual void Init() override;
     virtual void OnUpdate() override;
+
+    const int mTotalLoopsToRun; 
+    const int mLoopEveryNMillis;
 
     std::unique_ptr<TickEventProducer> mTickEventProducer;
     std::unique_ptr<SpamGenerator> mSpamGenerator;

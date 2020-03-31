@@ -2,21 +2,67 @@
 
 #include "EventProfiler.h"
 
+#include <tclap/CmdLine.h>
+
+auto EventProfiler::ParseArgs(int argc, char* argv[])
+{
+    struct returnStruct { int mLoopsToRun, mLoopEveryNMillis; };
+    int loopsToRun{0}, loopEveryNMillis{0};
+    try
+    {
+        TCLAP::CmdLine cmd("Event profiler", ' ', "0.1");
+
+        // filename arg; required, no default value.
+        TCLAP::ValueArg<int> loopFrequencyArg("f", "frequency", 
+            "Raise an event every 'f' millis.", true, 0, "frequency:int");
+
+        TCLAP::ValueArg<int> loopCountArg("l", "loops",
+            "Raise a total of 'l' events before exiting.", true, 0, "loops:int");
+
+        cmd.add(loopFrequencyArg);
+        cmd.add(loopCountArg);
+        cmd.parse(argc, argv);
+
+        loopsToRun = loopCountArg.getValue();
+        loopEveryNMillis = loopFrequencyArg.getValue();
+    }
+    catch (TCLAP::ArgException & e)
+    {
+        LOGF_CRITICAL("Error parsing cmd line args. Error: {} Argument: {}",
+            e.error(), e.argId());
+    }
+
+    return returnStruct{ loopsToRun, loopEveryNMillis };
+}
+
 namespace EventCore {
     Application* CreateApplication(int argc, char* argv[])
     {
-        return new ::EventProfiler();
+        auto [loopsToRun, loopEveryNMillis] = ::EventProfiler::ParseArgs(argc, argv);
+        if (loopsToRun <= 0 || loopEveryNMillis <= 0)
+        {
+            LOGF_CRITICAL("Both command line args must be >0. Got loopsToRun {} and loopEveryNMillis {}.",
+                loopsToRun, loopEveryNMillis);
+            return nullptr;
+        }
+        return new ::EventProfiler(loopsToRun, loopEveryNMillis);
     }
 }
 
 using namespace EventCore;
 
+EventProfiler::EventProfiler(int totalLoopsToRun, int loopEveryNMillis)
+    : mTotalLoopsToRun(totalLoopsToRun)
+    , mLoopEveryNMillis(loopEveryNMillis)
+{
+}
+
 void EventProfiler::Init()
 {
-    mTickEventProducer.reset(new TickEventProducer(5));
+    mTickEventProducer.reset(new TickEventProducer(mLoopEveryNMillis));
     RegisterEventProducer(mTickEventProducer.get());
 
-    mSpamGenerator.reset(new SpamGenerator(1000));
+    mSpamGenerator.reset(new SpamGenerator(mTotalLoopsToRun));
     RegisterEventProducer(mSpamGenerator.get());
     RegisterEventConsumer(mSpamGenerator.get());
 

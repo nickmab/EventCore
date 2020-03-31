@@ -6,6 +6,7 @@ add_executable (${APP_NAME} ${APP_SRC})
 
 include_directories(${EVENTCORELIB_ROOT_DIR} 
                     ${SPDLOG_INCLUDE_DIR} 
+                    ${TCLAP_INCLUDE_DIR}
                     ${PROTOBUF_INCLUDE_DIR})
 
 target_link_libraries(${APP_NAME} EventCoreLib)
