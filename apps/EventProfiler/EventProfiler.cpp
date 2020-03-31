@@ -79,12 +79,24 @@ SpamGenerator::SpamGenerator(unsigned maxIterations)
     , EventProducer()
     , mMaxIterations(maxIterations)
 {
-    mEventRaiserDispatchTable[0] = [this]() { this->RaiseEvent(new TCPClientConnectedEvent(nullptr, 0)); };
-    mEventRaiserDispatchTable[1] = [this]() { this->RaiseEvent(new TCPClientDisconnectedEvent(nullptr, 0)); };
-    mEventRaiserDispatchTable[2] = [this]() { this->RaiseEvent(new TCPServerConnectedEvent(nullptr, 0)); };
-    mEventRaiserDispatchTable[3] = [this]() { this->RaiseEvent(new TCPServerDisconnectedEvent(nullptr, 0)); };
-    
+    mEventRaiserDispatchTable[0] = [this]() { 
+        InstrumentationTimer t("RaiseTCPClientConnectedEvent");
+        this->RaiseEvent(new TCPClientConnectedEvent(nullptr, 0)); 
+    };
+    mEventRaiserDispatchTable[1] = [this]() { 
+        InstrumentationTimer t("RaiseTCPClientDisconnectedEvent");
+        this->RaiseEvent(new TCPClientDisconnectedEvent(nullptr, 0)); 
+    };
+    mEventRaiserDispatchTable[2] = [this]() { 
+        InstrumentationTimer t("RaiseTCPServerConnectedEvent");
+        this->RaiseEvent(new TCPServerConnectedEvent(nullptr, 0)); 
+    };
+    mEventRaiserDispatchTable[3] = [this]() { 
+        InstrumentationTimer t("RaiseTCPServerDisconnectedEvent");
+        this->RaiseEvent(new TCPServerDisconnectedEvent(nullptr, 0)); 
+    };    
     mEventRaiserDispatchTable[4] = [this]() { 
+        InstrumentationTimer t("RaiseNumericMessageEvent");
         demoproto::WrappedMessage wrapped;
         demoproto::NumericMessage& msg = *wrapped.mutable_numeric_message();
         msg.set_a_double(9.0);
@@ -92,6 +104,7 @@ SpamGenerator::SpamGenerator(unsigned maxIterations)
         this->RaiseEvent(ProtoMessageReceivedEvent::New(nullptr, 0, wrapped)); 
     };
     mEventRaiserDispatchTable[5] = [this]() {
+        InstrumentationTimer t("RaiseTextualMessageEvent");
         demoproto::WrappedMessage wrapped;
         demoproto::TextualMessage& msg = *wrapped.mutable_textual_message();
         msg.set_a_sentence("Hello, world");
@@ -99,7 +112,7 @@ SpamGenerator::SpamGenerator(unsigned maxIterations)
         this->RaiseEvent(ProtoMessageReceivedEvent::New(nullptr, 0, wrapped));
     };
     mEventRaiserDispatchTable[6] = [this]() {
-        
+        InstrumentationTimer t("RaiseArithmeticRequestEvent");
         mathproto::WrappedMessage wrapped;
         mathproto::ArithmeticRequest msg = *wrapped.mutable_arithmetic_request();
         msg.set_lhs(3.0);
@@ -109,6 +122,7 @@ SpamGenerator::SpamGenerator(unsigned maxIterations)
         this->RaiseEvent(ProtoMessageReceivedEvent::New(nullptr, 0, wrapped));
     };
     mEventRaiserDispatchTable[7] = [this]() {
+        InstrumentationTimer t("RaiseArithmeticResponseEvent");
         mathproto::WrappedMessage wrapped; 
         mathproto::ArithmeticResponse msg = *wrapped.mutable_arithmetic_response();
         msg.set_result(22.8);

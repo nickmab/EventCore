@@ -26,11 +26,12 @@ namespace EventCore {
     
     void EventProducer::RaiseEvent(Event* evt) const
     {
+        TIME_SCOPE;
+
         if (mCallback)
             mCallback(evt);
         else
         {
-            TIME_SCOPE;
             Application::Get().GetEventQueue().EnqueueEvent(evt);
         }
     }
@@ -67,6 +68,8 @@ namespace EventCore {
 
     void EventConsumer::OnProtoMessageReceived(const ProtoMessageReceivedEvent& evt)
     {
+        TIME_SCOPE;
+
         const ProtoMsgVariant& msg = evt.GetMessage();
         if (std::holds_alternative<demoproto::WrappedMessage>(msg))
         {
