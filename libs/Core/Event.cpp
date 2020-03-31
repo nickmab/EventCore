@@ -43,8 +43,9 @@ namespace EventCore {
     void EventConsumer::OnEvent(const Event& evt)
     {
         TIME_SCOPE;
-        
+
         const Event::Type type = evt.GetType();
+
         if (DoesCareAboutEventType(type))
         {
 
@@ -116,6 +117,7 @@ namespace EventCore {
             Event::Type eventType = static_cast<Event::Type>(i);
             if (consumer->DoesCareAboutEventType(eventType))
                 mEventTypeToConsumerMap[eventType].push_back(consumer);
+                
         }
     }
 
@@ -142,9 +144,12 @@ namespace EventCore {
 
     void EventQueue::PublishEvents()
     {
+        int eventsProcessed = 0;
         for (auto& evt : mEventQueue)
         {
+            eventsProcessed++;
             auto consumerVec = mEventTypeToConsumerMap[evt->GetType()];
+
             for (auto* consumer : consumerVec)
             {
                 if (!Application::Get().IsRunning())
@@ -153,7 +158,11 @@ namespace EventCore {
             }
         }
 
-        mEventQueue.clear();
+        // We have to do this because if any of the consumers themselves _also_ raise
+        // events during their callbacks, they wil be added to the back of the queue
+        // but _not_ processed during the above for loop. Thus we cannot
+        // trivially clear the event queue at this point. 
+        mEventQueue.erase(mEventQueue.begin(), mEventQueue.begin() + eventsProcessed);
     }
 
 }
