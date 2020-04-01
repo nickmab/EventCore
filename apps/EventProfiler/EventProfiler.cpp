@@ -80,11 +80,9 @@ SpamGenerator::SpamGenerator(unsigned maxIterations)
     , mMaxIterations(maxIterations)
 {
     mEventRaiserDispatchTable[0] = [this]() { 
-        //InstrumentationTimer t("RaiseTCPConnectionEvent");
         this->RaiseEvent(new TCPConnectionEvent(nullptr, 0, TCPConnectionEvent::Type::ClientConnected)); 
     };
     mEventRaiserDispatchTable[1] = [this]() { 
-        //InstrumentationTimer t("RaiseNumericMessageEvent");
         demoproto::WrappedMessage wrapped;
         demoproto::NumericMessage& msg = *wrapped.mutable_numeric_message();
         msg.set_a_double(9.0);
@@ -92,7 +90,6 @@ SpamGenerator::SpamGenerator(unsigned maxIterations)
         this->RaiseEvent(ProtoMessageReceivedEvent::New(nullptr, 0, wrapped)); 
     };
     mEventRaiserDispatchTable[2] = [this]() {
-        //InstrumentationTimer t("RaiseTextualMessageEvent");
         demoproto::WrappedMessage wrapped;
         demoproto::TextualMessage& msg = *wrapped.mutable_textual_message();
         msg.set_a_sentence("Hello, world");
@@ -100,7 +97,6 @@ SpamGenerator::SpamGenerator(unsigned maxIterations)
         this->RaiseEvent(ProtoMessageReceivedEvent::New(nullptr, 0, wrapped));
     };
     mEventRaiserDispatchTable[3] = [this]() {
-        //InstrumentationTimer t("RaiseArithmeticRequestEvent");
         mathproto::WrappedMessage wrapped;
         mathproto::ArithmeticRequest msg = *wrapped.mutable_arithmetic_request();
         msg.set_lhs(3.0);
@@ -110,7 +106,6 @@ SpamGenerator::SpamGenerator(unsigned maxIterations)
         this->RaiseEvent(ProtoMessageReceivedEvent::New(nullptr, 0, wrapped));
     };
     mEventRaiserDispatchTable[4] = [this]() {
-        //InstrumentationTimer t("RaiseArithmeticResponseEvent");
         mathproto::WrappedMessage wrapped; 
         mathproto::ArithmeticResponse msg = *wrapped.mutable_arithmetic_response();
         msg.set_result(22.8);

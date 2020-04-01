@@ -29,8 +29,7 @@ namespace EventCore {
 
 #define TYPE_SWITCH(evt_type) \
     case Event::Type:: ## evt_type: \
-        { InstrumentationTimer timer("On" #evt_type); \
-        On ## evt_type ## (reinterpret_cast<const evt_type ## Event&>(evt)); } \
+        On ## evt_type ## (reinterpret_cast<const evt_type ## Event&>(evt)); \
         break;
 
             switch (type)
