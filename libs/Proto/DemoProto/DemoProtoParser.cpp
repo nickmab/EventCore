@@ -4,13 +4,13 @@
 
 namespace EventCore {
 
-    ProtoParser* DemoProtoParser::New(EventProducer::EventCallbackFn callback)
+    ProtoParser* DemoProtoParser::New()
     {
-        return new DemoProtoParser(callback);
+        return new DemoProtoParser();
     }
 
-    DemoProtoParser::DemoProtoParser(EventProducer::EventCallbackFn callback)
-        : ProtoParser(callback)
+    DemoProtoParser::DemoProtoParser()
+        : ProtoParser()
     {
     }
     

@@ -10,11 +10,6 @@ namespace EventCore {
     class EventProducer
     {
     public:
-        using EventCallbackFn = std::function<void(Event*)>;
-
-        // specify callback function (e.g. Application::OnEvent) to forward events
-        // to when we instantiate the producer. If left as null, will use default.
-        EventProducer(EventCallbackFn fn = nullptr);
         virtual ~EventProducer() {}
         
         // will be periodically called every run loop
@@ -29,7 +24,6 @@ namespace EventCore {
         // The ownership will be transferred to the EventQueue object at the Application level.
         // Should return nullptr if no event needs to be raised/produced.
         void RaiseEvent(Event*) const;
-        EventCallbackFn mCallback;
     };
 
     class EventConsumer

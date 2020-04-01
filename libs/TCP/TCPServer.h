@@ -15,7 +15,6 @@ namespace EventCore {
     public:
         TCPServer(
             ProtoParser::Protocol,
-            EventProducer::EventCallbackFn evtCallback = nullptr,
             ULONG inAddr = DEFAULT_IN_ADDR, 
             USHORT listeningPort = DEFAULT_LISTENING_PORT);
         ~TCPServer();

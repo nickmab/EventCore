@@ -8,10 +8,9 @@ namespace EventCore {
 
     TCPClient::TCPClient(
         ProtoParser::Protocol proto,
-        EventProducer::EventCallbackFn evtCallback,
         const char* serverAddr, 
         USHORT serverPort)
-        : EventProducer(evtCallback)
+        : EventProducer()
         , mProtocol(proto)
     {
         mSockAddrIn.sin_family = AF_INET;
@@ -61,7 +60,7 @@ namespace EventCore {
             return false;
         }
 
-        ProtoParser* parser = ProtoParser::New(mProtocol, mCallback);
+        ProtoParser* parser = ProtoParser::New(mProtocol);
         if (!parser)
         {
             LOGF_ERROR("Unrecognised protocol; unable to create parser: {}", mProtocol);

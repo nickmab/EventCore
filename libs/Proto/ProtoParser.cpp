@@ -7,23 +7,18 @@
 
 namespace EventCore {
 
-    ProtoParser* ProtoParser::New(Protocol proto, EventProducer::EventCallbackFn callback)
+    ProtoParser* ProtoParser::New(Protocol proto)
     {
         switch (proto)
         {
         case Protocol::DemoProto:
-            return new DemoProtoParser(callback);
+            return new DemoProtoParser();
         case Protocol::MathProto:
-            return new MathProtoParser(callback);
+            return new MathProtoParser();
         default:
             ASSERTF(false, "This should be unreachable! Unknown proto: {}", proto);
             return nullptr;
         }
     }
     
-    ProtoParser::ProtoParser(EventProducer::EventCallbackFn callback)
-        : EventProducer(callback)
-    {
-    }
-
 }

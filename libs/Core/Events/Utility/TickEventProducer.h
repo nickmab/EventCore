@@ -7,7 +7,7 @@ namespace EventCore {
     class TickEventProducer : public EventProducer
     {
     public:
-        TickEventProducer(int millisFrequency, EventCallbackFn callback = nullptr);
+        TickEventProducer(int millisFrequency);
         
     private:
         double mSecondsFrequency;

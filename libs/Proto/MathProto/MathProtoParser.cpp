@@ -4,14 +4,9 @@
 
 namespace EventCore {
 
-    ProtoParser* MathProtoParser::New(EventProducer::EventCallbackFn callback)
+    ProtoParser* MathProtoParser::New()
     {
-        return new MathProtoParser(callback);
-    }
-
-    MathProtoParser::MathProtoParser(EventProducer::EventCallbackFn callback)
-        : ProtoParser(callback)
-    {
+        return new MathProtoParser();
     }
 
     bool MathProtoParser::ConsumeFrom(TCPSession& session)

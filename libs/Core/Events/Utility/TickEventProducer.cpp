@@ -4,8 +4,8 @@
 
 namespace EventCore {
 
-    TickEventProducer::TickEventProducer(int millisFrequency, EventCallbackFn callback)
-        : EventProducer(callback)
+    TickEventProducer::TickEventProducer(int millisFrequency)
+        : EventProducer()
         , mSecondsFrequency(1e-3 * (double)millisFrequency)
     {}
 

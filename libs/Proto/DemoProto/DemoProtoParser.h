@@ -13,9 +13,9 @@ namespace EventCore {
     {
     public:
 
-        static ProtoParser* New(EventProducer::EventCallbackFn callback = nullptr);
+        static ProtoParser* New();
 
-        DemoProtoParser(EventProducer::EventCallbackFn callback = nullptr);
+        DemoProtoParser();
         
         // false indicates error.
         virtual bool ConsumeFrom(TCPSession&) override;

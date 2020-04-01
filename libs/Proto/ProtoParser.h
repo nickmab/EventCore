@@ -16,9 +16,8 @@ namespace EventCore {
             MathProto
         };
         
-        static ProtoParser* New(Protocol, EventProducer::EventCallbackFn callback = nullptr);
+        static ProtoParser* New(Protocol);
 
-        ProtoParser(EventProducer::EventCallbackFn callback = nullptr);
         virtual ~ProtoParser() {}
         
         // false indicates error.

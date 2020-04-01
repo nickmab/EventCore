@@ -15,7 +15,6 @@ namespace EventCore {
     public:
         TCPClient(
             ProtoParser::Protocol,
-            EventProducer::EventCallbackFn evtCallback = nullptr,
             const char* serverAddr = DEFAULT_SERVER_ADDR, 
             USHORT serverPort = DEFAULT_SERVER_PORT);
         ~TCPClient();

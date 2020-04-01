@@ -6,10 +6,6 @@
 
 namespace EventCore {
 
-    EventProducer::EventProducer(EventCallbackFn callback)
-        : mCallback(callback)
-    {}
-
     std::string EventProducer::ToString() const
     {
         std::stringstream ss;
@@ -19,12 +15,7 @@ namespace EventCore {
     
     void EventProducer::RaiseEvent(Event* evt) const
     {
-        if (mCallback)
-            mCallback(evt);
-        else
-        {
-            Application::Get().GetEventQueue().EnqueueEvent(evt);
-        }
+        Application::Get().GetEventQueue().EnqueueEvent(evt);
     }
 
     bool EventConsumer::DoesCareAboutEventType(Event::Type type) const

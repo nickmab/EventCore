@@ -8,10 +8,9 @@ namespace EventCore {
 
     TCPServer::TCPServer(
         ProtoParser::Protocol proto,
-        EventProducer::EventCallbackFn evtCallback,
         ULONG inAddr, 
         USHORT listeningPort)
-        : EventProducer(evtCallback)
+        : EventProducer()
         , mProtocol(proto)
     {
         mSockAddrIn.sin_family = AF_INET;
@@ -152,7 +151,7 @@ namespace EventCore {
                 // OK I've accidentally made this kind of awkward because we need to construct the object
                 // to get a unique session id, but we want to key the map of the instances by session id. heh.
                 // easily fixed, but leaving it like this for now.
-                ProtoParser* parser = ProtoParser::New(mProtocol, mCallback);
+                ProtoParser* parser = ProtoParser::New(mProtocol);
                 if (!parser)
                 {
                     LOGF_ERROR("Unrecognised protocol; unable to create parser: {}", mProtocol);
