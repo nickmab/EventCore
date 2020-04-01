@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Core/Application.h>
-#include <Core/Event.h>
+#include <Core/Events/EventQueue.h>
 #include <TCP/TCPServer.h>
 
 #include "QuestionAnswerer.h"

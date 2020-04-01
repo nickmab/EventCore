@@ -3,9 +3,6 @@
 #include "TCPSession.h"
 #include "TCPDataInterface.h"
 
-#include "Core/Event.h"
-#include "Proto/DemoProto/DemoProtoParser.h"
-
 namespace EventCore {
 
     static const ULONG DEFAULT_IN_ADDR = INADDR_ANY;

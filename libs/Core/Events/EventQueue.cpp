@@ -1,18 +1,11 @@
 #include "pch.h"
 
-#include "Event.h"
-#include "Application.h"
+#include "EventQueue.h"
 
-#include "Events/TickEvent.h"
-#include "Proto/ProtoEvents.h"
-#include "TCP/TCPEvents.h"
+#include "Core/Application.h"
 
 namespace EventCore {
 
-    Event::Event(const EventProducer* sender)
-        : mSender(sender)
-    {}
-    
     EventProducer::EventProducer(EventCallbackFn callback)
         : mCallback(callback)
     {}

@@ -2,6 +2,8 @@
 
 #include "LuaEngine.h"
 
+#include "Core/Application.h"
+
 namespace EventCore {
 
     LuaEngine::LuaEngine(const char* filename)

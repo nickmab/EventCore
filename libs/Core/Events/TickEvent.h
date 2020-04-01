@@ -1,8 +1,10 @@
 #pragma once
 
-#include "Core/Event.h"
+#include "Event.h"
 
 namespace EventCore {
+
+    class EventProducer;
 
     class TickEvent : public Event
     {

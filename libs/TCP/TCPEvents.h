@@ -1,10 +1,12 @@
 #pragma once
 
-#include "Core/Event.h"
+#include "Core/Events/Event.h"
 
 #include "TCPSession.h"
 
 namespace EventCore {
+
+    class EventProducer;
 
     class TCPConnectionEvent : public Event
     {

@@ -1,20 +1,10 @@
 #pragma once
 
-#include "Core/Application.h"
-#include "Core/Event.h"
+#include "Core/Events/EventQueue.h"
 #include "TCP/TCPSession.h"
 
 namespace EventCore {
 
-    // ALL potential message types from all protocols must be 
-    // listed in this variant.
-    using ProtoMsgVariant = std::variant<
-        demoproto::NumericMessage,
-        demoproto::TextualMessage,
-        demoproto::WrappedMessage,
-        mathproto::ArithmeticRequest,
-        mathproto::ArithmeticResponse,
-        mathproto::WrappedMessage>;
 
     class ProtoParser : public EventProducer
     {

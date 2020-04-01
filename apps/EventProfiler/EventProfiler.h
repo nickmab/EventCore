@@ -2,8 +2,7 @@
 
 #include <Core/Application.h>
 
-#include <TCP/TCPEvents.h>
-#include <Proto/ProtoEvents.h>
+#include <Core/Events/EventQueue.h>
 #include <Core/Events/Utility/TickEventProducer.h>
 
 using namespace EventCore;

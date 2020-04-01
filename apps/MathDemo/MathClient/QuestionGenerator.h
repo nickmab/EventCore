@@ -1,7 +1,6 @@
 #pragma once
 
-#include <Core/Event.h>
-#include <Proto/MathProto/MathProto.pb.h>
+#include <Core/Events/EventQueue.h>
 
 #include "QandARouter.h"
 

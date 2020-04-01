@@ -1,9 +1,22 @@
 #pragma once
 
-#include "Core/Event.h"
+#include "Core/Events/Event.h"
 #include "TCP/TCPSession.h"
+#include "Proto/DemoProto/DemoProto.pb.h"
+#include "Proto/MathProto/MathProto.pb.h"
 
 namespace EventCore {
+
+    class EventProducer;
+
+    // YUCK.
+    using ProtoMsgVariant = std::variant<
+        demoproto::NumericMessage,
+        demoproto::TextualMessage,
+        demoproto::WrappedMessage,
+        mathproto::ArithmeticRequest,
+        mathproto::ArithmeticResponse,
+        mathproto::WrappedMessage>;
 
     class ProtoMessageReceivedEvent : public Event
     {

@@ -1,9 +1,8 @@
 #pragma once
 
-#include "Core/Application.h"
-#include "Core/Event.h"
 #include "TCP/TCPSession.h"
 #include "Proto/ProtoEvents.h"
+#include "Proto/ProtoParser.h"
 
 using namespace mathproto;
 

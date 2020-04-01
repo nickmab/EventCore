@@ -1,9 +1,9 @@
-[submodule "vendor\\spdlog"]
-	path = vendor\\spdlog
+[submodule "vendor/spdlog"]
+	path = vendor/spdlog
 	url = https://github.com/gabime/spdlog.git
-[submodule "vendor\\lua"]
-	path = vendor\\lua
+[submodule "vendor/lua"]
+	path = vendor/lua
 	url = https://github.com/nickmab/lua.git
-[submodule "vendor\\tclap"]
-	path = vendor\\tclap
+[submodule "vendor/tclap"]
+	path = vendor/tclap
 	url = https://github.com/nickmab/tclap.git

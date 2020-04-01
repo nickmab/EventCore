@@ -1,9 +1,7 @@
 #pragma once
 
-#include "TCPEvents.h"
-#include "TCPSession.h"
 #include "TCPDataInterface.h"
-#include "Core/Event.h"
+#include "Proto/ProtoParser.h"
 
 namespace EventCore {
 

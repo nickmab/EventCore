@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Event.h"
+#include "Core/Events/EventQueue.h"
 
 namespace EventCore {
 

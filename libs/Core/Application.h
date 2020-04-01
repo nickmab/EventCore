@@ -4,7 +4,7 @@
     #error "Project currently only supports Windows, sorry."
 #endif
 
-#include "Event.h"
+#include "Core/Events/EventQueue.h"
 
 int main(int argc, char* argv[]);
 

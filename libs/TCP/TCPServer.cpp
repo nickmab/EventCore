@@ -2,9 +2,7 @@
 
 #include "TCPServer.h"
 
-#include "Core/Application.h"
 #include "TCPUtils.h"
-#include "TCPEvents.h"
 
 namespace EventCore {
 

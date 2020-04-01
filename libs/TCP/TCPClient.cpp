@@ -1,8 +1,8 @@
 #include "pch.h"
 
 #include "TCPClient.h"
+
 #include "TCPUtils.h"
-#include "Core/Application.h"
 
 namespace EventCore {
 
