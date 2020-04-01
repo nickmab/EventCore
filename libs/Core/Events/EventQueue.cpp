@@ -25,8 +25,6 @@ namespace EventCore {
 
     void EventConsumer::OnEvent(const Event& evt)
     {
-        TIME_SCOPE;
-
         const Event::Type type = evt.GetType();
 
 #define TYPE_SWITCH(evt_type) \
@@ -48,8 +46,6 @@ namespace EventCore {
 
     void EventConsumer::OnProtoMessageReceived(const ProtoMessageReceivedEvent& evt)
     {
-        TIME_SCOPE;
-
         const ProtoMsgVariant& msg = evt.GetMessage();
         if (std::holds_alternative<demoproto::WrappedMessage>(msg))
         {

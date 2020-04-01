@@ -11,8 +11,6 @@ namespace EventCore {
 
     bool MathProtoParser::ConsumeFrom(TCPSession& session)
     {
-        TIME_SCOPE;
-        
         mInputBuffer << session.GetAllRecvBufferContents();
 
         // should have i) message size (4 bytes) then a ii) WrappedMessage.
