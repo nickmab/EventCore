@@ -126,9 +126,11 @@ bool SpamGenerator::DoesCareAboutEventType(Event::Type type) const
 
 void SpamGenerator::OnTick(const TickEvent&)
 {
-    // We have 5 different event types that we're going to cycle through.
-    mEventRaiserDispatchTable[mIterCount++ % 5]();
-
+    auto fn = mEventRaiserDispatchTable[mIterCount++ % 5];
+    { InstrumentationTimer timer("FnCall");
+        // We have 5 different event types that we're going to cycle through.
+        fn();
+    }
     if (mIterCount == mMaxIterations)
     {
         LOGF_WARN("Completed max iterations ({}). Shutting down.", mMaxIterations);

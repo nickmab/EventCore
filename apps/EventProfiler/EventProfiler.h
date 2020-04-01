@@ -48,9 +48,9 @@ private:
     // Each OnTick callback, we will raise an event by calling one
     // of these lambda functions (defined in the constructor). That
     // way we can easily cycle through which event we call using a simple
-    // counter (e.g. call the function at index [count % 8]).
+    // counter (e.g. call the function at index [count % 5]).
     using EventRaiserFn = std::function<void(void)>;
-    EventRaiserFn mEventRaiserDispatchTable[8];
+    EventRaiserFn mEventRaiserDispatchTable[5];
 
     virtual void OnTick(const TickEvent&) override;
 };
