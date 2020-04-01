@@ -67,14 +67,7 @@ public:
 private:
     unsigned long mAUselessThingToIncrement{0};
 
-    /*
     virtual void OnTCPConnection(const TCPConnectionEvent&) override;
-
-    virtual void OnTCPClientConnected(const TCPClientConnectedEvent&) override;
-    virtual void OnTCPClientDisconnected(const TCPClientDisconnectedEvent&) override;
-    virtual void OnTCPServerConnected(const TCPServerConnectedEvent&) override;
-    virtual void OnTCPServerDisconnected(const TCPServerDisconnectedEvent&) override;
-    */
 
     virtual void On_demoproto_NumericMessage(const ProtoMessageReceivedEvent&, const demoproto::NumericMessage&) override;
     virtual void On_demoproto_TextualMessage(const ProtoMessageReceivedEvent&, const demoproto::TextualMessage&) override;

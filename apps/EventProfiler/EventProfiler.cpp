@@ -79,24 +79,11 @@ SpamGenerator::SpamGenerator(unsigned maxIterations)
     , EventProducer()
     , mMaxIterations(maxIterations)
 {
-    /* 
     mEventRaiserDispatchTable[0] = [this]() { 
-        InstrumentationTimer t("RaiseTCPClientConnectedEvent");
-        this->RaiseEvent(new TCPClientConnectedEvent(nullptr, 0)); 
+        InstrumentationTimer t("RaiseTCPConnectionEvent");
+        this->RaiseEvent(new TCPConnectionEvent(nullptr, 0, TCPConnectionEvent::Type::ClientConnected)); 
     };
     mEventRaiserDispatchTable[1] = [this]() { 
-        InstrumentationTimer t("RaiseTCPClientDisconnectedEvent");
-        this->RaiseEvent(new TCPClientDisconnectedEvent(nullptr, 0)); 
-    };
-    mEventRaiserDispatchTable[2] = [this]() { 
-        InstrumentationTimer t("RaiseTCPServerConnectedEvent");
-        this->RaiseEvent(new TCPServerConnectedEvent(nullptr, 0)); 
-    };
-    mEventRaiserDispatchTable[3] = [this]() { 
-        InstrumentationTimer t("RaiseTCPServerDisconnectedEvent");
-        this->RaiseEvent(new TCPServerDisconnectedEvent(nullptr, 0)); 
-    };    
-    mEventRaiserDispatchTable[4] = [this]() { 
         InstrumentationTimer t("RaiseNumericMessageEvent");
         demoproto::WrappedMessage wrapped;
         demoproto::NumericMessage& msg = *wrapped.mutable_numeric_message();
@@ -104,7 +91,7 @@ SpamGenerator::SpamGenerator(unsigned maxIterations)
         msg.set_an_integer(3);
         this->RaiseEvent(ProtoMessageReceivedEvent::New(nullptr, 0, wrapped)); 
     };
-    mEventRaiserDispatchTable[5] = [this]() {
+    mEventRaiserDispatchTable[2] = [this]() {
         InstrumentationTimer t("RaiseTextualMessageEvent");
         demoproto::WrappedMessage wrapped;
         demoproto::TextualMessage& msg = *wrapped.mutable_textual_message();
@@ -112,7 +99,7 @@ SpamGenerator::SpamGenerator(unsigned maxIterations)
         msg.set_is_interesting(true);
         this->RaiseEvent(ProtoMessageReceivedEvent::New(nullptr, 0, wrapped));
     };
-    mEventRaiserDispatchTable[6] = [this]() {
+    mEventRaiserDispatchTable[3] = [this]() {
         InstrumentationTimer t("RaiseArithmeticRequestEvent");
         mathproto::WrappedMessage wrapped;
         mathproto::ArithmeticRequest msg = *wrapped.mutable_arithmetic_request();
@@ -122,7 +109,7 @@ SpamGenerator::SpamGenerator(unsigned maxIterations)
         msg.set_request_id(1);
         this->RaiseEvent(ProtoMessageReceivedEvent::New(nullptr, 0, wrapped));
     };
-    mEventRaiserDispatchTable[7] = [this]() {
+    mEventRaiserDispatchTable[4] = [this]() {
         InstrumentationTimer t("RaiseArithmeticResponseEvent");
         mathproto::WrappedMessage wrapped; 
         mathproto::ArithmeticResponse msg = *wrapped.mutable_arithmetic_response();
@@ -130,7 +117,6 @@ SpamGenerator::SpamGenerator(unsigned maxIterations)
         msg.set_request_id(1);
         this->RaiseEvent(ProtoMessageReceivedEvent::New(nullptr, 0, wrapped));
     };
-    */
 }
 
 bool SpamGenerator::DoesCareAboutEventType(Event::Type type) const
@@ -140,8 +126,8 @@ bool SpamGenerator::DoesCareAboutEventType(Event::Type type) const
 
 void SpamGenerator::OnTick(const TickEvent&)
 {
-    // We have 8 different event types that we're going to cycle through.
-    mEventRaiserDispatchTable[mIterCount++ % 8]();
+    // We have 5 different event types that we're going to cycle through.
+    mEventRaiserDispatchTable[mIterCount++ % 5]();
 
     if (mIterCount == mMaxIterations)
     {
@@ -154,28 +140,11 @@ bool AllEventConsumer::DoesCareAboutEventType(Event::Type type) const
 {
     return type != Event::Type::Tick;
 }
-/*
-void AllEventConsumer::OnTCPClientConnected(const TCPClientConnectedEvent& evt)
+
+void AllEventConsumer::OnTCPConnection(const TCPConnectionEvent& evt)
 {
     mAUselessThingToIncrement += evt.GetSessionId();
 }
-
-void AllEventConsumer::OnTCPClientDisconnected(const TCPClientDisconnectedEvent& evt)
-{
-    mAUselessThingToIncrement += evt.GetSessionId();
-}
-
-void AllEventConsumer::OnTCPServerConnected(const TCPServerConnectedEvent& evt)
-{
-    mAUselessThingToIncrement += evt.GetSessionId();
-}
-
-void AllEventConsumer::OnTCPServerDisconnected(const TCPServerDisconnectedEvent& evt)
-{
-    mAUselessThingToIncrement += evt.GetSessionId();
-}
-
-*/
 
 void AllEventConsumer::On_demoproto_NumericMessage(const ProtoMessageReceivedEvent& evt, const demoproto::NumericMessage& msg)
 {
