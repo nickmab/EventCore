@@ -217,10 +217,8 @@ namespace EventCore {
     {
         // the mClientSessions going out of scope should automatically call destructors to free memory...
         shutdown(mListeningSocket, SD_BOTH);
-        // Try to do a graceful disconnect ...but doesn't seem to work very well.
-        const int optVal = 1000;
-        const int optLen = sizeof(int);
-        setsockopt(mListeningSocket, SOL_SOCKET, SO_DONTLINGER, (char*)&optVal, optLen);
+        u_long argp = 0;
+        ioctlsocket(mListeningSocket, FIONBIO, &argp);
         closesocket(mListeningSocket);
         WSACleanup();
         mRunning = false;

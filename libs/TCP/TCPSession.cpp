@@ -20,10 +20,9 @@ namespace EventCore {
     {
         ClearRecvBuffer();
         delete[] mRecvBuffer;
-        // Try to do a graceful disconnect ...but doesn't seem to work very well.
-        const int optVal = 1000;
-        const int optLen = sizeof(int);
-        setsockopt(mSocket, SOL_SOCKET, SO_LINGER, (char*)&optVal, optLen);
+        u_long argp = 0;
+        LOG_WARN("Destroying socket session thing...");
+        ioctlsocket(mSocket, FIONBIO, &argp);
         closesocket(mSocket);
     }
 
